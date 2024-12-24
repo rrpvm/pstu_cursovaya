@@ -6,6 +6,18 @@
     app:startDestination="@id/fragment_splash">
     <fragment
         android:id="@+id/fragment_splash"
-        tools:layout=""
-        android:name="com.rrpvm.authorization.presentation.SplashFragment" />
+        android:name="com.rrpvm.authorization.presentation.splash.SplashFragment"
+        tools:layout="@layout/fragment_splash_screen">
+        <action
+            android:id="@+id/action_fragment_splash_to_fragment_signin"
+            app:destination="@id/fragment_signin"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_signin"
+        android:name="com.rrpvm.authorization.presentation.signin.SignInFragment"
+        tools:layout="@layout/fragment_signin_screen" />
 </navigation>

@@ -2,6 +2,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.androidKapt)
+    alias(libs.plugins.daggerDiLibrarry)
+    alias(libs.plugins.jetpackNavigationSafeArgs)
 }
 
 android {
@@ -41,6 +44,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    //shared
+    implementation(project(":core"))
+    implementation(project(":domain"))
+
+    //di hilt
+    implementation(libs.dagger.lib)
+    kapt(libs.dagger.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

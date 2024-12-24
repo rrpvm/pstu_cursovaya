@@ -10,9 +10,8 @@ material = "1.12.0"
 constraintlayout = "2.2.0"
 org-jetbrains-kotlin-jvm = "1.9.10"
 jetpack-navigation = "2.8.5"
-navigation-fragment-ktx = "2.8.5"
-navigation-ui-ktx = "2.8.5"
 dagger-di = "2.51.1"
+room-version = "2.6.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -24,10 +23,13 @@ material = { group = "com.google.android.material", name = "material", version.r
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 jetpack-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "jetpack-navigation" }
 jetpack-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "jetpack-navigation" }
-androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation-fragment-ktx" }
-androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation-ui-ktx" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "jetpack-navigation" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "jetpack-navigation" }
 dagger-lib = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-di" }
 dagger-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger-di" }
+room-runtime = {group = "androidx.room", name = "room-runtime",version.ref="room-version"}
+room-compiler = {group = "androidx.room", name = "room-compiler",version.ref="room-version"}
+room-ktx = {group = "androidx.room", name = "room-ktx",version.ref="room-version"}
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -35,4 +37,5 @@ org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 daggerDiLibrarry = { id = "com.google.dagger.hilt.android", version.ref = "dagger-di" }
 androidKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+jetpackNavigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "jetpack-navigation" }
 

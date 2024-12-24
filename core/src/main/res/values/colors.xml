@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="p40">#FF216487</color>
+    <color name="p100">#FFffffff</color>
+    <color name="s40">#FF4f616e</color>
+    <color name="t40">#FF62597c</color>
+    <color name="t100">#FFffffff</color>
+    <color name="e40">#FFba1a1a</color>
+    <color name="p90">#FFc6e7ff</color>
+    <color name="p10">#001e2d</color>
+    <color name="surface">#FFd7dadf</color>
+
+</resources>

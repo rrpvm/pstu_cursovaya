@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.androidKapt)
+    alias(libs.plugins.daggerDiLibrarry)
 }
 
 android {
@@ -56,9 +57,18 @@ dependencies {
     implementation(libs.dagger.lib)
     kapt(libs.dagger.compiler)
     //END DI HILT
-
+    //ROOM
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    //END ROOM
+    //shared
+    implementation(project(":core"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
     //features
     implementation(project(":feature:authorization"))
+
 
 
 
