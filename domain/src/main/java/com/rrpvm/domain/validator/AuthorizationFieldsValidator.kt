@@ -16,9 +16,9 @@ class AuthorizationFieldsValidator {
         return  username.matches(USERNAME_VALID_REGEX)
     }
 
-    fun validatePassword(password: String) {
+    fun validatePassword(password: String):Boolean {
         return password.trim().let {
-            it.length > 6 && it.length <= 30
+            it.length in PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH
         }
     }
 }

@@ -6,6 +6,7 @@ import com.rrpvm.domain.model.UserModel
 import com.rrpvm.domain.service.IAuthenticationService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,8 @@ class MemoryAuthenticationService : IAuthenticationService {
         }.stateIn(serviceScope, SharingStarted.Eagerly, false)
 
     override suspend fun authenticate(authenticationModel: AuthenticationModel) {
-        if (authenticationModel.username.equals("123") && authenticationModel.password.equals("123")) {
+        delay(1000L)
+        if (authenticationModel.username.equals("qwe123") && authenticationModel.password.equals("qwe123")) {
             val date = "January 2, 2010"
             credentials.value =
                 UserModel(

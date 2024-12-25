@@ -80,9 +80,26 @@ class SignInFragment : Fragment() {
     private fun observeDataScreen() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dataScreen.collectLatest { screen ->
-                    onPasswordProcess(screen.passwordData())
-                    onLoginProcess(screen.loginData())
+                launch {
+                    viewModel.dataScreen.collectLatest { screen ->
+                        onPasswordProcess(screen.passwordData())
+                        onLoginProcess(screen.loginData())
+                    }
+                }
+                launch {
+                    viewModel.userPasswordError.collectLatest {
+                        binding.tilPasswordAuth.error = it
+                    }
+                }
+                launch {
+                    viewModel.userLoginError.collectLatest {
+                        binding.tilUsername.error = it
+                    }
+                }
+                launch {
+                    viewModel.isSignInButtonEnabled.collectLatest {
+                        binding.btnDoSignIn.isEnabled = it
+                    }
                 }
             }
         }
@@ -100,7 +117,6 @@ class SignInFragment : Fragment() {
                 }
                 ed.inputType = newInputType
             }
-            error = data.errorText
         }
     }
 
@@ -109,7 +125,6 @@ class SignInFragment : Fragment() {
             editText?.let { ed ->
                 ed.setSafeText(data.mUsername)
             }
-            error = data.errorText
         }
     }
 

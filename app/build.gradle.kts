@@ -68,6 +68,7 @@ dependencies {
     implementation(project(":data"))
     //features
     implementation(project(":feature:authorization"))
+    implementation(project(":feature:profile"))
 
 
 

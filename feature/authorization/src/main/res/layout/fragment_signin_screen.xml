@@ -9,7 +9,8 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    android:paddingBottom="8dp">
+    android:paddingVertical="24dp"
+    android:focusable="true">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_username"

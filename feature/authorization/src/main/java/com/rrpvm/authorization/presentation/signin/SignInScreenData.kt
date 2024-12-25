@@ -10,21 +10,20 @@ data class SignInScreenData(
     @DrawableRes val mPasswordIcon: Int = R.drawable.ic_not_visible,
 ) {
     fun passwordData(): PasswordData {
-        return PasswordData("kirill pidoras",mPassword, mPasswordVisible, mPasswordIcon)
+        return PasswordData(mPassword, mPasswordVisible, mPasswordIcon)
     }
-    fun loginData() : LoginData{
-        return LoginData("incorrect password",this.mUsername)
+
+    fun loginData(): LoginData {
+        return LoginData(this.mUsername)
     }
 }
 
 data class PasswordData(
-    val errorText : String? = null,
     val mPassword: String,
     val mPasswordVisible: Boolean,
     @DrawableRes val mPasswordIcon: Int = R.drawable.ic_not_visible
 )
 
 data class LoginData(
-    val errorText : String? = null,
     val mUsername: String,
 )

@@ -4,4 +4,10 @@
     android:id="@+id/app_nav"
     app:startDestination="@id/auth_graph">
     <include app:graph="@navigation/auth_graph"/>
+    <include app:graph="@navigation/profile_graph"/>
+    <action android:id="@+id/action_go_application"
+        app:launchSingleTop="true"
+        app:destination="@id/profile_graph"
+        app:popUpTo="@id/app_nav"
+        app:popUpToInclusive="true"/>
 </navigation>

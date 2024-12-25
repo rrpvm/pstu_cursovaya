@@ -7,6 +7,7 @@ import com.rrpvm.authorization.R
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.model.AuthenticationModel
 import com.rrpvm.domain.service.IAuthenticationService
+import com.rrpvm.domain.validator.AuthorizationFieldsValidator
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -17,13 +18,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val authenticationService: IAuthenticationService
+    private val authenticationService: IAuthenticationService,
+    private val validator: AuthorizationFieldsValidator,
 ) : ViewModel() {
     private val signInCoroutineExceptionHandler =
         CoroutineExceptionHandler { coroutineContext, throwable ->
@@ -34,12 +37,19 @@ class SignInViewModel @Inject constructor(
     private val _isPasswordVisible = MutableStateFlow(false)
     private val _userPassword = MutableStateFlow("")
     private val _usernameInput = MutableStateFlow("")
+    private val _userPasswordError = MutableStateFlow<String?>(null)
+    private val _userLoginError = MutableStateFlow<String?>(null)
+    val userPasswordError = _userPasswordError.asStateFlow()
+    val userLoginError = _userLoginError.asStateFlow()
+    val isSignInButtonEnabled = _userPasswordError.combine(userLoginError) { f1, f2 ->
+        return@combine f1 == null && f2 == null
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
     val dataScreen =
         combine(
             flow = _isLoadingState,
             flow2 = _isPasswordVisible,
             flow3 = _userPassword,
-            flow4 = _usernameInput
+            flow4 = _usernameInput,
         ) { isSignInJob, isPasswordVisible, password, usernameInput ->
             SignInScreenData(
                 mUsername = usernameInput,
@@ -56,9 +66,17 @@ class SignInViewModel @Inject constructor(
         if (signJob?.isActive == true) {
             return
         }
-        signJob = viewModelScope.launch(Dispatchers.IO + signInCoroutineExceptionHandler) {
+        if (!onValidate()) {
+            return
+        }
+        viewModelScope.launch(Dispatchers.IO + signInCoroutineExceptionHandler) {
             _isLoadingState.value = true
-            delay(3000L)
+            authenticationService.authenticate(
+                AuthenticationModel(
+                    username = _usernameInput.value,
+                    password = _userPassword.value
+                )
+            )
             _isLoadingState.value = false
         }
     }
@@ -69,15 +87,23 @@ class SignInViewModel @Inject constructor(
 
     fun onPasswordInput(newText: String) {
         _userPassword.value = newText
+        _userPasswordError.value = null
     }
 
     fun onUsernameInput(username: String) {
         _usernameInput.value = username
+        _userLoginError.value = null
     }
 
-    init {
-        viewModelScope.launch {
-            authenticationService.authenticate(AuthenticationModel("123", "123"))
+    private fun onValidate(): Boolean {
+        if (!validator.validateUsername(_usernameInput.value)) {
+            _userLoginError.value = "incorrect username"
+            return false
         }
+        if (!validator.validatePassword(_userPassword.value)) {
+            _userPasswordError.value = "incorrect password"
+            return false
+        }
+        return true
     }
 }
