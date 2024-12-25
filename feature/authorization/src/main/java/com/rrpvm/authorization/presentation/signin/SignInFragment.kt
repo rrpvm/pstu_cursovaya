@@ -1,20 +1,21 @@
 package com.rrpvm.authorization.presentation.signin
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
+import android.view.inputmethod.EditorInfo
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
-import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.rrpvm.authorization.R
 import com.rrpvm.authorization.databinding.FragmentSigninScreenBinding
+import com.rrpvm.core.setSafeText
+import com.rrpvm.core.showProgress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,25 +38,27 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var visible = false
-
-        binding.tilPasswordAuth.setEndIconDrawable(if (visible) R.drawable.ic_visible else R.drawable.ic_not_visible)
-        binding.tilPasswordAuth.setEndIconOnClickListener {
-            visible = !visible
-            binding.tilPasswordAuth.setEndIconDrawable(if (visible) R.drawable.ic_visible else R.drawable.ic_not_visible)
-        }
-
-        setupClickListeners()
+        setupUiEventListeners()
         observeLoadingState()
+        observeDataScreen()
         viewModel.let {
             it.toString()
         }
     }
 
-    private fun setupClickListeners() {
+    private fun setupUiEventListeners() {
         binding.apply {
             btnDoSignIn.setOnClickListener {
                 viewModel.onSignInClicked()
+            }
+            tilPasswordAuth.setEndIconOnClickListener {
+                viewModel.onPasswordVisibilityToggle()
+            }
+            edUserPassword.doOnTextChanged { text, start, before, count ->
+                viewModel.onPasswordInput(text.toString())
+            }
+            edUserLogin.doOnTextChanged { text, start, before, count ->
+                viewModel.onUsernameInput(text.toString())
             }
         }
     }
@@ -74,18 +77,40 @@ class SignInFragment : Fragment() {
         }
     }
 
-    fun MaterialButton.showProgress(@ColorInt tintColor: Int = this.iconTint.defaultColor) {
-        val spec = CircularProgressIndicatorSpec(
-            context, null, 0,
-            com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_Small
-        )
+    private fun observeDataScreen() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dataScreen.collectLatest { screen ->
+                    onPasswordProcess(screen.passwordData())
+                    onLoginProcess(screen.loginData())
+                }
+            }
+        }
+    }
 
-        spec.indicatorColors = intArrayOf(tintColor)
+    private fun onPasswordProcess(data: PasswordData) {
+        binding.tilPasswordAuth.apply {
+            setEndIconDrawable(data.mPasswordIcon)
+            editText?.let { ed ->
+                ed.setSafeText(data.mPassword)
+                val newInputType = if (data.mPasswordVisible) {
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                } else {
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
+                }
+                ed.inputType = newInputType
+            }
+            error = data.errorText
+        }
+    }
 
-        val progressIndicatorDrawable =
-            IndeterminateDrawable.createCircularDrawable(context, spec)
-
-        this.icon = progressIndicatorDrawable
+    private fun onLoginProcess(data: LoginData) {
+        binding.tilUsername.apply {
+            editText?.let { ed ->
+                ed.setSafeText(data.mUsername)
+            }
+            error = data.errorText
+        }
     }
 
     override fun onDestroyView() {

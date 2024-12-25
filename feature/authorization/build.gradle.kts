@@ -12,6 +12,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        minSdk = 28
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -25,7 +26,7 @@ android {
             )
         }
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
     compileOptions {

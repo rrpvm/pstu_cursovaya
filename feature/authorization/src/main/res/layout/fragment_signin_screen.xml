@@ -6,10 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp">
+    android:paddingHorizontal="16dp"
+    android:paddingBottom="8dp">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_username"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +30,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+
         android:hint="password"
         app:endIconDrawable="@drawable/ic_visible"
         app:endIconMinSize="48dp"
@@ -41,9 +44,19 @@
             android:id="@+id/ed_user_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:inputType="textPassword" />
+            tools:inputType="textPassword"
+            tools:text="12345" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:minHeight="0dp"
+        android:paddingHorizontal="4dp"
+        android:text="Забыл пароль?"
+        android:textSize="11sp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_do_sign_in"
@@ -51,9 +64,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingBottom="12dp"
         android:text="@string/button_sign_in"
         app:cornerRadius="12dp"
         app:iconGravity="textEnd"
         app:iconTint="@color/p100"
-        tools:icon="@drawable/ic_visible" />
+        tools:icon="@android:drawable/title_bar" />
 </LinearLayout>
