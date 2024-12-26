@@ -1,9 +1,13 @@
+import androidx.room.gradle.RoomExtension
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.androidKapt)
+    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.daggerDiLibrarry)
+    alias(libs.plugins.room)
+    alias(libs.plugins.androidKsp)
+    id("kotlin-kapt")
 }
 
 android {
@@ -33,20 +37,25 @@ android {
         viewBinding = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+}
+extensions.configure<RoomExtension> {
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
-    // kapt("groupId:artifactId:version")
+
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+
+
 
     //navigation
     implementation(libs.jetpack.navigation.ui)
@@ -55,12 +64,12 @@ dependencies {
 
     //DI HILT
     implementation(libs.dagger.lib)
-    kapt(libs.dagger.compiler)
+    ksp(libs.dagger.compiler)
     //END DI HILT
     //ROOM
-    implementation(libs.room.ktx)
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
     //END ROOM
     //shared
     implementation(project(":core"))

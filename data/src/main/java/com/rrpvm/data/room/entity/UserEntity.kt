@@ -1,16 +1,21 @@
-package com.rrpvm.data.entity
+package com.rrpvm.data.room.dao.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.rrpvm.data.constants.Constants.dateFormat
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
-@Entity
+@Entity(tableName = "auth_user")
 data class UserEntity(
-    internal val password: String,
-    val username: String,
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val internalAccountId: Int = 0xFF,
+    @ColumnInfo(name = "user_id")
     val userId: String,
+    @ColumnInfo(name = "username")
+    val username: String,
+    @ColumnInfo(name = "created_at")
     val createdAt: String,
 ) {
     interface Mapper<T> {

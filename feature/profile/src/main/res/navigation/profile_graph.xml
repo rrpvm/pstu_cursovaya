@@ -4,5 +4,5 @@
     android:id="@+id/profile_graph"
     app:startDestination="@id/fragment_profile">
     <fragment android:id="@+id/fragment_profile"
-        android:name="com.rrpvm.profile.ProfileFragment"/>
+        android:name="com.rrpvm.profile.presentation.ProfileFragment"/>
 </navigation>
