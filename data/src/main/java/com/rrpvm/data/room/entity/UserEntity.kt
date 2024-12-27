@@ -5,12 +5,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.rrpvm.data.constants.Constants.dateFormat
 import java.util.Date
+import java.util.UUID
 
 @Entity(tableName = "auth_user")
 data class UserEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
-    val internalAccountId: Int = 0xFF,
+    val internalAccountId: UUID,
     @ColumnInfo(name = "user_id")
     val userId: String,
     @ColumnInfo(name = "username")

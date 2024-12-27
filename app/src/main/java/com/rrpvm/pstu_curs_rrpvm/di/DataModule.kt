@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-/*
+
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
@@ -24,9 +24,7 @@ abstract class DataModule {
 
         @Provides
         fun provideClientDao(db: KinoZDatabase): ClientDao {
-            throw IllegalArgumentException()
-           // return db.getUserEntityDao()
+            return db.getUserEntityDao()
         }
     }
 }
-*/

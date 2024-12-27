@@ -31,6 +31,7 @@ class SignInViewModel @Inject constructor(
     private val signInCoroutineExceptionHandler =
         CoroutineExceptionHandler { coroutineContext, throwable ->
             Log.i(TAG, coroutineContext.toString() + " " + throwable.cause.toString())
+            throwable.printStackTrace()
         }
     private val _isLoadingState = MutableStateFlow(false)
     val isLoadingState = _isLoadingState.asStateFlow()
@@ -77,6 +78,7 @@ class SignInViewModel @Inject constructor(
                     password = _userPassword.value
                 )
             )
+        }.invokeOnCompletion {
             _isLoadingState.value = false
         }
     }

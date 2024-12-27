@@ -30,7 +30,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.mUsername.collectLatest {
+            viewModel.mAccount.collectLatest {
                 binding.apply {
                     tv1.text = it?.userName
                 }

@@ -12,17 +12,18 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 private const val DATABASE_NAME = "kinoZDatabase"
-/*
+
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RoomModule {
-    companion object{
+    companion object {
         @Provides
         @Singleton
-        fun provideRoomDataBase(@ApplicationContext applicationContext: Context) = Room.databaseBuilder(
-            applicationContext,
-            KinoZDatabase::class.java, DATABASE_NAME
-        ).build()
+        fun provideRoomDataBase(@ApplicationContext applicationContext: Context) =
+            Room.databaseBuilder(
+                applicationContext,
+                KinoZDatabase::class.java, DATABASE_NAME
+            ).fallbackToDestructiveMigration()
+                .build()
     }
-
-}*/
+}
