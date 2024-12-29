@@ -7,13 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rrpvm.profile.databinding.ItemAccountInfoBinding
 import com.rrpvm.profile.databinding.ItemDefaultTextBinding
 import com.rrpvm.profile.databinding.ItemLogoutButtonBinding
+import com.rrpvm.profile.presentation.menu.model.DefaultTextMenuTypes
 import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
 import com.rrpvm.profile.presentation.menu.viewholder.ClientInfoViewHolder
 import com.rrpvm.profile.presentation.menu.viewholder.DefaultTextViewHolder
 import com.rrpvm.profile.presentation.menu.viewholder.LogoutButtonViewHolder
 import com.rrpvm.profile.presentation.menu.viewholder.ProfileMenuViewHolder
 
-class ProfileMenuAdapter : RecyclerView.Adapter<ProfileMenuViewHolder>() {
+class ProfileMenuAdapter(
+    private val onLogoutClicked: () -> Unit,
+    private val onMenuOptionClicked: (type: DefaultTextMenuTypes) -> Unit,
+) : RecyclerView.Adapter<ProfileMenuViewHolder>() {
     private val mItems = AsyncListDiffer<ProfileMenuItem>(this, ProfileMenuItemDiffCallback())
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileMenuViewHolder {
         return when (viewType) {
@@ -39,11 +43,12 @@ class ProfileMenuAdapter : RecyclerView.Adapter<ProfileMenuViewHolder>() {
 
             ProfileMenuItem.LogoutButtonItem.VIEW_TYPE -> {
                 LogoutButtonViewHolder(
-                    ItemLogoutButtonBinding.inflate(
+                    binding = ItemLogoutButtonBinding.inflate(
                         /* inflater = */ LayoutInflater.from(parent.context),
                         /* parent = */ parent,
                         /* attachToParent = */ false
-                    )
+                    ),
+                    onLogoutListener = onLogoutClicked
                 )
             }
 

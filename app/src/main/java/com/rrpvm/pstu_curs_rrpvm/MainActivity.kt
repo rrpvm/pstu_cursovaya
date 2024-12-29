@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.rrpvm.pstu_curs_rrpvm.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,12 +28,15 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isAuth.collectLatest { authenticated ->
                     if (authenticated) {
-                        navController.clearBackStack(R.id.app_nav)
                         navController.navigate(R.id.action_go_application)
-                    }
-                    else {
-                        navController.clearBackStack(R.id.app_nav)
-                        navController.navigate(com.rrpvm.authorization.R.id.auth_graph)
+                    } else {
+                        if (navController.currentDestination?.parent?.id != R.id.app_nav &&
+                            navController.currentDestination?.parent?.id != com.rrpvm.authorization.R.id.auth_graph
+                        ) {
+                            navController.navigate(
+                                R.id.action_go_splash_screen,
+                            )
+                        }
                     }
                 }
             }

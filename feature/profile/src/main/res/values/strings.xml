@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Настройки</string>
-    <string name="my_tickes">Мои билеты</string>
+    <string name="my_tickets">Мои билеты</string>
     <string name="saved">Избранные фильмы</string>
     <string name="logout">Выйти</string>
 </resources>

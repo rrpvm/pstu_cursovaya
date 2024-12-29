@@ -3,11 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/app_nav"
     app:startDestination="@id/auth_graph">
-    <include app:graph="@navigation/auth_graph"/>
-    <include app:graph="@navigation/profile_graph"/>
-    <action android:id="@+id/action_go_application"
-        app:launchSingleTop="true"
+    <include app:graph="@navigation/auth_graph" />
+    <include app:graph="@navigation/profile_graph" />
+    <action
+        android:id="@+id/action_go_application"
         app:destination="@id/profile_graph"
+        app:launchSingleTop="true"
         app:popUpTo="@id/app_nav"
-        app:popUpToInclusive="true"/>
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_go_splash_screen"
+        app:destination="@id/auth_graph"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/app_nav"
+        app:popUpToInclusive="true" />
 </navigation>

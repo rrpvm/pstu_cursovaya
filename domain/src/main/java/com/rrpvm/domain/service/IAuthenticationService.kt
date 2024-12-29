@@ -8,4 +8,5 @@ interface IAuthenticationService {
     val isAuthenticated: StateFlow<Boolean>
     val currentAccountId: StateFlow<UUID?>
     suspend fun authenticate(authenticationModel: AuthenticationModel)
+    suspend fun logout()
 }

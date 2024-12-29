@@ -2,11 +2,20 @@ package com.rrpvm.profile.presentation.menu.model
 
 import androidx.annotation.DrawableRes
 
-sealed class ProfileMenuItem(val viewType: Int) {
-    data class DefaultTextMenu(val mText: String, @DrawableRes val mIcon: Int) : ProfileMenuItem(
-        DEFAULT_TEXT_MENU_VIEW_TYPE,
+enum class DefaultTextMenuTypes {
+    MyTickets,
+    MyFavourites,
+    MySettings
+}
 
-        ) {
+sealed class ProfileMenuItem(val viewType: Int) {
+    data class DefaultTextMenu(
+        val mText: String,
+        @DrawableRes val mIcon: Int,
+        val type: DefaultTextMenuTypes
+    ) : ProfileMenuItem(
+        viewType = DEFAULT_TEXT_MENU_VIEW_TYPE
+    ) {
         companion object {
             const val VIEW_TYPE = DEFAULT_TEXT_MENU_VIEW_TYPE
         }

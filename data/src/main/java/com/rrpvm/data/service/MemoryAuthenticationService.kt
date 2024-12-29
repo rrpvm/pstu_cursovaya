@@ -54,9 +54,13 @@ class MemoryAuthenticationService @Inject constructor(
             clientRepository.setClientData(ADMIN_MEMORY, ADMIN_MEMORY_INTERNAL_UID).also {
                 credentials.value = ADMIN_MEMORY
                 _currentAccountId.value = ADMIN_MEMORY_INTERNAL_UID
-                setLastInternalUUID(ADMIN_MEMORY_INTERNAL_UID)
             }
         }
+    }
+
+    override suspend fun logout() {
+        delay(500L)
+        _currentAccountId.value = null
     }
 
     private fun getLastInternalUUID(): UUID? {
@@ -66,9 +70,9 @@ class MemoryAuthenticationService @Inject constructor(
         )
     }
 
-    private fun setLastInternalUUID(uuid: UUID) {
+    private fun setLastInternalUUID(uuid: UUID?) {
         context.getSharedPreferences("ff", Context.MODE_PRIVATE).edit().apply {
-            this.putString("uuid", uuid.toString())
+            this.putString("uuid", uuid.takeIf { it != null }?.toString())
             commit()
         }
     }
@@ -77,6 +81,7 @@ class MemoryAuthenticationService @Inject constructor(
         _currentAccountId.value = getLastInternalUUID()
         serviceScope.launch {
             _currentAccountId.collectLatest { accId ->
+                setLastInternalUUID(accId)
                 if (accId == null) {
                     credentials.value = null
                     return@collectLatest

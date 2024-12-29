@@ -9,6 +9,7 @@ import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.service.IAuthenticationService
 import com.rrpvm.domain.service.IStringProvider
 import com.rrpvm.profile.R
+import com.rrpvm.profile.presentation.menu.model.DefaultTextMenuTypes
 import com.rrpvm.profile.presentation.menu.model.ProfileMenuAdapterState
 import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,23 +53,35 @@ class ProfileViewModel @Inject constructor(
                     avatarUri = uiModel.userAvatar
                 ),
                 ProfileMenuItem.DefaultTextMenu(
-                    stringProvider.provideString(R.string.my_tickes),
-                    R.drawable.ic_tickets
+                    mText = stringProvider.provideString(R.string.my_tickets),
+                    mIcon = R.drawable.ic_tickets,
+                    type = DefaultTextMenuTypes.MyTickets
                 ),
                 ProfileMenuItem.DefaultTextMenu(
-                    stringProvider.provideString(R.string.saved),
-                    R.drawable.ic_like
+                    mText = stringProvider.provideString(R.string.saved),
+                    mIcon = R.drawable.ic_like,
+                    type = DefaultTextMenuTypes.MyFavourites
                 ),
 
                 ProfileMenuItem.DefaultTextMenu(
-                    stringProvider.provideString(R.string.settings),
-                    R.drawable.ic_settings
+                    mText = stringProvider.provideString(R.string.settings),
+                    mIcon = R.drawable.ic_settings,
+                    type = DefaultTextMenuTypes.MySettings
                 ),
                 ProfileMenuItem.LogoutButtonItem
             )
         )
     }
 
+    fun onLogoutClicked() {
+        viewModelScope.launch {
+            authenticationService.logout()
+        }
+    }
+
+    fun onMenuOptionClicked(type: DefaultTextMenuTypes) {
+
+    }
 
     init {
         viewModelScope.launch {

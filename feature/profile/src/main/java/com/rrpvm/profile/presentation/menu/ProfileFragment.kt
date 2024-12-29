@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.rrpvm.core.toPx
 import com.rrpvm.profile.databinding.FragmentProfileLayoutBinding
+import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -17,8 +18,16 @@ import kotlinx.coroutines.launch
 class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
     private var _binding: FragmentProfileLayoutBinding? = null
-    private val adapter = ProfileMenuAdapter()
+    private lateinit var adapter: ProfileMenuAdapter
     private val binding get() = checkNotNull(_binding)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = ProfileMenuAdapter(
+            onLogoutClicked = viewModel::onLogoutClicked,
+            onMenuOptionClicked = viewModel::onMenuOptionClicked
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +58,7 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        binding.rvProfile.adapter = null
         _binding = null
         super.onDestroyView()
     }
