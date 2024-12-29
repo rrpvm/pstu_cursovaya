@@ -1,4 +1,4 @@
-package com.rrpvm.data.room.dao.entity
+package com.rrpvm.data.room.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,7 +1,7 @@
 package com.rrpvm.data.mapper
 
 import com.rrpvm.data.constants.Constants.dateFormat
-import com.rrpvm.data.room.dao.entity.UserEntity
+import com.rrpvm.data.room.entity.UserEntity
 import com.rrpvm.domain.model.UserModel
 import java.util.UUID
 

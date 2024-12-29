@@ -46,6 +46,8 @@ dependencies {
     //END DI HILT
 
 
+    implementation(project(":domain"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

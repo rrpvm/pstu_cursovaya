@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.rrpvm.data.room.dao.entity.UserEntity
+import com.rrpvm.data.room.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -12,8 +12,8 @@ import java.util.UUID
 interface ClientDao {
     @Query("SELECT * FROM auth_user WHERE id=:uuid")
     fun getAuthenticatedUserModel(uuid : UUID) : Flow<UserEntity>
-    @Query("SELECT * FROM auth_user WHERE id=:UUID")
-    fun getUserByUUID(UUID:String) : UserEntity
+    @Query("SELECT * FROM auth_user WHERE id=:uuid")
+    fun getUserByUUID(uuid: UUID) : UserEntity
     @Query("SELECT id FROM auth_user WHERE user_id=:userId")
     fun getUserUUID(userId:String) : UUID
 

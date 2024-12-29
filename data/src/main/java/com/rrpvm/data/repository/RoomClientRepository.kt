@@ -46,7 +46,7 @@ class RoomClientRepository @Inject constructor(
         return coroutineScope {
             withContext(this.coroutineContext + roomCEH) {
                 runCatching {
-                    clientDao.getUserByUUID(internalUId.toString()).map(UserEntityToUserModelMapper)
+                    clientDao.getUserByUUID(internalUId).map(UserEntityToUserModelMapper)
                 }.getOrNull() ?: throw NoSuchElementException()
             }
         }

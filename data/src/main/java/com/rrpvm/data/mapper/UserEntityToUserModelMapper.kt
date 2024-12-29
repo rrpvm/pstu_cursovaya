@@ -1,6 +1,6 @@
 package com.rrpvm.data.mapper
 
-import com.rrpvm.data.room.dao.entity.UserEntity
+import com.rrpvm.data.room.entity.UserEntity
 import com.rrpvm.domain.model.UserModel
 
 

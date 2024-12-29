@@ -15,8 +15,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -34,14 +37,12 @@ class MemoryAuthenticationService @Inject constructor(
             cause.message ?: cause.stackTraceToString()
         )
     }
-    private val serviceScope = CoroutineScope(Dispatchers.IO)
+    private val serviceScope = CoroutineScope(Dispatchers.IO + memoryCoroutineExceptionHandler)
     private val credentials =
         MutableStateFlow<UserModel?>(null)
+    private val _currentAccountId = MutableStateFlow<UUID?>(null)
     override val currentAccountId: StateFlow<UUID?>
-        get() = credentials.map { userModel ->
-            clientRepository.getClientInternalUUID(userModel?.userId ?: return@map null)
-        }.flowOn(memoryCoroutineExceptionHandler)
-            .stateIn(serviceScope, SharingStarted.Eagerly, null)
+        get() = _currentAccountId.asStateFlow()
     override val isAuthenticated: StateFlow<Boolean>
         get() = credentials.map {
             it != null
@@ -52,6 +53,7 @@ class MemoryAuthenticationService @Inject constructor(
         if (authenticationModel.username.equals("qwe123") && authenticationModel.password.equals("qwe123")) {
             clientRepository.setClientData(ADMIN_MEMORY, ADMIN_MEMORY_INTERNAL_UID).also {
                 credentials.value = ADMIN_MEMORY
+                _currentAccountId.value = ADMIN_MEMORY_INTERNAL_UID
                 setLastInternalUUID(ADMIN_MEMORY_INTERNAL_UID)
             }
         }
@@ -72,17 +74,21 @@ class MemoryAuthenticationService @Inject constructor(
     }
 
     init {
-        serviceScope.launch(Dispatchers.IO) {
-            credentials.value = getLastInternalUUID()?.let {
-                clientRepository.getClientByInternalUUID(
-                    it
-                )
+        _currentAccountId.value = getLastInternalUUID()
+        serviceScope.launch {
+            _currentAccountId.collectLatest { accId ->
+                if (accId == null) {
+                    credentials.value = null
+                    return@collectLatest
+                }
+                credentials.value = runCatching {
+                    clientRepository.getClientByInternalUUID(accId)
+                }.getOrNull()
             }
         }
     }
 
     companion object {
-
         private val ADMIN_MEMORY: UserModel =
             UserModel("UserAdmin", "admin", Calendar.Builder().setDate(2025, 1, 1).build().time)
         private val ADMIN_MEMORY_INTERNAL_UID =
