@@ -12,7 +12,7 @@ constraintlayout = "2.2.0"
 jetpack-navigation = "2.8.5"
 dagger-di = "2.51.1"
 room-version = "2.6.1"
-
+glide-version = "4.16.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -31,6 +31,7 @@ dagger-compiler = { group = "com.google.dagger", name = "hilt-compiler", version
 room-runtime = {group = "androidx.room", name = "room-runtime",version.ref="room-version"}
 room-compiler = {group = "androidx.room", name = "room-compiler",version.ref="room-version"}
 room-ktx = {group = "androidx.room", name = "room-ktx",version.ref="room-version"}
+bumtech-glide={group="com.github.bumptech.glide",name="glide",version.ref="glide-version"}
 [plugins]
 #di
 daggerDiLibrarry = { id = "com.google.dagger.hilt.android", version.ref = "dagger-di" }

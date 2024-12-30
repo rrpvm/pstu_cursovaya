@@ -23,11 +23,12 @@ class ProfileMenuAdapter(
         return when (viewType) {
             ProfileMenuItem.DefaultTextMenu.VIEW_TYPE -> {
                 DefaultTextViewHolder(
-                    ItemDefaultTextBinding.inflate(
+                    binding = ItemDefaultTextBinding.inflate(
                         /* inflater = */ LayoutInflater.from(parent.context),
                         /* parent = */ parent,
                         /* attachToParent = */ false
-                    )
+                    ),
+                    onClickListener = onMenuOptionClicked
                 )
             }
 
@@ -64,6 +65,10 @@ class ProfileMenuAdapter(
 
     override fun getItemCount(): Int {
         return mItems.currentList.size
+    }
+
+    override fun onViewRecycled(holder: ProfileMenuViewHolder) {
+        holder.onViewRecycled()
     }
 
     override fun getItemViewType(position: Int): Int {

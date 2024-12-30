@@ -11,5 +11,6 @@
     <color name="p90">#FFc6e7ff</color>
     <color name="p10">#001e2d</color>
     <color name="surface">#FFd7dadf</color>
+    <color name="surface_experimental">#e3e9ea</color>
 
 </resources>

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_item_default_text_root"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_item_default_text_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
-    android:focusable="true"
-
     android:paddingHorizontal="8dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="12dp">
 
     <ImageView
         android:id="@+id/iv_profile_menu_item"
@@ -29,6 +28,6 @@
         android:layout_weight="1"
         android:paddingLeft="8dp"
         android:textFontWeight="600"
-        android:textSize="14sp"
+        android:textSize="16sp"
         tools:text="Sigma sigma siamg boy sigma boy kajdaya dev4onka xo4et tancevat s toboy" />
 </LinearLayout>

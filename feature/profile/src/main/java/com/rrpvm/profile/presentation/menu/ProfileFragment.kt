@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.rrpvm.core.toPx
+import com.rrpvm.profile.R
 import com.rrpvm.profile.databinding.FragmentProfileLayoutBinding
 import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,6 +46,10 @@ class ProfileFragment : Fragment() {
             rvProfile.addItemDecoration(
                 ProfileMenuDecorator(
                     _strokeWidth = resources.toPx(1.15F),
+                    _strokeColor = resources.getColor(
+                        com.rrpvm.core.R.color.surface,
+                        context?.theme
+                    ),
                     footerMargin = resources.toPx(12).toInt()
                 )
             )

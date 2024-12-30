@@ -8,7 +8,7 @@ object UserEntityToUserModelMapper : UserEntity.Mapper<UserModel> {
     override fun map(obj: UserEntity): UserModel {
         return UserModel(
             userId = obj.userId,
-            createdDate = UserEntity.convertDate(obj),
+            createdDate = FromDomainDateStringMapper.mapToDomainDate(obj.createdAt),
             userName = obj.username
         )
     }

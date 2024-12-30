@@ -1,7 +1,6 @@
 package com.rrpvm.pstu_curs_rrpvm.di
 
 import com.rrpvm.core.presentation.mapper.UserModelToUiMapper
-import com.rrpvm.data.mapper.UserModelToUiMapperImpl
 import com.rrpvm.data.repository.RoomClientRepository
 import com.rrpvm.data.room.KinoZDatabase
 import com.rrpvm.data.room.dao.ClientDao
@@ -18,8 +17,8 @@ abstract class DataModule {
     @Binds
     abstract fun bindClientRepository(service: RoomClientRepository): ClientRepository
 
-    @Binds
-    abstract fun bindUserModelToUiMapper(mapper: UserModelToUiMapperImpl): UserModelToUiMapper
+    // @Binds
+    // abstract fun bindUserModelToUiMapper(mapper: UserModelToUiMapperImpl): UserModelToUiMapper
 
     companion object {
         @Provides
@@ -32,9 +31,9 @@ abstract class DataModule {
             return db.getUserEntityDao()
         }
 
-        @Provides
-        fun provideUserModelToUserModelUiMapper(): UserModelToUiMapperImpl {
-            return UserModelToUiMapperImpl()
-        }
+        // @Provides
+        // fun provideUserModelToUserModelUiMapper(): UserModelToUiMapperImpl {
+        //     return UserModelToUiMapperImpl()
+        //}
     }
 }

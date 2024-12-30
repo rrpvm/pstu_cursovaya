@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.dagger.lib)
     ksp(libs.dagger.compiler)
     //END HILT
+    implementation(libs.bumtech.glide)
+
     //shared
     implementation(project(":core"))
     implementation(project(":domain"))

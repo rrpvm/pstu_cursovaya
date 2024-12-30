@@ -9,4 +9,7 @@ open class ProfileMenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     open fun  onBindViewHolder(item: ProfileMenuItem) {
         throw RuntimeException("no specified")
     }
+    open fun onViewRecycled(){
+
+    }
 }

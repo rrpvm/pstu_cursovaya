@@ -29,7 +29,6 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val authenticationService: IAuthenticationService,
     private val clientRepository: ClientRepository,
-    private val userModelToUiMapper: UserModelToUiMapper,
     private val stringProvider: IStringProvider,
 ) : ViewModel() {
     private val _menuState = MutableStateFlow(ProfileMenuAdapterState())
@@ -44,7 +43,7 @@ class ProfileViewModel @Inject constructor(
             flowOf(null)
         }
     }.filterNotNull().onEach { userModel ->
-        val uiModel = userModel.map(userModelToUiMapper)
+        val uiModel = userModel.map(UserModelToUiMapper)
         _menuState.value = ProfileMenuAdapterState(
             listOf(
                 ProfileMenuItem.ClientItem(

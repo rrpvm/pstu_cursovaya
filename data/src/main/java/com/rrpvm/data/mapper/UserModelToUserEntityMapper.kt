@@ -1,6 +1,5 @@
 package com.rrpvm.data.mapper
 
-import com.rrpvm.data.constants.Constants.dateFormat
 import com.rrpvm.data.room.entity.UserEntity
 import com.rrpvm.domain.model.UserModel
 import java.util.UUID
@@ -12,7 +11,7 @@ data class UserModelToUserEntityMapper(val localAccountId: UUID) :
             internalAccountId = localAccountId,
             userId = obj.userId,
             username = obj.userName,
-            createdAt = dateFormat.format(obj.createdDate)
+            createdAt = FromDomainDateStringMapper.mapToDomainString(obj.createdDate)
         )
     }
 }

@@ -4,5 +4,5 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 object Constants {
-    val dateFormat = SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH)
+    val baseBackendDataFormat = SimpleDateFormat("dd/MM/yyyy HH:mm::ss", Locale.ENGLISH)
 }
