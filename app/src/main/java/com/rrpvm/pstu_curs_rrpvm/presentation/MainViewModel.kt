@@ -1,8 +1,7 @@
-package com.rrpvm.pstu_curs_rrpvm
+package com.rrpvm.pstu_curs_rrpvm.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.rrpvm.data.room.KinoZDatabase
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.service.IAuthenticationService
 import dagger.hilt.android.lifecycle.HiltViewModel

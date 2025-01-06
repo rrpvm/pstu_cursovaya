@@ -2,7 +2,6 @@ package com.rrpvm.pstu_curs_rrpvm.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.rrpvm.data.room.KinoZDatabase
 import dagger.Module
 import dagger.Provides

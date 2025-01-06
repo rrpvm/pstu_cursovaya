@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav"
-    app:startDestination="@id/auth_graph">
+    app:startDestination="@id/feed_graph">
     <include app:graph="@navigation/auth_graph" />
     <include app:graph="@navigation/profile_graph" />
+    <include app:graph="@navigation/feed_graph" />
     <action
-        android:id="@+id/action_go_application"
+        android:id="@+id/action_go_profile"
         app:destination="@id/profile_graph"
-        app:launchSingleTop="true"
         app:popUpTo="@id/app_nav"
         app:popUpToInclusive="true" />
     <action
@@ -17,4 +18,10 @@
         app:launchSingleTop="true"
         app:popUpTo="@id/app_nav"
         app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_go_feed"
+        app:destination="@id/feed_graph"
+        app:popUpTo="@id/app_nav"
+        app:popUpToInclusive="true" />
+
 </navigation>

@@ -64,7 +64,7 @@ class ProfileViewModel @Inject constructor(
 
                 ProfileMenuItem.DefaultTextMenu(
                     mText = stringProvider.provideString(R.string.settings),
-                    mIcon = R.drawable.ic_settings,
+                    mIcon = com.rrpvm.core.R.drawable.ic_settings,
                     type = DefaultTextMenuTypes.MySettings
                 ),
                 ProfileMenuItem.LogoutButtonItem

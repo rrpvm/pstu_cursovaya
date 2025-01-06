@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    tools:context=".presentation.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_activity_fragment_host"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,4 +20,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/app_nav" />
 
-</FrameLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_activity_fragment_host_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingVertical="0dp"
+        android:textAlignment="center"
+        app:itemIconSize="24dp"
+        app:itemPaddingBottom="8dp"
+        app:itemPaddingTop="8dp"
+        app:labelVisibilityMode="auto"
+        app:menu="@menu/bottom_navigation" />
+</LinearLayout>

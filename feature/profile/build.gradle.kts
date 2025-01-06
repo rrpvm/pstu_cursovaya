@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.androidKsp)
     alias(libs.plugins.daggerDiLibrarry)
+    alias(libs.plugins.jetpackNavigationSafeArgs)
 }
 
 android {
