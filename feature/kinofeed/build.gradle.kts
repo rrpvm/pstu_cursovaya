@@ -52,6 +52,9 @@ dependencies {
     //END HILT
     implementation(libs.bumtech.glide)
 
+    //lottie
+    implementation(libs.lottie.anims)
+
     //shared
     implementation(project(":core"))
     implementation(project(":domain"))

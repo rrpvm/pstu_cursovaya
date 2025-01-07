@@ -72,6 +72,10 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     //END ROOM
+
+    implementation(libs.splash.screen)
+    implementation(libs.lottie.anims)
+
     //shared
     implementation(project(":core"))
     implementation(project(":domain"))

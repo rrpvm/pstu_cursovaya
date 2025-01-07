@@ -15,11 +15,13 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -50,6 +52,10 @@ class MemoryAuthenticationService @Inject constructor(
         get() = credentials.filterNotNull().map {
             it is MemoryCredential || it is MemoryGuestCredential
         }.stateIn(serviceScope, SharingStarted.Eagerly, false)
+    override val isAuthJobFirst: Flow<Boolean>
+        get() = credentials.map {
+            it == null
+        }
 
     override suspend fun authenticate(authenticationModel: AuthenticationModel) {
         delay(1000L)
@@ -89,6 +95,7 @@ class MemoryAuthenticationService @Inject constructor(
                     return@collectLatest
                 }
                 credentials.value = runCatching {
+                    delay(1000L)
                     MemoryCredential(clientRepository.getClientByInternalUUID(accId))
                 }.getOrDefault(Credentials.NoAuthCredentials)
             }
