@@ -1,4 +1,9 @@
 package com.rrpvm.kinofeed.presentation.model
 
-class ActualKinoFeedItem : FeedItemUi(FeedItemUiTypes.TODAY_POSTS) {
+import com.rrpvm.domain.model.KinoModel
+
+class ActualKinoFeedItem(
+    val kinoList : List<KinoModel>
+) : FeedItemUi(FeedItemUiTypes.TODAY_POSTS) {
+
 }

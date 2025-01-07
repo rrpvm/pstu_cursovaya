@@ -1,7 +1,6 @@
 package com.rrpvm.kinofeed.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
@@ -34,17 +33,24 @@ class KinoFeedAdapter : RecyclerView.Adapter<KinoFeedDefaultViewHolder>() {
                 )
             )
 
-            FeedItemUiTypes.NEW_POSTS -> KinoFeedDefaultViewHolder(View(parent.context))
+            // FeedItemUiTypes.NEW_POSTS -> KinoFeedDefaultViewHolder(View(parent.context))
             else -> throw IllegalArgumentException()
         }
     }
 
     override fun onBindViewHolder(holder: KinoFeedDefaultViewHolder, position: Int) {
-
+        holder.onBind(mItems.currentList[position])
     }
+
+    override fun onViewRecycled(holder: KinoFeedDefaultViewHolder) {
+        super.onViewRecycled(holder)
+        holder.onViewRecycled()
+    }
+
     override fun getItemViewType(position: Int): Int {
         return mItems.currentList[position].mViewType
     }
+
     override fun getItemCount(): Int {
         return mItems.currentList.size
     }

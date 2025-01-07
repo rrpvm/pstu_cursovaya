@@ -10,7 +10,8 @@
         <item name="colorTertiary">@color/t40</item>
         <item name="backgroundColor">#f6fafe</item>
 
-
+        <item name="font">@font/dmserifregular</item>
+        <item name="fontFamily">serif</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
