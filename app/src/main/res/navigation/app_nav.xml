@@ -10,6 +10,7 @@
     <action
         android:id="@+id/action_go_profile"
         app:destination="@id/profile_graph"
+        app:launchSingleTop="true"
         app:popUpTo="@id/app_nav"
         app:popUpToInclusive="true" />
     <action
@@ -21,6 +22,7 @@
     <action
         android:id="@+id/action_go_feed"
         app:destination="@id/feed_graph"
+        app:launchSingleTop="true"
         app:popUpTo="@id/app_nav"
         app:popUpToInclusive="true" />
 

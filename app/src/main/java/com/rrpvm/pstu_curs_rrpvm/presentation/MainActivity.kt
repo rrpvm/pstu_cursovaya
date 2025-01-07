@@ -7,7 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import com.rrpvm.pstu_curs_rrpvm.AppNavDirections
 import com.rrpvm.pstu_curs_rrpvm.R
 import com.rrpvm.pstu_curs_rrpvm.databinding.ActivityMainBinding
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isAuth.collectLatest { authenticated ->
                     if (authenticated) {
-                        navController.navigate(AppNavDirections.actionGoProfile())
+                        navController.navigate(AppNavDirections.actionGoFeed())
                     } else {
                         if (navController.currentDestination?.parent?.id != R.id.app_nav &&
                             navController.currentDestination?.parent?.id != com.rrpvm.authorization.R.id.auth_graph

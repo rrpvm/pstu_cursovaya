@@ -56,7 +56,9 @@ internal object KinoZBottomNavigation {
         navController: NavController,
         viewItem: MenuItem
     ): Boolean {
-        val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
+        val builder = NavOptions.Builder().setLaunchSingleTop(true)
+            .setPopUpTo(R.id.app_nav, true)
+            .setRestoreState(true)
         //любые анимации
         val options = builder.build()
         return runCatching {

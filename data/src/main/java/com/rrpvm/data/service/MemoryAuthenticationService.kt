@@ -3,7 +3,10 @@ package com.rrpvm.data.service
 import android.content.Context
 import android.util.Log
 import com.rrpvm.core.TAG
+import com.rrpvm.data.model.credentials.MemoryCredential
+import com.rrpvm.data.model.credentials.MemoryGuestCredential
 import com.rrpvm.domain.model.AuthenticationModel
+import com.rrpvm.domain.model.Credentials
 import com.rrpvm.domain.model.UserModel
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.service.IAuthenticationService
@@ -17,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -38,21 +42,20 @@ class MemoryAuthenticationService @Inject constructor(
         )
     }
     private val serviceScope = CoroutineScope(Dispatchers.IO + memoryCoroutineExceptionHandler)
-    private val credentials =
-        MutableStateFlow<UserModel?>(null)
-    private val _currentAccountId = MutableStateFlow<UUID?>(null)
+    private val credentials = MutableStateFlow<Credentials?>(null)
+    private val _currentAccountId = MutableStateFlow(getLastInternalUUID())
     override val currentAccountId: StateFlow<UUID?>
         get() = _currentAccountId.asStateFlow()
     override val isAuthenticated: StateFlow<Boolean>
-        get() = credentials.map {
-            it != null
+        get() = credentials.filterNotNull().map {
+            it is MemoryCredential || it is MemoryGuestCredential
         }.stateIn(serviceScope, SharingStarted.Eagerly, false)
 
     override suspend fun authenticate(authenticationModel: AuthenticationModel) {
         delay(1000L)
         if (authenticationModel.username.equals("qwe123") && authenticationModel.password.equals("qwe123")) {
             clientRepository.setClientData(ADMIN_MEMORY, ADMIN_MEMORY_INTERNAL_UID).also {
-                credentials.value = ADMIN_MEMORY
+                credentials.value = MemoryCredential(ADMIN_MEMORY)
                 _currentAccountId.value = ADMIN_MEMORY_INTERNAL_UID
             }
         }
@@ -78,17 +81,16 @@ class MemoryAuthenticationService @Inject constructor(
     }
 
     init {
-        _currentAccountId.value = getLastInternalUUID()
         serviceScope.launch {
             _currentAccountId.collectLatest { accId ->
                 setLastInternalUUID(accId)
                 if (accId == null) {
-                    credentials.value = null
+                    credentials.value = Credentials.NoAuthCredentials
                     return@collectLatest
                 }
                 credentials.value = runCatching {
-                    clientRepository.getClientByInternalUUID(accId)
-                }.getOrNull()
+                    MemoryCredential(clientRepository.getClientByInternalUUID(accId))
+                }.getOrDefault(Credentials.NoAuthCredentials)
             }
         }
     }
