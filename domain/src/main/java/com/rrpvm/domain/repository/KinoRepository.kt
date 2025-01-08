@@ -1,10 +1,11 @@
 package com.rrpvm.domain.repository
 
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.KinoSessionModel
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 //
 interface KinoRepository {
-    fun getKinoFeed() : Flow<List<KinoModel>>
-    suspend fun fetchKinoFeed() : Result<Boolean>
+    fun getKinoSessions(minDate: Date): Flow<List<KinoSessionModel>>
+    suspend fun fetchKinoFeed(): Result<Boolean>
 }

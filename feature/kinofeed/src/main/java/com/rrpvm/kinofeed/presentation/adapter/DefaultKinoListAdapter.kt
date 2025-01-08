@@ -7,6 +7,8 @@ import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.kinofeed.databinding.ItemKinoItemBinding
 import com.rrpvm.kinofeed.presentation.viewholder.KinoViewHolder
 
+const val ITEM_SIZE_MULTIPLIER = 0.3
+
 class DefaultKinoListAdapter : RecyclerView.Adapter<KinoViewHolder>() {
     private val mItems = mutableListOf<KinoModel>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KinoViewHolder {
@@ -17,7 +19,7 @@ class DefaultKinoListAdapter : RecyclerView.Adapter<KinoViewHolder>() {
                 false
             ).apply {
                 this.root.layoutParams = RecyclerView.LayoutParams(
-                    (parent.measuredWidth * 0.3).toInt(),
+                    (parent.measuredWidth * ITEM_SIZE_MULTIPLIER).toInt(),
                     RecyclerView.LayoutParams.WRAP_CONTENT
                 )
             }

@@ -4,6 +4,8 @@ import com.rrpvm.data.repository.MemoryKinoRepository
 import com.rrpvm.data.repository.RoomClientRepository
 import com.rrpvm.data.room.KinoZDatabase
 import com.rrpvm.data.room.dao.ClientDao
+import com.rrpvm.data.room.dao.KinoDao
+import com.rrpvm.data.room.dao.KinoSessionDao
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.KinoRepository
 import dagger.Binds
@@ -33,8 +35,21 @@ abstract class DataModule {
         }
 
         @Provides
-        fun provideMemoryKinoRepository(): MemoryKinoRepository {
-            return MemoryKinoRepository()
+        fun provideKinoDao(db: KinoZDatabase): KinoDao {
+            return db.getKinoEntityDao()
+        }
+
+        @Provides
+        fun provideKinoSessionDao(db: KinoZDatabase): KinoSessionDao {
+            return db.getKinoSessionEntityDao()
+        }
+
+        @Provides
+        fun provideMemoryKinoRepository(
+            kinoDao: KinoDao,
+            kinoSessionDao: KinoSessionDao
+        ): MemoryKinoRepository {
+            return MemoryKinoRepository(kinoDao, kinoSessionDao)
         }
 
     }

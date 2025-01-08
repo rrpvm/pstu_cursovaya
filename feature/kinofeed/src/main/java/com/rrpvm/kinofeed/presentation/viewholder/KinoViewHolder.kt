@@ -20,6 +20,7 @@ class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(bind
         viewTarget = Glide.with(binding.ivKinoPreview)
             .load(model.previewImage)
             .fitCenter()
+            .centerCrop()
             .addListener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -43,7 +44,7 @@ class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(bind
                 }
             })
             .error(com.rrpvm.core.R.drawable.ic_image_error)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(binding.ivKinoPreview)
             .clearOnDetach()
     }
