@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.rrpvm.core.presentation.fadeIn
 import com.rrpvm.core.presentation.fadeOff
 import com.rrpvm.kinofeed.databinding.FragmentKinoFeedBinding
+import com.rrpvm.kinofeed.presentation.adapter.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.adapter.KinoFeedAdapter
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +29,8 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAdapter = KinoFeedAdapter()
+        mAdapter = KinoFeedAdapter(
+            actualFeedItemListener = viewModel as ActualFeedItemListener)
     }
 
     override fun onDestroy() {

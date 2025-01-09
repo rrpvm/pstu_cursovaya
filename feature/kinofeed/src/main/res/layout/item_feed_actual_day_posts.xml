@@ -6,13 +6,41 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
-        android:text="Актуальное на сегодня:"
-        android:textSize="14sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:id="@+id/tv_date_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="Актуальное на сегодня:" />
+
+        <ImageView
+            android:id="@+id/btn_date_mode_shift_left"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="4dp"
+            android:padding="4dp"
+            android:rotation="180"
+            app:srcCompat="@drawable/ic_arrow_side"
+            tools:tint="@color/surface" />
+
+        <ImageView
+            android:id="@+id/btn_date_mode_shift_right"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_arrow_side"
+            tools:tint="@color/surface" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_feed_actual_day_posts"

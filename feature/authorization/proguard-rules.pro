@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn dagger.hilt.**
+-keep class dagger.hilt.** { *; }
+-keep @dagger.hilt.android.internal.** class *

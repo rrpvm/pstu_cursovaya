@@ -8,6 +8,10 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+        }
+    }
     namespace = "com.rrpvm.profile"
     compileSdk = 34
 

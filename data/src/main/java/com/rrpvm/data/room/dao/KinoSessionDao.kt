@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import com.rrpvm.data.room.entity.KinoSessionEntity
 import com.rrpvm.data.room.entity.SessionsWithKino
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @Dao
 interface KinoSessionDao {
@@ -15,6 +16,22 @@ interface KinoSessionDao {
     @Transaction
     @Query("SELECT * FROM kinos_table")
     fun getSessionsWithKinoFlow(): Flow<List<SessionsWithKino>>
+
+
+    fun getSessionsWithKinoByOrderDateFlow(): Flow<List<SessionsWithKino>> {
+        return getSessionsWithKinoFlow().map {
+            it.asSequence()
+                .filter { kinoWithSession ->
+                    kinoWithSession.sessionList.isNotEmpty()
+                }
+                .sortedBy { kinoWithSession ->
+                    kinoWithSession.sessionList.minByOrNull { session ->
+                        session.sessionStartDate
+                    }!!.sessionStartDate
+                }.toList()
+        }
+    }
+
 
     @Query("SELECT * FROM kino_sessions")
     fun getKinoSessionList(): List<KinoSessionEntity>

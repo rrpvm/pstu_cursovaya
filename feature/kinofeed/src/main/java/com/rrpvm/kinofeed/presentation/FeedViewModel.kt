@@ -6,15 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.repository.KinoRepository
+import com.rrpvm.kinofeed.presentation.adapter.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
+import com.rrpvm.kinofeed.presentation.model.PickDateModeUi
 import com.rrpvm.kinofeed.presentation.model.SeenKinoFeedItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -28,11 +30,13 @@ import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-class FeedViewModel @Inject constructor(private val kinoRepository: KinoRepository) : ViewModel() {
+class FeedViewModel @Inject constructor(private val kinoRepository: KinoRepository) : ViewModel(),
+    ActualFeedItemListener {
     private val cre = CoroutineExceptionHandler { coroutineContext, throwable ->
         Log.e(TAG, "FeedViewModel:: $throwable")
     }
-    private val actualFeedState = MutableStateFlow(ActualKinoFeedItem(emptyList()))
+    private val actualFeedState =
+        MutableStateFlow(ActualKinoFeedItem(emptyList(), PickDateModeUi.TODAY))
     private val seenFeedState = MutableStateFlow<SeenKinoFeedItem?>(null)
     private val _mAdapterLoadingState = MutableStateFlow(true)
     val mAdapterState =
@@ -55,7 +59,7 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
             return@combine !isLoading && adapterState.isNullOrEmpty()
         }.flowOn(Dispatchers.Default + cre)
     val networkFetchState =
-        _mAdapterLoadingState.combine(mAdapterState) { fetchRequest,adapterState  ->
+        _mAdapterLoadingState.combine(mAdapterState) { fetchRequest, adapterState ->
             return@combine fetchRequest && adapterState.isNullOrEmpty().not()
         }
 
@@ -68,26 +72,78 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
         fetchKinoFeed()
     }
 
+    override fun onShiftLeft() {
+        val currentDateMode = actualFeedState.value.dateMode
+        val currentIndex = PickDateModeUi.entries.indexOf(currentDateMode)
+        if (currentIndex == 0) return
+        actualFeedState.value =
+            actualFeedState.value.copy(dateMode = PickDateModeUi.entries[currentIndex - 1])
+        observeActualFeedState()
+    }
+
+    override fun onShiftRight() {
+        val currentDateMode = actualFeedState.value.dateMode
+        val currentIndex = PickDateModeUi.entries.indexOf(currentDateMode)
+        if (currentIndex == PickDateModeUi.entries.size - 1) return
+        actualFeedState.value =
+            actualFeedState.value.copy(dateMode = PickDateModeUi.entries[currentIndex + 1])
+        observeActualFeedState()
+    }
+
     private fun fetchKinoFeed() {
         viewModelScope.launch(Dispatchers.IO + cre) {
             _mAdapterLoadingState.value = true
-            kinoRepository.fetchKinoFeed()
+            kinoRepository.fetchKinoFeed().onFailure {
+                it.printStackTrace()
+            }
         }.invokeOnCompletion {
             _mAdapterLoadingState.value = false
         }
     }
 
+    private var observeActualFeedStateJob: Job? = null
     private fun observeActualFeedState() {
-        viewModelScope.launch(Dispatchers.Default + cre) {
+        observeActualFeedStateJob?.cancel()
+        observeActualFeedStateJob = viewModelScope.launch(Dispatchers.Default + cre) {
             val now = Calendar.getInstance().time
-            val today = Date(
-                LocalDate.now().atTime(23, 59, 59, 999).atZone(ZoneId.systemDefault()).toInstant()
-                    .toEpochMilli()
-            )
-            kinoRepository.getKinoFilmsByDateConstraintSessionDate(now, today)
+            val endTime = when (actualFeedState.value.dateMode) {
+                PickDateModeUi.TODAY -> {
+                    Date(
+                        LocalDate.now().atTime(23, 59, 59, 999).atZone(ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                    )
+                }
+
+                PickDateModeUi.TOMORROW -> {
+                    Date(
+                        LocalDate.now().plusDays(1)
+                            .atTime(23, 59, 59, 999)
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                    )
+                }
+
+                PickDateModeUi.AT_WEEK -> {
+                    Date(
+                        LocalDate.now().plusDays(7).atTime(23, 59, 59, 999)
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                    )
+                }
+            }
+
+
+            kinoRepository.getKinoFilmsByDateConstraintSessionDate(now, endTime)
                 .distinctUntilChanged()
                 .collectLatest { films: List<KinoModel> ->
-                    actualFeedState.value = ActualKinoFeedItem(films)
+                    actualFeedState.value =
+                        ActualKinoFeedItem(
+                            kinoList = films,
+                            dateMode = actualFeedState.value.dateMode
+                        )
                 }
         }
     }

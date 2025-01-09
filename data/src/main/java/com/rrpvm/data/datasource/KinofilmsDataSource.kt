@@ -1,9 +1,9 @@
-package com.rrpvm.domain.datasource
+package com.rrpvm.data.datasource
 
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.data.model.kinofilms.KinoModelDto
 import com.rrpvm.domain.model.KinoSessionModel
 
 interface KinofilmsDataSource {
     suspend fun getAllAfishaKinoSessions() : List<KinoSessionModel>
-    suspend fun getAllAfishaKinos() : List<KinoModel>
+    suspend fun getAllAfishaKinos() : List<KinoModelDto>
 }

@@ -11,13 +11,14 @@ import androidx.room.PrimaryKey
         entity = KinoEntity::class,
         parentColumns = arrayOf("kino_id"),
         childColumns = arrayOf("bound_kino_id"),
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.CASCADE,
+
     )]
 )
 data class KinoSessionEntity(
     @PrimaryKey
     val sessionId: String,
-    @ColumnInfo(name = "bound_kino_id")
+    @ColumnInfo(name = "bound_kino_id", index = true)
     val kinoId: String,
     @ColumnInfo(name = "session_start_date")
     val sessionStartDate: String

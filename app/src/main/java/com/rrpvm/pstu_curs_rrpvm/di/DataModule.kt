@@ -1,13 +1,16 @@
 package com.rrpvm.pstu_curs_rrpvm.di
 
-import com.rrpvm.data.datasource.MemoryKinoFilmsDataSource
+import com.rrpvm.data.datasource.impl.MemoryKinoFilmsDataSource
 import com.rrpvm.data.repository.RoomCachedKinoRepository
 import com.rrpvm.data.repository.RoomClientRepository
 import com.rrpvm.data.room.KinoZDatabase
 import com.rrpvm.data.room.dao.ClientDao
 import com.rrpvm.data.room.dao.KinoDao
 import com.rrpvm.data.room.dao.KinoSessionDao
-import com.rrpvm.domain.datasource.KinofilmsDataSource
+import com.rrpvm.data.datasource.KinofilmsDataSource
+import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
+import com.rrpvm.data.mapper_helpers.IsLikedKinoChecker
+import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.KinoRepository
 import dagger.Binds
@@ -28,6 +31,9 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindKinoFilmDataSource(dataSource: MemoryKinoFilmsDataSource): KinofilmsDataSource
+
+    @Binds
+    abstract fun bindIsLikedKinoChecker(checker: IsLikedKinoCheckerRoomImpl): IsLikedKinoChecker
 
     companion object {
         @Provides
@@ -53,8 +59,19 @@ abstract class DataModule {
 
         @Provides
         @Singleton
-        fun provideMemoryKinoFilmsDataSource(): MemoryKinoFilmsDataSource {
-            return MemoryKinoFilmsDataSource()
+        fun provideMemoryKinoFilmsDataSource(mapper: KinoDtoToKinoModelMapper): MemoryKinoFilmsDataSource {
+            return MemoryKinoFilmsDataSource(mapper)
+        }
+
+        @Provides
+        @Singleton
+        fun provideIsLikedKinoCheckerRoom(dao: KinoDao): IsLikedKinoCheckerRoomImpl {
+            return IsLikedKinoCheckerRoomImpl(dao)
+        }
+
+        @Provides
+        fun provideKinoDtoToKinoModelMapper(checker: IsLikedKinoChecker): KinoDtoToKinoModelMapper {
+            return KinoDtoToKinoModelMapper(checker)
         }
 
         @Provides
@@ -62,12 +79,14 @@ abstract class DataModule {
         fun provideMemoryKinoRepository(
             kinoDao: KinoDao,
             kinoSessionDao: KinoSessionDao,
-            kinofilmsDataSource: KinofilmsDataSource
+            kinofilmsDataSource: KinofilmsDataSource,
+            kinoModelMapper: KinoDtoToKinoModelMapper
         ): RoomCachedKinoRepository {
             return RoomCachedKinoRepository(
                 kinoDao = kinoDao,
                 kinoSessionDao = kinoSessionDao,
-                kinoDataSource = kinofilmsDataSource
+                kinoDataSource = kinofilmsDataSource,
+                kinoDtoToKinoModelMapper = kinoModelMapper
             )
         }
 

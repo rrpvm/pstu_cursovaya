@@ -12,6 +12,10 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+        }
+    }
     namespace = "com.rrpvm.pstu_curs_rrpvm"
     compileSdk = 34
 
@@ -44,6 +48,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildToolsVersion = "34.0.0"
 }
 extensions.configure<RoomExtension> {
     schemaDirectory("$projectDir/schemas")

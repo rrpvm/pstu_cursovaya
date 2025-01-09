@@ -5,6 +5,10 @@ plugins {
 
 }
 android{
+    signingConfigs {
+        create("release") {
+        }
+    }
     namespace = "com.rrpvm.domain"
     compileSdk = 34
     defaultConfig {

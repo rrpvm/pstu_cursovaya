@@ -13,7 +13,9 @@ import com.rrpvm.kinofeed.presentation.viewholder.FeedActualDayPostsViewHolder
 import com.rrpvm.kinofeed.presentation.viewholder.FeedSeenPostsViewHolder
 import com.rrpvm.kinofeed.presentation.viewholder.KinoFeedDefaultViewHolder
 
-class KinoFeedAdapter : RecyclerView.Adapter<KinoFeedDefaultViewHolder>() {
+class KinoFeedAdapter(
+    private val actualFeedItemListener: ActualFeedItemListener,
+) : RecyclerView.Adapter<KinoFeedDefaultViewHolder>() {
     private val mItems = AsyncListDiffer(this, FeedItemUiDiffCallback())
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KinoFeedDefaultViewHolder {
         return when (FeedItemUiTypes.entries.first { it.viewType == viewType }) {
@@ -25,13 +27,16 @@ class KinoFeedAdapter : RecyclerView.Adapter<KinoFeedDefaultViewHolder>() {
                 )
             )
 
-            FeedItemUiTypes.TODAY_POSTS -> FeedActualDayPostsViewHolder(
+            FeedItemUiTypes.ACTUAL_POSTS -> FeedActualDayPostsViewHolder(
                 ItemFeedActualDayPostsBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
                 )
-            )
+            ).also {
+                it.setOnShiftLeftDateDateModeListener(actualFeedItemListener::onShiftLeft)
+                it.setOnShiftRightDateDateModeListener(actualFeedItemListener::onShiftRight)
+            }
 
             // FeedItemUiTypes.NEW_POSTS -> KinoFeedDefaultViewHolder(View(parent.context))
             else -> throw IllegalArgumentException()

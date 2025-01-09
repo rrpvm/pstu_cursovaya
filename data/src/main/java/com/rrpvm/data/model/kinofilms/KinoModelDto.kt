@@ -1,17 +1,16 @@
-package com.rrpvm.domain.model
+package com.rrpvm.data.model.kinofilms
 
 import java.util.Date
 
-data class KinoModel(
+data class KinoModelDto(
     val id: String,
     val title: String,
     val description: String,
     val previewImage: String,
     val releasedDate: Date,
-    val isLiked: Boolean = false
 ){
     interface Mapper<T> {
-        fun map(obj: KinoModel): T
+        fun map(obj: KinoModelDto): T
     }
 
     fun <T> map(mapper: Mapper<T>): T {

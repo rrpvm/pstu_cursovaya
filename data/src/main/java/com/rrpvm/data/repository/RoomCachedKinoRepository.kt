@@ -8,7 +8,8 @@ import com.rrpvm.data.room.dao.KinoDao
 import com.rrpvm.data.room.dao.KinoSessionDao
 import com.rrpvm.data.room.entity.KinoSessionEntity
 import com.rrpvm.data.room.entity.SessionsWithKino
-import com.rrpvm.domain.datasource.KinofilmsDataSource
+import com.rrpvm.data.datasource.KinofilmsDataSource
+import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.model.KinoSessionModel
 import com.rrpvm.domain.repository.KinoRepository
@@ -20,20 +21,25 @@ import javax.inject.Inject
 class RoomCachedKinoRepository @Inject constructor(
     private val kinoDao: KinoDao,
     private val kinoSessionDao: KinoSessionDao,
-    private val kinoDataSource: KinofilmsDataSource
+    private val kinoDataSource: KinofilmsDataSource,
+    private val kinoDtoToKinoModelMapper: KinoDtoToKinoModelMapper
 ) : KinoRepository {
+
     override fun getKinoFilmsByDateConstraintSessionDate(
         minDate: Date,
         maxDate: Date
     ): Flow<List<KinoModel>> {
-        return kinoSessionDao.getSessionsWithKinoFlow()
+        return kinoSessionDao.getSessionsWithKinoByOrderDateFlow()
             .map { sessionsWithKinos: List<SessionsWithKino> ->
                 sessionsWithKinos.filter { sessionsWithKino: SessionsWithKino ->
                     sessionsWithKino.sessionList.any { kinoSessionEntity: KinoSessionEntity ->
-                        val time =
+                        val sessionTime =
                             FromDomainDateStringMapper.mapToDomainDate(kinoSessionEntity.sessionStartDate).time
-                        time >= minDate.time && time <= maxDate.time
-                    }
+                        //попадаем во временные рамки
+                        sessionTime >= minDate.time && sessionTime <= maxDate.time
+                    } && sessionsWithKino.sessionList.isNotEmpty() //на всякий случай сверяем на пустоту
+                }.sortedBy {
+                    it.sessionList.first().sessionStartDate
                 }
             }.map { filteredSessions ->
                 filteredSessions.map { sessionWithKino ->
@@ -65,20 +71,23 @@ class RoomCachedKinoRepository @Inject constructor(
     override suspend fun fetchKinoFeed(): Result<Boolean> {
         val result = runCatching {
             //refresh films
-            kinoDataSource.getAllAfishaKinos().let {
-                kinoDao.fullUpdateKinoList(it.map { e ->
-                    e.map(KinoModelToKinoEntityMapper)
-                })
+            kinoDataSource.getAllAfishaKinos().let { films ->
+                kinoDao.fullUpdateKinoList(films.asSequence().map { e ->
+                    e.map(kinoDtoToKinoModelMapper)
+                }.map { domainModel ->
+                    domainModel.map(KinoModelToKinoEntityMapper)
+                }.toList())
             }
             //refresh kino sessions
-            kinoDataSource.getAllAfishaKinoSessions().let { kinoSessions->
+            kinoDataSource.getAllAfishaKinoSessions().let { kinoSessions ->
                 kinoSessionDao.insertSession(kinoSessions.map {
                     it.map(KinoSessionModelToKinoSessionEntityMapper)
                 })
             }
             return@runCatching true
-        }.onFailure {
+        }.onFailure { it: Throwable ->
             //abort all
+            it.printStackTrace()
         }
         return result
     }
