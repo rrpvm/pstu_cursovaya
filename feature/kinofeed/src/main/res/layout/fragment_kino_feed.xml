@@ -21,7 +21,8 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="invisible"
+        tools:visibility="visible">
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/sfl_shimmer"
@@ -45,5 +46,11 @@
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/layout_no_content"
+        layout="@layout/item_feed_no_content"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
 </FrameLayout>

@@ -14,6 +14,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
+import com.rrpvm.core.presentation.fadeIn
+import com.rrpvm.core.presentation.fadeOff
 import com.rrpvm.pstu_curs_rrpvm.AppNavDirections
 import com.rrpvm.pstu_curs_rrpvm.R
 import com.rrpvm.pstu_curs_rrpvm.databinding.ActivityMainBinding
@@ -105,43 +107,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun View.fadeIn(duration: Long) {
-        val animation = AlphaAnimation(0.0F, 1F)
-        animation.duration = duration
-        animation.setAnimationListener(object : AnimationListener {
-            override fun onAnimationStart(animation: Animation?) {
-                isVisible = true
-            }
 
-            override fun onAnimationEnd(animation: Animation?) {
-
-            }
-
-            override fun onAnimationRepeat(animation: Animation?) {
-
-            }
-        })
-        this.animation = animation
-        animation.start()
-    }
-
-    private fun View.fadeOff(duration: Long, onEnd: View.() -> Unit) {
-        val animation = AlphaAnimation(1F, 0F)
-        animation.duration = duration
-        animation.setAnimationListener(object : AnimationListener {
-            override fun onAnimationStart(animation: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animation?) {
-                onEnd()
-            }
-
-            override fun onAnimationRepeat(animation: Animation?) {
-
-            }
-        })
-        this.animation = animation
-        animation.start()
-    }
 }

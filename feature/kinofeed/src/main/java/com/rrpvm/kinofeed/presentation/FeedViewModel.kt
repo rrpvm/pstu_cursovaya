@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -29,7 +30,7 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
     }
     private val actualFeedState = MutableStateFlow(ActualKinoFeedItem(emptyList()))
     private val seenFeedState = MutableStateFlow<SeenKinoFeedItem?>(null)
-    private val _mAdapterLoadingState = MutableStateFlow(false)
+    private val _mAdapterLoadingState = MutableStateFlow(true)
     val mAdapterState =
         combine(actualFeedState, seenFeedState) { actualKinoFeedItem, seenKinoFeedItem ->
             val builder = mutableListOf<FeedItemUi>()
@@ -39,18 +40,33 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
                 Log.e("null", "${actualKinoFeedItem.kinoList}")
                 return@combine null
             }
-        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
-    val mAdapterLoadingState = _mAdapterLoadingState.combine(mAdapterState){ networkFetch, adapterData->
-        return@combine networkFetch || adapterData?.isNotEmpty() == true
-    }
+        }.flowOn(Dispatchers.Default + cre)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val mAdapterLoadingState =
+        _mAdapterLoadingState.combine(mAdapterState) { networkFetch, adapterData ->
+            return@combine networkFetch || adapterData?.isNotEmpty() == true
+        }.flowOn(Dispatchers.Default + cre)
+    val mEmptyScreenHolderVisible =
+        mAdapterLoadingState.combine(mAdapterState) { isLoading, adapterState ->
+            return@combine !isLoading && adapterState.isNullOrEmpty()
+        }.flowOn(Dispatchers.Default + cre)
+
     init {
+        fetchKinoFeed()
+        observeActualFeedState()
+    }
+
+    fun onRetryFetch() {
+        fetchKinoFeed()
+    }
+
+    private fun fetchKinoFeed() {
         viewModelScope.launch(Dispatchers.IO + cre) {
             _mAdapterLoadingState.value = true
             kinoRepository.fetchKinoFeed()
         }.invokeOnCompletion {
             _mAdapterLoadingState.value = false
         }
-        observeActualFeedState()
     }
 
     private fun observeActualFeedState() {
