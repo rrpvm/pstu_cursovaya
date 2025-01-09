@@ -1,10 +1,9 @@
 package com.rrpvm.domain.model
 
 import java.util.Date
-import java.util.UUID
 
 data class KinoSessionModel(
-    val sessionId : UUID,
+    val sessionId : String,
     val kinoModel: KinoModel,
     val sessionStartDate: Date
 ) {

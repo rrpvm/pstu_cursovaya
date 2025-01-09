@@ -4,7 +4,7 @@ import java.util.Date
 import java.util.UUID
 
 data class KinoModel(
-    val id: UUID,
+    val id: String,
     val title: String,
     val description: String,
     val previewImage: String,

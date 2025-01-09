@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(
     tableName = "kino_sessions",
@@ -17,9 +16,9 @@ import java.util.UUID
 )
 data class KinoSessionEntity(
     @PrimaryKey
-    val sessionId: UUID,
+    val sessionId: String,
     @ColumnInfo(name = "bound_kino_id")
-    val kinoId: UUID,
+    val kinoId: String,
     @ColumnInfo(name = "session_start_date")
     val sessionStartDate: String
 ) {

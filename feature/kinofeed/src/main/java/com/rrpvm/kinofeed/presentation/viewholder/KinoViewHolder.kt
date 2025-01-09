@@ -16,10 +16,10 @@ import com.rrpvm.kinofeed.databinding.ItemKinoItemBinding
 class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(binding.root) {
     private var viewTarget: ViewTarget<*, *>? = null
     fun onBind(model: KinoModel) {
+        binding.previewLoader.isVisible = true
         binding.tvKinoTitle.text = model.title
         viewTarget = Glide.with(binding.ivKinoPreview)
             .load(model.previewImage)
-            .fitCenter()
             .centerCrop()
             .addListener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
@@ -44,7 +44,7 @@ class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(bind
                 }
             })
             .error(com.rrpvm.core.R.drawable.ic_image_error)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(binding.ivKinoPreview)
             .clearOnDetach()
     }
@@ -53,5 +53,7 @@ class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(bind
         runCatching {
             Glide.with(binding.tvKinoTitle).clear(viewTarget)
         }
+        binding.ivKinoPreview.setImageDrawable(null)
+        binding.previewLoader.isVisible = true
     }
 }

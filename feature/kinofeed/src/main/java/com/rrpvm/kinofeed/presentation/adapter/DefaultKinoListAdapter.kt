@@ -26,6 +26,10 @@ class DefaultKinoListAdapter : RecyclerView.Adapter<KinoViewHolder>() {
         )
     }
 
+    override fun onViewRecycled(holder: KinoViewHolder) {
+        holder.onViewRecycled()
+    }
+
     override fun onBindViewHolder(holder: KinoViewHolder, position: Int) {
         holder.onBind(mItems[position])
     }

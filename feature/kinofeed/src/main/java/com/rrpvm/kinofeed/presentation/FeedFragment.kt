@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.rrpvm.kinofeed.databinding.FragmentKinoFeedBinding
 import com.rrpvm.kinofeed.presentation.adapter.KinoFeedAdapter
+import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -49,8 +51,13 @@ class FeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.mAdapterState.collectLatest {
-                        mAdapter?.setItems(it)
+                    viewModel.mAdapterState.collectLatest { adapterData: List<FeedItemUi>? ->
+                        if(adapterData == null){
+                            binding.llMainProgressContainer.isVisible = true
+                            return@collectLatest
+                        }
+                        binding.llMainProgressContainer.isVisible = false
+                        mAdapter?.setItems(adapterData)
                     }
                 }
             }
