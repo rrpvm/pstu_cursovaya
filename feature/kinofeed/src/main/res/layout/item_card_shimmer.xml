@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:layout_width="wrap_content">
+
+    <View
+        android:layout_width="@dimen/card_width"
+        android:layout_height="@dimen/card_height"
+        android:background="@drawable/brush_8dp_solid"
+        android:backgroundTint="@color/surface" />
+
+    <View
+        android:layout_width="@dimen/card_width"
+        android:layout_height="12sp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/brush_8dp_solid"
+        android:backgroundTint="@color/surface" />
+</LinearLayout>

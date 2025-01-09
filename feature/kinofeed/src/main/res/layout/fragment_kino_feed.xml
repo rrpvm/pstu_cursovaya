@@ -11,9 +11,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_feed_actual_day_posts" />
+        tools:listitem="@layout/item_feed_actual_day_posts"
+        tools:visibility="gone" />
 
-    <LinearLayout
+    <ScrollView
         android:id="@+id/ll_main_progress_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,17 +23,27 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/lottie_circle" />
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl_shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Загружаем данные..." />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="8dp">
+
+                <include layout="@layout/item_feed_shimmer" />
+
+                <include layout="@layout/item_feed_shimmer" />
+
+                <include layout="@layout/item_feed_shimmer" />
+
+                <include layout="@layout/item_feed_shimmer" />
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </ScrollView>
 
 </FrameLayout>

@@ -15,6 +15,7 @@ room-version = "2.6.1"
 glide-version = "4.16.0"
 lottie-version = "6.6.2"
 splash-screen-version = "1.0.0"
+facebook-shimmer-version = "0.5.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -36,6 +37,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-ver
 bumtech-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide-version" }
 lottie-anims = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie-version" }
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen-version" }
+facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer-version" }
 [plugins]
 #di
 daggerDiLibrarry = { id = "com.google.dagger.hilt.android", version.ref = "dagger-di" }

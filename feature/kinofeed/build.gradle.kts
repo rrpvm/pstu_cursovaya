@@ -55,6 +55,9 @@ dependencies {
     //lottie
     implementation(libs.lottie.anims)
 
+    //shimmer
+    implementation(libs.facebook.shimmer)
+
     //shared
     implementation(project(":core"))
     implementation(project(":domain"))

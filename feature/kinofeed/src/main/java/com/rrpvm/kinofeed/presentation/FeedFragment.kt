@@ -51,13 +51,18 @@ class FeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.mAdapterState.collectLatest { adapterData: List<FeedItemUi>? ->
-                        if(adapterData == null){
-                            binding.llMainProgressContainer.isVisible = true
-                            return@collectLatest
+                    viewModel.mAdapterLoadingState.collectLatest { isLoading ->
+                        binding.llMainProgressContainer.isVisible = isLoading
+                        if (isLoading) {
+                            binding.sflShimmer.showShimmer(true)
+                        } else {
+                            binding.sflShimmer.hideShimmer()
                         }
-                        binding.llMainProgressContainer.isVisible = false
-                        mAdapter?.setItems(adapterData)
+                    }
+                }
+                launch {
+                    viewModel.mAdapterState.collectLatest { adapterData: List<FeedItemUi>? ->
+                        mAdapter?.setItems(adapterData ?: emptyList())
                     }
                 }
             }

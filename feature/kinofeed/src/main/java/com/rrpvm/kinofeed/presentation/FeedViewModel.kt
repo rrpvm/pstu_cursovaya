@@ -29,6 +29,7 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
     }
     private val actualFeedState = MutableStateFlow(ActualKinoFeedItem(emptyList()))
     private val seenFeedState = MutableStateFlow<SeenKinoFeedItem?>(null)
+    private val _mAdapterLoadingState = MutableStateFlow(false)
     val mAdapterState =
         combine(actualFeedState, seenFeedState) { actualKinoFeedItem, seenKinoFeedItem ->
             val builder = mutableListOf<FeedItemUi>()
@@ -39,17 +40,22 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
                 return@combine null
             }
         }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
+    val mAdapterLoadingState = _mAdapterLoadingState.combine(mAdapterState){ networkFetch, adapterData->
+        return@combine networkFetch || adapterData?.isNotEmpty() == true
+    }
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + cre) {
+            _mAdapterLoadingState.value = true
             kinoRepository.fetchKinoFeed()
+        }.invokeOnCompletion {
+            _mAdapterLoadingState.value = false
         }
         observeActualFeedState()
     }
 
     private fun observeActualFeedState() {
         viewModelScope.launch(Dispatchers.Default + cre) {
-            kinoRepository.getKinoFilmsByMinSessionDate(Calendar.Builder().build().time)
+            kinoRepository.getKinoFilmsByMinSessionDate(Calendar.getInstance().time)
                 .distinctUntilChanged()
                 .collectLatest { films: List<KinoModel> ->
                     actualFeedState.value = ActualKinoFeedItem(films)

@@ -104,9 +104,6 @@ class MemoryKinoRepository @Inject constructor(
             kinoDao.fullUpdateKinoList(it.map {e->
                 e.map(KinoModelToKinoEntityMapper)
             })
-         //   kinoDao.insertKinoList(it.map { e ->
-            //    e.map(KinoModelToKinoEntityMapper)
-          //  })
         }
     }
 
@@ -116,58 +113,58 @@ class MemoryKinoRepository @Inject constructor(
             //Аватар
             KinoSessionModel(
                 kinoModel = list.first { it.id == "5874b417-5417-4b01-be85-aa9f647bd35f" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 8).setTimeOfDay(13, 30, 30)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 8).setTimeOfDay(13, 30, 30)
                     .build().time,
                 sessionId = "db60116a-f83e-4b09-a3d0-5dadb1f179c8"
             ),
             KinoSessionModel(
                 kinoModel = list.first { it.id == "5874b417-5417-4b01-be85-aa9f647bd35f" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 8).setTimeOfDay(16, 30, 30)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 8).setTimeOfDay(16, 30, 30)
                     .build().time,
                 sessionId = "3632ca1d-8784-454d-b103-eac719abd1f2"
             ),
             //Ронин
             KinoSessionModel(
                 kinoModel = list.first { it.id == "cf65ed1d-b79a-460a-9606-1d2edaf3586c" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 8).setTimeOfDay(16, 30, 30)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 8).setTimeOfDay(16, 30, 30)
                     .build().time,
                 sessionId = "eb2772e7-beb1-42b9-838a-6b80d494935d"
             ),
             KinoSessionModel(
                 kinoModel = list.first { it.id == "cf65ed1d-b79a-460a-9606-1d2edaf3586c" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 8).setTimeOfDay(18, 30, 30)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 8).setTimeOfDay(18, 30, 30)
                     .build().time,
                 sessionId = "4095449a-ce4f-467d-b3ed-0af6d0d3d2a6"
             ),
             KinoSessionModel(
                 kinoModel = list.first { it.id == "cf65ed1d-b79a-460a-9606-1d2edaf3586c" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 8).setTimeOfDay(21, 30, 30)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 8).setTimeOfDay(21, 30, 30)
                     .build().time,
                 sessionId = "d5e8edd1-de15-45e7-9377-37bf7503a28c"
             ),
             //Постучись в мою дверь
             KinoSessionModel(
                 kinoModel = list.first { it.id =="ebb65720-2389-4a7e-9fe3-7d1458d240a0" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 9).setTimeOfDay(9, 15, 0)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(9, 15, 0)
                     .build().time,
                 sessionId = "5d7e1b9c-d0ba-4903-ba91-087dc179c28d"
             ),
             KinoSessionModel(
                 kinoModel = list.first { it.id == "ebb65720-2389-4a7e-9fe3-7d1458d240a0" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 9).setTimeOfDay(11, 15, 0)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(11, 15, 0)
                     .build().time,
                 sessionId = "34b94e26-99e6-40e2-9f2e-05e263768a90"
             ),
             KinoSessionModel(
                 kinoModel = list.first { it.id == "ebb65720-2389-4a7e-9fe3-7d1458d240a0" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 9).setTimeOfDay(4, 15, 0)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(13, 15, 0)
                     .build().time,
                 sessionId = "fd7edc7a-7a9b-46a3-885e-d4973cbe546c"
             ),
             //Волшебник изумрудного города
             KinoSessionModel(
                 kinoModel = list.first { it.id == "abb08203-ac9b-4467-9b76-dbb7d890e9b9" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 1, 9).setTimeOfDay(4, 15, 0)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(4, 15, 0)
                     .build().time,
                 sessionId = "db84083c-0f50-43f7-9b05-7b4882ae8073"
             ),
