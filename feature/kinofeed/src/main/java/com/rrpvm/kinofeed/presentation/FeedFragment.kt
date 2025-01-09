@@ -54,6 +54,11 @@ class FeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    viewModel.networkFetchState.collectLatest { visibility ->
+                        binding.updateIndicator.isVisible = visibility
+                    }
+                }
+                launch {
                     viewModel.mAdapterLoadingState.collectLatest { isLoading ->
                         binding.llMainProgressContainer.isVisible = isLoading
                         if (isLoading) {
@@ -78,7 +83,6 @@ class FeedFragment : Fragment() {
                 }
                 launch {
                     viewModel.mAdapterState.collectLatest { adapterData: List<FeedItemUi>? ->
-
                         mAdapter?.setItems(adapterData ?: emptyList())
                     }
                 }
@@ -87,7 +91,7 @@ class FeedFragment : Fragment() {
     }
 
     private fun FragmentKinoFeedBinding.setupClickListeners() {
-        binding.layoutNoContent.btnRefreshData.setOnClickListener {
+        layoutNoContent.btnRefreshData.setOnClickListener {
             viewModel.onRetryFetch()
         }
     }

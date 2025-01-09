@@ -53,4 +53,19 @@
         android:visibility="invisible"
         tools:visibility="visible" />
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/update_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:indicatorColor="@color/e40"
+        app:minHideDelay="300"
+        app:showDelay="200"
+        app:trackStopIndicatorSize="150dp"
+        app:trackThickness="3dp"
+        tools:indeterminate="false"
+        tools:max="100"
+        tools:min="0"
+        tools:progress="80" />
+
 </FrameLayout>

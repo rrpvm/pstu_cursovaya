@@ -22,12 +22,17 @@ class MemoryKinoRepository @Inject constructor(
     private val kinoDao: KinoDao,
     private val kinoSessionDao: KinoSessionDao,
 ) : KinoRepository {
-    override fun getKinoFilmsByMinSessionDate(minDate: Date): Flow<List<KinoModel>> {
+    override fun getKinoFilmsByDateConstraintSessionDate(
+        minDate: Date,
+        maxDate: Date
+    ): Flow<List<KinoModel>> {
         return kinoSessionDao.getSessionsWithKinoFlow()
             .map { sessionsWithKinos: List<SessionsWithKino> ->
                 sessionsWithKinos.filter { sessionsWithKino: SessionsWithKino ->
                     sessionsWithKino.sessionList.any { kinoSessionEntity: KinoSessionEntity ->
-                        FromDomainDateStringMapper.mapToDomainDate(kinoSessionEntity.sessionStartDate).time >= minDate.time
+                        val time =
+                            FromDomainDateStringMapper.mapToDomainDate(kinoSessionEntity.sessionStartDate).time
+                        time >= minDate.time && time <= maxDate.time
                     }
                 }
             }.map { filteredSessions ->
@@ -101,7 +106,7 @@ class MemoryKinoRepository @Inject constructor(
                 releasedDate = Calendar.Builder().setDate(2025, 1, 1).build().time,
             ),
         ).also {
-            kinoDao.fullUpdateKinoList(it.map {e->
+            kinoDao.fullUpdateKinoList(it.map { e ->
                 e.map(KinoModelToKinoEntityMapper)
             })
         }
@@ -144,7 +149,7 @@ class MemoryKinoRepository @Inject constructor(
             ),
             //Постучись в мою дверь
             KinoSessionModel(
-                kinoModel = list.first { it.id =="ebb65720-2389-4a7e-9fe3-7d1458d240a0" },
+                kinoModel = list.first { it.id == "ebb65720-2389-4a7e-9fe3-7d1458d240a0" },
                 sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(9, 15, 0)
                     .build().time,
                 sessionId = "5d7e1b9c-d0ba-4903-ba91-087dc179c28d"
@@ -157,14 +162,14 @@ class MemoryKinoRepository @Inject constructor(
             ),
             KinoSessionModel(
                 kinoModel = list.first { it.id == "ebb65720-2389-4a7e-9fe3-7d1458d240a0" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(13, 15, 0)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(18, 15, 0)
                     .build().time,
                 sessionId = "fd7edc7a-7a9b-46a3-885e-d4973cbe546c"
             ),
             //Волшебник изумрудного города
             KinoSessionModel(
                 kinoModel = list.first { it.id == "abb08203-ac9b-4467-9b76-dbb7d890e9b9" },
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(4, 15, 0)
+                sessionStartDate = Calendar.Builder().setDate(2025, 0, 9).setTimeOfDay(17, 15, 0)
                     .build().time,
                 sessionId = "db84083c-0f50-43f7-9b05-7b4882ae8073"
             ),

@@ -7,7 +7,7 @@ import java.util.Date
 
 //
 interface KinoRepository {
-    fun getKinoFilmsByMinSessionDate(minDate: Date) : Flow<List<KinoModel>>
+    fun getKinoFilmsByDateConstraintSessionDate(minDate: Date,maxDate:Date) : Flow<List<KinoModel>>
     fun getKinoSessions(minDate: Date): Flow<List<KinoSessionModel>>
     suspend fun fetchKinoFeed(): Result<Boolean>
 }

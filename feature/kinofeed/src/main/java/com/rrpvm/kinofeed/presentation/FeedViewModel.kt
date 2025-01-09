@@ -14,13 +14,17 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,12 +48,16 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val mAdapterLoadingState =
         _mAdapterLoadingState.combine(mAdapterState) { networkFetch, adapterData ->
-            return@combine networkFetch || adapterData?.isNotEmpty() == true
+            return@combine networkFetch && adapterData?.isEmpty() == true
         }.flowOn(Dispatchers.Default + cre)
     val mEmptyScreenHolderVisible =
         mAdapterLoadingState.combine(mAdapterState) { isLoading, adapterState ->
             return@combine !isLoading && adapterState.isNullOrEmpty()
         }.flowOn(Dispatchers.Default + cre)
+    val networkFetchState =
+        _mAdapterLoadingState.combine(mAdapterState) { fetchRequest,adapterState  ->
+            return@combine fetchRequest && adapterState.isNullOrEmpty().not()
+        }
 
     init {
         fetchKinoFeed()
@@ -71,7 +79,12 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
 
     private fun observeActualFeedState() {
         viewModelScope.launch(Dispatchers.Default + cre) {
-            kinoRepository.getKinoFilmsByMinSessionDate(Calendar.getInstance().time)
+            val now = Calendar.getInstance().time
+            val today = Date(
+                LocalDate.now().atTime(23, 59, 59, 999).atZone(ZoneId.systemDefault()).toInstant()
+                    .toEpochMilli()
+            )
+            kinoRepository.getKinoFilmsByDateConstraintSessionDate(now, today)
                 .distinctUntilChanged()
                 .collectLatest { films: List<KinoModel> ->
                     actualFeedState.value = ActualKinoFeedItem(films)
