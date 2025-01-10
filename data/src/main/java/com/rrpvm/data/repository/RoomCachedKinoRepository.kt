@@ -79,6 +79,14 @@ class RoomCachedKinoRepository @Inject constructor(
         }
     }
 
+    override fun getAllKinoFilms(): Flow<List<KinoModel>> {
+        return kinoDao.getKinoListFlow().map {
+            it.map { e ->
+                e.map(KinoEntityToModelMapper)
+            }
+        }
+    }
+
     override fun viewKino(kinoId: String): Result<Boolean> {
         return kotlin.runCatching {
             kinoFilmViewsDao.insertKinoView(KinoFilmViewEntity(kinoId))

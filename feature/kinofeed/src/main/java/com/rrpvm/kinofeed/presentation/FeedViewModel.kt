@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
 import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -35,7 +35,10 @@ import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-class FeedViewModel @Inject constructor(private val kinoRepository: KinoRepository) : ViewModel(),
+class FeedViewModel @Inject constructor(
+    private val kinoRepository: KinoRepository,
+    private val filterRepository: FilterRepository
+) : ViewModel(),
     ActualFeedItemListener, SeenFeedItemListener {
     private val cre = CoroutineExceptionHandler { coroutineContext, throwable ->
         Log.e(TAG, "FeedViewModel:: $throwable")
@@ -65,7 +68,8 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
                 Log.e("null", "${actualKinoFeedItem.kinoList}")
                 return@combine null
             }
-        }.flowOn(Dispatchers.Default + cre)
+        }
+            .flowOn(Dispatchers.Default + cre)
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val mAdapterLoadingState =
         _mAdapterLoadingState.combine(mAdapterState) { networkFetch, adapterData ->
@@ -182,9 +186,17 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
                 }
             }
 
-
             kinoRepository.getKinoFilmsByDateConstraintSessionDate(now, endTime)
                 .distinctUntilChanged()
+                .combine(filterRepository.getFilters()) { unfilteredList, filters ->
+                    unfilteredList.filter { unfiliteredItem->
+                        var isSatisfies = true
+                        filters.forEach { filter->
+                            isSatisfies = isSatisfies and filter.isFilmConstraint(unfiliteredItem)
+                        }
+                        isSatisfies
+                    }
+                }
                 .collectLatest { films: List<KinoModel> ->
                     actualFeedState.value =
                         ActualKinoFeedItem(

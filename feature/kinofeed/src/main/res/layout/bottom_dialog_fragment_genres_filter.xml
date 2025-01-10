@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/surface_experimental"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="24dp"
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="12dp"
+    android:background="@drawable/brush_16_dp"
+    android:backgroundTint="@color/primaryWhite"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-    app:spanCount="2">
+    app:spanCount="2"
+
+    tools:listitem="@layout/item_checkbox_filter">
 
 </androidx.recyclerview.widget.RecyclerView>

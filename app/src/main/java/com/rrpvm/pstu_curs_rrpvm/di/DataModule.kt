@@ -11,8 +11,10 @@ import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.mapper_helpers.IsLikedKinoChecker
 import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
+import com.rrpvm.data.repository.FilterRepositoryImpl
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.domain.repository.ClientRepository
+import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
 import dagger.Binds
 import dagger.Module
@@ -29,6 +31,9 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindKinoRepository(repository: RoomCachedKinoRepository): KinoRepository
+
+    @Binds
+    abstract fun bindFilterRepository(repository: FilterRepositoryImpl): FilterRepository
 
     @Binds
     abstract fun bindKinoFilmDataSource(dataSource: MemoryKinoFilmsDataSource): KinofilmsDataSource
@@ -80,6 +85,11 @@ abstract class DataModule {
             return KinoDtoToKinoModelMapper(checker)
         }
 
+        @Provides
+        @Singleton
+        fun provideFilterRepositoryImpl(): FilterRepositoryImpl {
+            return FilterRepositoryImpl()
+        }
 
         @Provides
         @Singleton
