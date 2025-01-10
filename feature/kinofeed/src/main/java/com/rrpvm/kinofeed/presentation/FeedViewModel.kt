@@ -49,7 +49,12 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
         combine(actualFeedState, seenFeedState) { actualKinoFeedItem, seenKinoFeedItem ->
             val builder = mutableListOf<FeedItemUi>()
             if (actualKinoFeedItem.kinoList.isNotEmpty()) builder.add(actualKinoFeedItem)
-            if (seenKinoFeedItem.viewedKinoList.isNotEmpty()) builder.add(seenKinoFeedItem)
+            if (seenKinoFeedItem.viewedKinoList.isNotEmpty()) {
+                builder.add(seenKinoFeedItem)
+                builder.add(seenKinoFeedItem)
+                builder.add(seenKinoFeedItem)
+                builder.add(seenKinoFeedItem)
+            }
             return@combine builder.takeIf { it.isNotEmpty() } ?: run {
                 Log.e("null", "${actualKinoFeedItem.kinoList}")
                 return@combine null

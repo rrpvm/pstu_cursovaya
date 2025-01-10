@@ -15,7 +15,7 @@
         android:textFontWeight="500"
         android:textSize="16sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.rrpvm.core.presentation.component.HorizontalRecyclerView
         android:id="@+id/rv_feed_seen_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

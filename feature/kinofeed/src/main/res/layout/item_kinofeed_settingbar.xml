@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/brush_8dp_solid"
+    android:backgroundTint="@color/surface_experimental"
+    android:gravity="center_vertical"
+    android:minHeight="54dp"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="4dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/brush_16_dp"
+            android:backgroundTint="@color/surface"
+            android:drawablePadding="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="Жанры"
+            android:textSize="12sp"
+            app:drawableEndCompat="@drawable/ic_category"
+            app:drawableTint="@color/p40" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/brush_16_dp"
+            android:backgroundTint="@color/surface"
+            android:drawablePadding="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="Год показа"
+            android:textSize="12sp"
+            app:drawableEndCompat="@drawable/ic_calendar"
+            app:drawableTint="@color/p40" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/brush_16_dp"
+            android:backgroundTint="@color/surface"
+            android:drawablePadding="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="Страна"
+            android:textSize="12sp"
+            app:drawableEndCompat="@drawable/ic_flag"
+            app:drawableTint="@color/p40" />
+    </FrameLayout>
+</LinearLayout>

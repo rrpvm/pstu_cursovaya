@@ -42,7 +42,7 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.rrpvm.core.presentation.component.HorizontalRecyclerView
         android:id="@+id/rv_feed_actual_day_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
