@@ -7,13 +7,17 @@ import com.rrpvm.data.mapper.KinoSessionModelToKinoSessionEntityMapper
 import com.rrpvm.data.room.dao.KinoDao
 import com.rrpvm.data.room.dao.KinoSessionDao
 import com.rrpvm.data.room.entity.KinoSessionEntity
-import com.rrpvm.data.room.entity.SessionsWithKino
+import com.rrpvm.data.room.entity.query_model.SessionsWithKino
 import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
+import com.rrpvm.data.room.dao.KinoFilmViewsDao
+import com.rrpvm.data.room.entity.KinoEntity
+import com.rrpvm.data.room.entity.KinoFilmViewEntity
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.model.KinoSessionModel
 import com.rrpvm.domain.repository.KinoRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.util.Date
 import javax.inject.Inject
@@ -21,6 +25,7 @@ import javax.inject.Inject
 class RoomCachedKinoRepository @Inject constructor(
     private val kinoDao: KinoDao,
     private val kinoSessionDao: KinoSessionDao,
+    private val kinoFilmViewsDao: KinoFilmViewsDao,
     private val kinoDataSource: KinofilmsDataSource,
     private val kinoDtoToKinoModelMapper: KinoDtoToKinoModelMapper
 ) : KinoRepository {
@@ -48,6 +53,14 @@ class RoomCachedKinoRepository @Inject constructor(
             }
     }
 
+    override fun getKinoFilmsViewed(): Flow<List<KinoModel>> {
+        return kinoFilmViewsDao.getViewedKinoFilms().map {
+            it.map { e ->
+                e.map(KinoEntityToModelMapper)
+            }
+        }
+    }
+
     override fun getKinoSessions(minDate: Date): Flow<List<KinoSessionModel>> {
         return kinoSessionDao.getSessionsWithKinoFlow().map { list ->
             val result = mutableListOf<KinoSessionModel>()
@@ -65,6 +78,13 @@ class RoomCachedKinoRepository @Inject constructor(
                 }
             }
             result
+        }
+    }
+
+    override fun viewKino(kinoId: String): Result<Boolean> {
+        return kotlin.runCatching {
+            kinoFilmViewsDao.insertKinoView(KinoFilmViewEntity(kinoId))
+            return@runCatching true
         }
     }
 

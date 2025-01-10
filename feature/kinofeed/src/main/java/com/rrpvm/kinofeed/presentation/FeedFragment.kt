@@ -13,8 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.rrpvm.core.presentation.fadeIn
 import com.rrpvm.core.presentation.fadeOff
 import com.rrpvm.kinofeed.databinding.FragmentKinoFeedBinding
-import com.rrpvm.kinofeed.presentation.adapter.ActualFeedItemListener
+import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.adapter.KinoFeedAdapter
+import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +31,9 @@ class FeedFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAdapter = KinoFeedAdapter(
-            actualFeedItemListener = viewModel as ActualFeedItemListener)
+            actualFeedItemListener = viewModel as ActualFeedItemListener,
+            seenFeedItemListener = viewModel as SeenFeedItemListener
+        )
     }
 
     override fun onDestroy() {

@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.repository.KinoRepository
-import com.rrpvm.kinofeed.presentation.adapter.ActualFeedItemListener
+import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
+import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import com.rrpvm.kinofeed.presentation.model.PickDateModeUi
@@ -31,19 +32,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(private val kinoRepository: KinoRepository) : ViewModel(),
-    ActualFeedItemListener {
+    ActualFeedItemListener,SeenFeedItemListener {
     private val cre = CoroutineExceptionHandler { coroutineContext, throwable ->
         Log.e(TAG, "FeedViewModel:: $throwable")
     }
     private val actualFeedState =
-        MutableStateFlow(ActualKinoFeedItem(emptyList(), PickDateModeUi.TODAY))
-    private val seenFeedState = MutableStateFlow<SeenKinoFeedItem?>(null)
+        MutableStateFlow(
+            ActualKinoFeedItem(
+                kinoList = emptyList(),
+                dateMode = PickDateModeUi.TODAY
+            )
+        )
+    private val seenFeedState = MutableStateFlow(SeenKinoFeedItem(viewedKinoList = emptyList()))
     private val _mAdapterLoadingState = MutableStateFlow(true)
     val mAdapterState =
         combine(actualFeedState, seenFeedState) { actualKinoFeedItem, seenKinoFeedItem ->
             val builder = mutableListOf<FeedItemUi>()
             if (actualKinoFeedItem.kinoList.isNotEmpty()) builder.add(actualKinoFeedItem)
-            if (seenKinoFeedItem != null) builder.add(seenKinoFeedItem)
+            if (seenKinoFeedItem.viewedKinoList.isNotEmpty()) builder.add(seenKinoFeedItem)
             return@combine builder.takeIf { it.isNotEmpty() } ?: run {
                 Log.e("null", "${actualKinoFeedItem.kinoList}")
                 return@combine null
@@ -66,6 +72,7 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
     init {
         fetchKinoFeed()
         observeActualFeedState()
+        observeViewedFeedState()
     }
 
     fun onRetryFetch() {
@@ -88,6 +95,16 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
         actualFeedState.value =
             actualFeedState.value.copy(dateMode = PickDateModeUi.entries[currentIndex + 1])
         observeActualFeedState()
+    }
+
+    override fun onKinoSelected(kinoId: String) {
+        viewModelScope.launch(Dispatchers.IO + cre) {
+            kinoRepository.viewKino(kinoId).getOrThrow()
+        }
+    }
+
+    override fun onItemSelected(kinoId: String) {
+        //nothing
     }
 
     private fun fetchKinoFeed() {
@@ -145,6 +162,14 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
                             dateMode = actualFeedState.value.dateMode
                         )
                 }
+        }
+    }
+
+    private fun observeViewedFeedState() {
+        viewModelScope.launch(Dispatchers.Default + cre) {
+            kinoRepository.getKinoFilmsViewed().collectLatest {
+                seenFeedState.value = SeenKinoFeedItem(it)
+            }
         }
     }
 

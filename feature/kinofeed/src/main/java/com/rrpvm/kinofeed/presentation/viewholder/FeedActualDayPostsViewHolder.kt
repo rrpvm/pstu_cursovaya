@@ -3,7 +3,6 @@ package com.rrpvm.kinofeed.presentation.viewholder
 import android.content.res.ColorStateList
 import android.widget.ImageView
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.rrpvm.kinofeed.R
 import com.rrpvm.kinofeed.databinding.ItemFeedActualDayPostsBinding
 import com.rrpvm.kinofeed.presentation.adapter.DefaultKinoListAdapter
 import com.rrpvm.kinofeed.presentation.decorator.KinoHorizontalDecorator
@@ -11,13 +10,22 @@ import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import com.rrpvm.kinofeed.presentation.model.PickDateModeUi
 
-class FeedActualDayPostsViewHolder(private val binding: ItemFeedActualDayPostsBinding) :
+class FeedActualDayPostsViewHolder(
+    private val binding: ItemFeedActualDayPostsBinding,
+    onKinoItemSelected: (kinoId: String) -> Unit
+) :
     KinoFeedDefaultViewHolder(binding.root) {
-    private val mAdapter = DefaultKinoListAdapter()
+    private val mAdapter = DefaultKinoListAdapter(onKinoItemSelected)
     private val snapHelper = PagerSnapHelper()
     private val decorator = KinoHorizontalDecorator()
+
+
+
+
+    //callbacks
     private var onShiftRightDateModeListener: (() -> Unit)? = null
     private var onShiftLeftDateModeListener: (() -> Unit)? = null
+
 
     fun setOnShiftRightDateDateModeListener(callback: () -> Unit) {
         onShiftRightDateModeListener = callback
@@ -40,6 +48,7 @@ class FeedActualDayPostsViewHolder(private val binding: ItemFeedActualDayPostsBi
 
     override fun onBind(item: FeedItemUi) {
         if (item !is ActualKinoFeedItem) return
+
         binding.rvFeedActualDayPosts.adapter = mAdapter
         binding.tvDateMode.setText(item.dateMode.resId)
         if (item.dateMode.ordinal == 0) {

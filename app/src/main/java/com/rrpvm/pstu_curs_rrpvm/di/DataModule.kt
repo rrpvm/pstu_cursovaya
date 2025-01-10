@@ -11,6 +11,7 @@ import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.mapper_helpers.IsLikedKinoChecker
 import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
+import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.KinoRepository
 import dagger.Binds
@@ -58,6 +59,11 @@ abstract class DataModule {
         }
 
         @Provides
+        fun provideKinoFilmViewsDao(db: KinoZDatabase): KinoFilmViewsDao {
+            return db.getKinoFilmsViewsDao()
+        }
+
+        @Provides
         @Singleton
         fun provideMemoryKinoFilmsDataSource(mapper: KinoDtoToKinoModelMapper): MemoryKinoFilmsDataSource {
             return MemoryKinoFilmsDataSource(mapper)
@@ -74,17 +80,20 @@ abstract class DataModule {
             return KinoDtoToKinoModelMapper(checker)
         }
 
+
         @Provides
         @Singleton
         fun provideMemoryKinoRepository(
             kinoDao: KinoDao,
             kinoSessionDao: KinoSessionDao,
+            kinoFilmViewsDao: KinoFilmViewsDao,
             kinofilmsDataSource: KinofilmsDataSource,
             kinoModelMapper: KinoDtoToKinoModelMapper
         ): RoomCachedKinoRepository {
             return RoomCachedKinoRepository(
                 kinoDao = kinoDao,
                 kinoSessionDao = kinoSessionDao,
+                kinoFilmViewsDao = kinoFilmViewsDao,
                 kinoDataSource = kinofilmsDataSource,
                 kinoDtoToKinoModelMapper = kinoModelMapper
             )

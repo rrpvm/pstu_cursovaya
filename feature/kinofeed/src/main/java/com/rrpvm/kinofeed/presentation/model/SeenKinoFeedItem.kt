@@ -1,5 +1,5 @@
 package com.rrpvm.kinofeed.presentation.model
 
-class SeenKinoFeedItem : FeedItemUi(FeedItemUiTypes.SEEN_POSTS) {
+import com.rrpvm.domain.model.KinoModel
 
-}
+data class SeenKinoFeedItem(val viewedKinoList:List<KinoModel>) : FeedItemUi(FeedItemUiTypes.SEEN_POSTS)

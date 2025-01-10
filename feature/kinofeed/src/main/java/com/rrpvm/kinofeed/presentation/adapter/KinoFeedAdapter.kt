@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rrpvm.kinofeed.databinding.ItemFeedActualDayPostsBinding
 import com.rrpvm.kinofeed.databinding.ItemFeedSeenPostsBinding
 import com.rrpvm.kinofeed.presentation.diffcallback.FeedItemUiDiffCallback
+import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
+import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import com.rrpvm.kinofeed.presentation.model.FeedItemUiTypes
 import com.rrpvm.kinofeed.presentation.viewholder.FeedActualDayPostsViewHolder
@@ -15,24 +17,25 @@ import com.rrpvm.kinofeed.presentation.viewholder.KinoFeedDefaultViewHolder
 
 class KinoFeedAdapter(
     private val actualFeedItemListener: ActualFeedItemListener,
+    private val seenFeedItemListener: SeenFeedItemListener,
 ) : RecyclerView.Adapter<KinoFeedDefaultViewHolder>() {
     private val mItems = AsyncListDiffer(this, FeedItemUiDiffCallback())
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KinoFeedDefaultViewHolder {
         return when (FeedItemUiTypes.entries.first { it.viewType == viewType }) {
             FeedItemUiTypes.SEEN_POSTS -> FeedSeenPostsViewHolder(
-                ItemFeedSeenPostsBinding.inflate(
+                binding = ItemFeedSeenPostsBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
-                )
+                ), onKinoItemSelected = seenFeedItemListener::onItemSelected
             )
 
             FeedItemUiTypes.ACTUAL_POSTS -> FeedActualDayPostsViewHolder(
-                ItemFeedActualDayPostsBinding.inflate(
+                binding = ItemFeedActualDayPostsBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
-                )
+                ), onKinoItemSelected = actualFeedItemListener::onKinoSelected
             ).also {
                 it.setOnShiftLeftDateDateModeListener(actualFeedItemListener::onShiftLeft)
                 it.setOnShiftRightDateDateModeListener(actualFeedItemListener::onShiftRight)

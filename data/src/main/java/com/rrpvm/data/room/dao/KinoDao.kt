@@ -8,11 +8,14 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.rrpvm.data.room.entity.KinoEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface KinoDao {
     @Query("SELECT * FROM kinos_table")
     fun getKinoList(): List<KinoEntity>
+    @Query("SELECT * FROM kinos_table")
+    fun getKinoListFlow(): Flow<List<KinoEntity>>
 
     @Query("SELECT * FROM kinos_table WHERE kino_id = :kinoId")
     fun getKino(kinoId: String): KinoEntity?

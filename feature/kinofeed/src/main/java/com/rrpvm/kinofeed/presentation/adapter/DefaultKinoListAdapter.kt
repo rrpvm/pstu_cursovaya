@@ -9,8 +9,11 @@ import com.rrpvm.kinofeed.presentation.viewholder.KinoViewHolder
 
 const val ITEM_SIZE_MULTIPLIER = 0.3
 
-class DefaultKinoListAdapter : RecyclerView.Adapter<KinoViewHolder>() {
+class DefaultKinoListAdapter(private val onKinoSelected: ((kinoId: String) -> Unit)) :
+    RecyclerView.Adapter<KinoViewHolder>() {
     private val mItems = mutableListOf<KinoModel>()
+    //callbacks
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KinoViewHolder {
         return KinoViewHolder(
             ItemKinoItemBinding.inflate(
@@ -23,7 +26,9 @@ class DefaultKinoListAdapter : RecyclerView.Adapter<KinoViewHolder>() {
                     RecyclerView.LayoutParams.WRAP_CONTENT
                 )
             }
-        )
+        ).apply {
+            this.setOnKinoSelectedCallback(onKinoSelected)
+        }
     }
 
     override fun onViewRecycled(holder: KinoViewHolder) {

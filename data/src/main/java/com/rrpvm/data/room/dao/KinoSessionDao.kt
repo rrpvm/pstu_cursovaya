@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.rrpvm.data.room.entity.KinoSessionEntity
-import com.rrpvm.data.room.entity.SessionsWithKino
+import com.rrpvm.data.room.entity.query_model.SessionsWithKino
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

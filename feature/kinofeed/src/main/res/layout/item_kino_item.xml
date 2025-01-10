@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:layout_width="120dp">
+    android:minWidth="@dimen/card_width"
+    tools:layout_width="140dp">
 
     <LinearLayout
+        android:id="@+id/ll_kino_item_workspace"
         android:layout_width="@dimen/card_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -23,9 +25,9 @@
                 android:id="@+id/iv_kino_preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
+                android:scaleType="center"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Small"
-                tools:srcCompat="@drawable/ic_image_error" />
+                tools:srcCompat="@color/e40" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/preview_loader"

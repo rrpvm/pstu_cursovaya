@@ -14,8 +14,28 @@ import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.kinofeed.databinding.ItemKinoItemBinding
 
 class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(binding.root) {
+    //fields
     private var viewTarget: ViewTarget<*, *>? = null
+    private var boundKinoId: String? = null
+
+    //callbacks
+    private var onKinoSelected: ((kinoId: String) -> Unit)? = null
+
+
+    init {
+        binding.llKinoItemWorkspace.setOnClickListener {
+            onKinoSelected?.invoke(boundKinoId ?: return@setOnClickListener)
+        }
+    }
+
+    fun setOnKinoSelectedCallback(callback: (id: String) -> Unit) {
+        onKinoSelected = callback
+    }
+
+
     fun onBind(model: KinoModel) {
+        boundKinoId = model.id
+
         binding.previewLoader.isVisible = true
         binding.tvKinoTitle.text = model.title
         viewTarget = Glide.with(binding.ivKinoPreview)
@@ -50,6 +70,7 @@ class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(bind
     }
 
     fun onViewRecycled() {
+        boundKinoId = null
         runCatching {
             Glide.with(binding.tvKinoTitle).clear(viewTarget)
         }

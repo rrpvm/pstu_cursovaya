@@ -19,6 +19,7 @@ data class KinoEntity(
     val mReleasedDate: String,
     @ColumnInfo(name = "is_liked")
     val isLiked: Boolean
+
 ) {
     interface Mapper<T> {
         fun map(obj: KinoEntity): T
