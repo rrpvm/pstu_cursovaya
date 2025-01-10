@@ -18,3 +18,14 @@ data class KinoModel(
         return mapper.map(this)
     }
 }
+fun listsEqual(list1: List<KinoModel>, list2: List<KinoModel>): Boolean {
+
+    if (list1.size != list2.size)
+        return false
+
+    val pairList = list1.zip(list2)
+
+    return pairList.all { (elt1, elt2) ->
+        elt1 == elt2
+    }
+}
