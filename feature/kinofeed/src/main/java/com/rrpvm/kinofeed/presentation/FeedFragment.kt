@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.rrpvm.core.presentation.fadeIn
 import com.rrpvm.core.presentation.fadeOff
 import com.rrpvm.kinofeed.databinding.FragmentKinoFeedBinding
@@ -17,6 +19,7 @@ import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.adapter.KinoFeedAdapter
 import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
+import com.rrpvm.kinofeed.presentation.model.MainFeedViewEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -53,14 +56,19 @@ class FeedFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         binding.rvKinoFeed.adapter = mAdapter
         binding.setupClickListeners()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.networkFetchState.collectLatest { visibility ->
                         binding.updateIndicator.isVisible = visibility
+                    }
+                }
+                launch {
+                    viewModel.viewScreenEffects.collect { effect ->
+                        resolveScreenEffect(effect)
                     }
                 }
                 launch {
@@ -98,6 +106,31 @@ class FeedFragment : Fragment() {
     private fun FragmentKinoFeedBinding.setupClickListeners() {
         layoutNoContent.btnRefreshData.setOnClickListener {
             viewModel.onRetryFetch()
+        }
+        this.settingbar.tvGenres.setOnClickListener {
+            viewModel.onGenreFilterClicked()
+        }
+        this.settingbar.tvYear.setOnClickListener {
+            viewModel.onYearFilterClicked()
+        }
+        this.settingbar.tvCountry.setOnClickListener {
+            viewModel.onCountryFilterClicked()
+        }
+    }
+
+    private fun resolveScreenEffect(effect: MainFeedViewEffect) {
+        when (effect) {
+            MainFeedViewEffect.OpenYearFilter -> {
+
+            }
+
+            MainFeedViewEffect.OpenCountryFilter -> {
+
+            }
+
+            MainFeedViewEffect.OpenGenresFilter -> {
+                findNavController().navigate(FeedFragmentDirections.actionFragmentFeedToDialogGenreFilter())
+            }
         }
     }
 

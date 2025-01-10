@@ -10,14 +10,18 @@ import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
+import com.rrpvm.kinofeed.presentation.model.MainFeedViewEffect
 import com.rrpvm.kinofeed.presentation.model.PickDateModeUi
 import com.rrpvm.kinofeed.presentation.model.SeenKinoFeedItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -32,10 +36,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(private val kinoRepository: KinoRepository) : ViewModel(),
-    ActualFeedItemListener,SeenFeedItemListener {
+    ActualFeedItemListener, SeenFeedItemListener {
     private val cre = CoroutineExceptionHandler { coroutineContext, throwable ->
         Log.e(TAG, "FeedViewModel:: $throwable")
     }
+    private val _viewScreenEffects = MutableSharedFlow<MainFeedViewEffect>()
+    val viewScreenEffects = _viewScreenEffects.asSharedFlow()
     private val actualFeedState =
         MutableStateFlow(
             ActualKinoFeedItem(
@@ -74,6 +80,7 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
             return@combine fetchRequest && adapterState.isNullOrEmpty().not()
         }
 
+
     init {
         fetchKinoFeed()
         observeActualFeedState()
@@ -82,6 +89,24 @@ class FeedViewModel @Inject constructor(private val kinoRepository: KinoReposito
 
     fun onRetryFetch() {
         fetchKinoFeed()
+    }
+
+    fun onGenreFilterClicked() {
+        viewModelScope.launch {
+            _viewScreenEffects.emit(MainFeedViewEffect.OpenGenresFilter)
+        }
+    }
+
+    fun onYearFilterClicked() {
+        viewModelScope.launch {
+            _viewScreenEffects.emit(MainFeedViewEffect.OpenYearFilter)
+        }
+    }
+
+    fun onCountryFilterClicked() {
+        viewModelScope.launch {
+            _viewScreenEffects.emit(MainFeedViewEffect.OpenCountryFilter)
+        }
     }
 
     override fun onShiftLeft() {

@@ -3,4 +3,5 @@
     <string name="pick_mode_today">Актуальное на сегодня:</string>
     <string name="pick_mode_tomorrow">Актуальное на завтра:</string>
     <string name="pick_mode_week">Актуальное на неделю:</string>
+    <string name="appbar_name">KinoZ Афиша</string>
 </resources>

@@ -49,8 +49,10 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/brush_8dp_solid"
         android:backgroundTint="@color/surface_experimental"
+        android:nestedScrollingEnabled="false"
         android:orientation="horizontal"
         android:paddingVertical="4dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_kino_item" />
 </LinearLayout>

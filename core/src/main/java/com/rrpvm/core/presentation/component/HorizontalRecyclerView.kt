@@ -2,7 +2,6 @@ package com.rrpvm.core.presentation.component
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
 
 class HorizontalRecyclerView @JvmOverloads constructor(
@@ -13,8 +12,22 @@ class HorizontalRecyclerView @JvmOverloads constructor(
     override fun canScrollVertically(direction: Int): Boolean {
         return false
     }
-
-    override fun onInterceptTouchEvent(e: MotionEvent?): Boolean {
-        return e?.action == MotionEvent.ACTION_MOVE
+    /*
+    override fun onTouchEvent(e: MotionEvent): Boolean {
+       /* if (findChildViewUnder(e.x, e.y) == null) {
+            parent?.requestDisallowInterceptTouchEvent(false)
+            return false
+        }*/
+        return super.onTouchEvent(e)
     }
+
+    override fun onInterceptTouchEvent(e: MotionEvent): Boolean {
+      //  val isEmptySpace = findChildViewUnder(e.x, e.y) == null
+      /*  if (isEmptySpace) {
+            parent?.requestDisallowInterceptTouchEvent(false)
+            return false
+        }*/
+       // return e.action == MotionEvent.ACTION_MOVE
+        return super.onInterceptTouchEvent(e)
+    }*/
 }
