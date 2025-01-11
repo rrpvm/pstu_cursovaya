@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,11 +27,17 @@ class KinoDetailViewModel @Inject constructor(
         MutableStateFlow<KinoDetailViewData>(KinoDetailViewData.ScreenLoading)
     val screenState = _screenState.asStateFlow()
     val genresAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
-        return@map it.kino.kinoModel.genres
+        return@map it.kino.kinoModel.genres.sortedBy {genre->
+            genre.title
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val sessionsAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
-        return@map it.kino.sessions
+        return@map it.kino.sessions.asSequence()
+            .filter {
+                it.sessionDate.time >= Calendar.getInstance().time.time
+            }.sortedBy { it.sessionDate }.toList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     init {
         viewModelScope.launch(Dispatchers.Default) {
             delay(1000L)//имитируем полезность

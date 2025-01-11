@@ -10,7 +10,8 @@ data class KinoModelDto(
     val previewImage: String,
     val releasedDate: Date,
     val byCountry : String,
-    val genres : List<GenreModel>
+    val genres : List<GenreModel>,
+    val duration : Int = 0//в секундах
 ){
     interface Mapper<T> {
         fun map(obj: KinoModelDto): T

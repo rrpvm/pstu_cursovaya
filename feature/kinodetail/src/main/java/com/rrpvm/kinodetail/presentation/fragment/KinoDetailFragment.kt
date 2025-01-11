@@ -3,12 +3,11 @@ package com.rrpvm.kinodetail.presentation.fragment
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,11 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
@@ -33,6 +29,8 @@ import com.rrpvm.kinodetail.presentation.model.KinoDetailViewData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class KinoDetailFragment : Fragment() {
@@ -40,6 +38,7 @@ class KinoDetailFragment : Fragment() {
     private var _binding: FragmentKinoDetailBinding? = null
     private val binding get() = checkNotNull(_binding)
     private val safeArgs by navArgs<KinoDetailFragmentArgs>()
+
     private val genreAdapter by lazy {
         GenreListAdapter()
     }
@@ -81,8 +80,8 @@ class KinoDetailFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.rvGenres.adapter = genreAdapter
         binding.rvSessionList.adapter = sessionAdapter
+        binding.rvGenres.adapter = genreAdapter
     }
 
     private fun onUiUpdate(uiState: KinoDetailViewData) {
@@ -105,55 +104,28 @@ class KinoDetailFragment : Fragment() {
         }
     }
 
+    private val releaseDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
     private fun onUiSuccess(uiState: KinoDetailViewData.Success) {
 
         binding.ivKinoTitle.text = uiState.kino.kinoModel.title
-        binding.tvDuration.text = "Duration: 2h15m"
-        binding.tvReleasedDate.text = uiState.kino.kinoModel.releasedDate.toString()
+        binding.tvDuration.text =
+            resources.getString(R.string.duration_format, "2ч 15м")
+        binding.tvReleasedDate.text =
+            resources.getString(
+                R.string.released_format,
+                releaseDateFormat.format(uiState.kino.kinoModel.releasedDate)
+            )
+
         binding.tvDescription.text = uiState.kino.kinoModel.description
         loadingTarget = Glide.with(binding.ivKinoFull)
             .asBitmap()
             .load(uiState.kino.kinoModel.previewImage)
             .error(R.drawable.error_loading_image_with_surface)
             .placeholder(com.rrpvm.core.R.color.surface_contrast)
-
-            .addListener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Bitmap>,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    _binding?.ivKinoFull?.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        this.dimensionRatio = "16:9"
-                    }
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    model: Any,
-                    target: Target<Bitmap>?,
-                    dataSource: DataSource,
-                    isFirstResource: Boolean
-                ): Boolean {
-
-                    val width = resource.width.toFloat()
-                    val height = resource.height.toFloat()
-                    val ratio = width / height
-                    _binding?.ivKinoFull?.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        this.dimensionRatio = "$ratio"
-                    }
-                    return false
-                }
-            })
-            .transform(RoundedCorners((resources.displayMetrics.density * 12).toInt()))
+            .transform(RoundedCorners((resources.displayMetrics.density * 8).toInt()))
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(object : SimpleTarget<Bitmap>() {
                 override fun onLoadStarted(placeholder: Drawable?) {
-                    _binding?.ivKinoFull?.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        this.dimensionRatio = "16:9"
-                    }
                     _binding?.ivKinoFull?.setImageDrawable(placeholder)
                     _binding?.imageProgress?.isVisible = true
                 }
@@ -176,8 +148,8 @@ class KinoDetailFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding.rvGenres.adapter = null
         binding.rvSessionList.adapter = null
+        binding.rvGenres.adapter = null
         _binding = null
         kotlin.runCatching {
             loadingTarget?.let {

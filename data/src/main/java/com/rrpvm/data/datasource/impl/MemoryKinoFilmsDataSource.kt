@@ -35,7 +35,10 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 DtoGenres.DRAMA.genre,
                 DtoGenres.BOEVIK.genre,
                 DtoGenres.FANTASY.genre,
-                DtoGenres.TRAVEL.genre
+                DtoGenres.TRAVEL.genre,
+                DtoGenres.COMEDY.genre,
+                DtoGenres.HORROR.genre,
+                DtoGenres.MELODRAMA.genre
             )
         ),
         KinoModelDto(
@@ -79,6 +82,33 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 1)
                 }.time,
                 sessionId = "db60116a-f83e-4b09-a3d0-5dadb1f179c8"
+            ),
+            KinoSessionModel(
+                kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
+                    kinoModelMapper
+                ),
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 3)
+                }.time,
+                sessionId = "50373c0c-e3cc-4f09-9772-fc36c5fb4628"
+            ),
+            KinoSessionModel(
+                kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
+                    kinoModelMapper
+                ),
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 6)
+                }.time,
+                sessionId = "7a4f3094-a1c1-4be8-a462-d828d1ea792e"
+            ),
+            KinoSessionModel(
+                kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
+                    kinoModelMapper
+                ),
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 8)
+                }.time,
+                sessionId = "bc2f80b1-566b-4c04-aa78-a5f9161e1f24"
             ),
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -161,7 +191,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
     }
 
     override suspend fun getAllAfishaKinos(): List<KinoModelDto> {
-        delay(10000)
+        delay(1000)
         return kinoList.values.toList()
     }
 }

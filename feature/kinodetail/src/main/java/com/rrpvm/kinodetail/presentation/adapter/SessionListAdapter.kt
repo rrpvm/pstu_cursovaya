@@ -13,7 +13,7 @@ class SessionListAdapter : RecyclerView.Adapter<SessionListAdapter.SessionViewHo
     class SessionViewHolder(private val binding: ItemSessionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: BaseShortSessionModel, position: Int) {
-            binding.tvNumber.text = position.toString()
+            binding.tvNumber.text = (position+1).toString()
             binding.tvSessionLabel.text = item.sessionDate.toString()
         }
     }
