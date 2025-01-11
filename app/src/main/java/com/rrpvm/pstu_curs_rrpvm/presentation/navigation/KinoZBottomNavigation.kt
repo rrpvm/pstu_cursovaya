@@ -77,8 +77,11 @@ internal object KinoZBottomNavigation {
             navController.currentDestination
                 ?.hierarchy
                 ?.any {
-                    //need mapper
-                    it.id == viewItem.itemId
+                    it.id ==  when(viewItem.itemId){
+                        R.id.btm_nav_feed-> com.rrpvm.kinofeed.R.id.feed_graph
+                        R.id.btm_nav_profile-> com.rrpvm.profile.R.id.profile_graph
+                        else->throw RuntimeException("unknown viewItem.itemId")
+                    }
                 } == true
         }.getOrDefault(false)
     }

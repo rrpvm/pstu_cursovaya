@@ -1,13 +1,7 @@
 package com.rrpvm.pstu_curs_rrpvm.presentation
 
-import android.animation.AnimatorSet
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
-import android.view.animation.TranslateAnimation
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -21,7 +15,6 @@ import com.rrpvm.pstu_curs_rrpvm.R
 import com.rrpvm.pstu_curs_rrpvm.databinding.ActivityMainBinding
 import com.rrpvm.pstu_curs_rrpvm.presentation.navigation.KinoZBottomNavigation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn

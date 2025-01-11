@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Component.KinoZ.BottomNav" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@drawable/brush_top_16_dp</item>
+        <item name="backgroundTint">@color/surface_contrast</item>
+        <item name="itemIconSize">20dp</item>
+        <item name="itemPaddingBottom">8dp</item>
+        <item name="itemPaddingTop">12dp</item>
+        <item name="itemRippleColor">@color/transparent</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemTextColor">@color/bottom_nav_text_color</item>
+        <item name="itemTextAppearanceActive">
+            @style/Component.KinoZ.BottomNav.TextAppearance
+        </item>
+        <item name="itemTextAppearanceInactive">
+            @style/Component.KinoZ.BottomNav.TextAppearance
+        </item>
+        <item name="itemIconTint">@color/bottom_nav_text_color</item>
+    </style>
+
+    <style name="Component.KinoZ.BottomNav.TextAppearance">
+        <item name="android:textSize">9sp</item>
+    </style>
+</resources>

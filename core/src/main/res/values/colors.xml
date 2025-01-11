@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="p40">#FF216487</color>
+    <color name="p80">#3C93C5</color>
     <color name="p100">#FFffffff</color>
     <color name="s40">#FF4f616e</color>
     <color name="t40">#FF62597c</color>
@@ -11,6 +12,7 @@
     <color name="p90">#FFc6e7ff</color>
     <color name="p10">#001e2d</color>
     <color name="surface">#FFd7dadf</color>
+    <color name="surface_contrast">#FFEFEFF4</color>
     <color name="primaryWhite">#f6fafe</color>
     <color name="surface_experimental">#e3e9ea</color>
     <color name="transparent">#00FFFFFF</color>

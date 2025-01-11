@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/btm_nav_feed"
-        android:icon="@drawable/ic_tickets"
-        android:title="Menu" />
+        android:icon="@drawable/ic_home"
+        android:title="Афиша" />
     <item
         android:id="@+id/btm_nav_profile"
         android:icon="@drawable/ic_settings"
-        android:title="settings" />
+        android:title="Профиль" />
 </menu>

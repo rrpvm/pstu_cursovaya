@@ -28,14 +28,9 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/main_activity_fragment_host_bottom_navigation"
+            style="@style/Component.KinoZ.BottomNav"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingVertical="0dp"
-            android:textAlignment="center"
-            app:itemIconSize="24dp"
-            app:itemPaddingBottom="8dp"
-            app:itemPaddingTop="8dp"
-            app:labelVisibilityMode="auto"
+            android:layout_height="52dp"
             app:menu="@menu/bottom_navigation" />
     </LinearLayout>
 
