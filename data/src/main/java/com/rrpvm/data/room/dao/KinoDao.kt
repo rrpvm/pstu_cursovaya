@@ -25,6 +25,9 @@ interface KinoDao {
     @Query("SELECT * FROM kinos_table WHERE kino_id = :kinoId")
     fun getKino(kinoId: String): KinoEntity?
 
+    @Query("SELECT * FROM kinos_table WHERE kino_id=:kinoId")
+    fun getFullKinoModel(kinoId: String):KinoWithSessionsAndGenres
+
     @Delete(entity = KinoEntity::class)
     fun deleteKinoList(list: List<KinoEntity>)
 

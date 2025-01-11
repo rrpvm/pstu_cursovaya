@@ -11,6 +11,7 @@ import com.rrpvm.data.mapper.GenreModelToKinoGenreEntityMapper
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.mapper._entity.KinoWithGenresToKinoModel
 import com.rrpvm.data.mapper._entity.KinoWithSessionsAndGenresToKinoModel
+import com.rrpvm.data.mapper._entity.KinoWithSessionsAndGenresToKinoWithSessionModelMapper
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.data.room.dao.KinoGenresDao
 import com.rrpvm.data.room.entity.KinoFilmViewEntity
@@ -19,6 +20,7 @@ import com.rrpvm.data.room.entity.KinoGenreEntity
 import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
 import com.rrpvm.domain.model.GenreModel
 import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.KinoWithSessionsModel
 import com.rrpvm.domain.repository.KinoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -100,6 +102,14 @@ class RoomCachedKinoRepository @Inject constructor(
             it.map { e ->
                 GenreModel(e.mGenreId, e.mGenreName)
             }
+        }
+    }
+
+    override fun getKinoById(kinoId: String): Result<KinoWithSessionsModel> {
+        return kotlin.runCatching {
+            return@runCatching kinoDao.getFullKinoModel(kinoId).map(
+                KinoWithSessionsAndGenresToKinoWithSessionModelMapper
+            )
         }
     }
 

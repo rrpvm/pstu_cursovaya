@@ -137,12 +137,15 @@ class FeedViewModel @Inject constructor(
 
     override fun onKinoSelected(kinoId: String) {
         viewModelScope.launch(Dispatchers.IO + cre) {
+            _viewScreenEffects.emit(MainFeedViewEffect.GoToKinoDetail(kinoId))
             kinoRepository.viewKino(kinoId).getOrThrow()
         }
     }
 
     override fun onItemSelected(kinoId: String) {
-        //nothing
+        viewModelScope.launch(cre) {
+            _viewScreenEffects.emit(MainFeedViewEffect.GoToKinoDetail(kinoId))
+        }
     }
 
     private fun fetchKinoFeed() {

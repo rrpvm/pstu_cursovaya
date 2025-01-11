@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/kino_details_graph"
+    app:startDestination="@id/fragment_kino_detail">
+    <argument
+        android:name="kinoId"
+        app:argType="string"
+        app:nullable="false" />
+    <deepLink app:uri="kinoz://kinoDetail/{kinoId}" />
+    <fragment
+        android:id="@+id/fragment_kino_detail"
+        android:name="com.rrpvm.kinodetail.presentation.fragment.KinoDetailFragment"
+        tools:layout="@layout/fragment_kino_detail">
+        <argument
+            android:name="kinoId"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+</navigation>

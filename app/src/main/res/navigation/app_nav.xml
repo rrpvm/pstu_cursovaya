@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav"
     app:startDestination="@id/feed_graph">
     <include app:graph="@navigation/auth_graph" />
     <include app:graph="@navigation/profile_graph" />
     <include app:graph="@navigation/feed_graph" />
+    <include app:graph="@navigation/kino_details_nav" />
     <action
         android:id="@+id/action_go_profile"
         app:destination="@id/profile_graph"
