@@ -4,4 +4,5 @@ interface ActualFeedItemListener {
     fun onShiftLeft() : Unit
     fun onShiftRight() : Unit
     fun onKinoSelected(kinoId:String) : Unit
+    fun onRetryFetchData()
 }

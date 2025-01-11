@@ -73,25 +73,12 @@ class FeedFragment : Fragment() {
                 }
                 launch {
                     viewModel.mAdapterLoadingState.collectLatest { isLoading ->
-                        binding.llMainProgressContainer.isVisible = isLoading
+                        binding.llMainProgressContainer.isVisible = isLoading//шиммер
+                        binding.ccContent.isVisible = isLoading.not()//шапка
                         if (isLoading) {
                             binding.sflShimmer.showShimmer(true)
                         } else {
                             binding.sflShimmer.hideShimmer()
-                        }
-                    }
-                }
-                launch {
-                    viewModel.mEmptyScreenHolderVisible.collectLatest { isVisiblePlaceholder ->
-                        binding.layoutNoContent.root.clearAnimation()
-                        binding.ivKinozLogo.isVisible = isVisiblePlaceholder.not()
-                        if (isVisiblePlaceholder) {
-                            binding.layoutNoContent.root.fadeIn(duration = 400L)
-                        } else {
-                            if (binding.layoutNoContent.root.visibility != View.VISIBLE) return@collectLatest
-                            binding.layoutNoContent.root.fadeOff(duration = 400L) {
-                                binding.layoutNoContent.root.isVisible = false
-                            }
                         }
                     }
                 }
@@ -105,9 +92,6 @@ class FeedFragment : Fragment() {
     }
 
     private fun FragmentKinoFeedBinding.setupClickListeners() {
-        layoutNoContent.btnRefreshData.setOnClickListener {
-            viewModel.onRetryFetch()
-        }
         this.settingbar.tvGenres.setOnClickListener {
             viewModel.onGenreFilterClicked()
         }

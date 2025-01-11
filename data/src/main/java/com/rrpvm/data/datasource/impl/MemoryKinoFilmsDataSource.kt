@@ -4,7 +4,6 @@ import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.model.kinofilms.KinoModelDto
 import com.rrpvm.domain.model.GenreModel
-import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.model.KinoSessionModel
 import kotlinx.coroutines.delay
 import java.util.Calendar
@@ -17,6 +16,10 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
             BOEVIK(GenreModel("d0ad42e1-7450-4519-aef8-2f36be7df341", "Боевик")),
             DRAMA(GenreModel("01d775cf-3c83-4048-b374-cee0f6d08620", "Драма")),
             COMEDY(GenreModel("c08af339-2489-40bb-a4e4-9615186ec330", "Комедия")),
+            MELODRAMA(GenreModel("8d9504be-4d4c-4539-8caa-aa02686ff80b", "Мелодрама")),
+            FANTASY(GenreModel("e718963f-914e-4eb7-b3da-7643fcd404c2", "Фантастика")),
+            TRAVEL(GenreModel("855789c1-2f83-4899-9614-64d5cb089601", "Приключения")),
+            HORROR(GenreModel("3bd22d52-2e39-4fe2-8e0a-cb2d03416b3c", "Ужасы")),
         }
     }
 
@@ -24,16 +27,21 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
         KinoModelDto(
             id = "5874b417-5417-4b01-be85-aa9f647bd35f",
             title = "Аватар",
-            description = "",
+            description = "Бывший морпех Джейк Салли прикован к инвалидному креслу. Несмотря на немощное тело, Джейк в душе по-прежнему остается воином. Он получает задание совершить путешествие в несколько световых лет к базе землян на планете Пандора, где корпорации добывают редкий минерал, имеющий огромное значение для выхода Земли из энергетического кризиса.",
             previewImage = "https://m.media-amazon.com/images/M/MV5BZDA0OGQxNTItMDZkMC00N2UyLTg3MzMtYTJmNjg3Nzk5MzRiXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_FMjpg_UX1000_.jpg",
             releasedDate = Calendar.Builder().setDate(2009, 11, 18).build().time,
             byCountry = "USA",
-            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.BOEVIK.genre)
+            genres = listOf(
+                DtoGenres.DRAMA.genre,
+                DtoGenres.BOEVIK.genre,
+                DtoGenres.FANTASY.genre,
+                DtoGenres.TRAVEL.genre
+            )
         ),
         KinoModelDto(
             id = "cf65ed1d-b79a-460a-9606-1d2edaf3586c",
             title = "Последний ронин",
-            description = "",
+            description = "(Не)далекое будущее. В результате изменений климата, приведших к глобальной ядерной войне, цивилизация практически уничтожена: земли выжжены, города разрушены. Техника не работает, бензин давно потерял свои свойства. Главная валюта в этом мире — два патрона: 9 и 7,62 мм от АК-47. Преследуемый призраками прошлого одинокий путник Ронин странствует по пустошам в поисках убийцы своего отца, годами создавая карту континента. На каждом шагу его подстерегают охотники за головами и бандиты. Но однажды судьба сводит Ронина со своенравной девочкой-подростком Марией, которая обещает ему наивысшую плату, если он доведет ее до места, где она родилась.",
             previewImage = "https://avatars.mds.yandex.net/i?id=1508d997ad6dc85da055bbb434f34b73_l-10414746-images-thumbs&n=13",
             releasedDate = Calendar.Builder().setDate(2024, 6, 19).build().time,
             byCountry = "USA",
@@ -42,7 +50,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
         KinoModelDto(
             id = "ebb65720-2389-4a7e-9fe3-7d1458d240a0",
             title = "Постучись в мою дверь",
-            description = "",
+            description = "Эда живёт вместе со своей тётей и работает в семейном цветочном магазине. Она мечтает уехать на стажировку в Италию, но лишается стипендии, которую местное архитектурное бюро Art Life выделяет для талантливых студентов. Обидевшись, девушка решает отомстить его владельцу, молодому и талантливому архитектору Серкану Болату. Но их знакомство оборачивается неожиданным договором — Эда получит полностью оплаченную поездку в Италию, если 2 месяца будет притворяться девушкой Серкана, чтобы он смог вернуть свою бывшую.",
             previewImage = "https://yastatic.net/naydex/yandex-search/bTFy12402/d21c4fyqx/EVXP3tawtuggczhscKX0EJ-siEZ_6PFmTUAZlZURLVdixeCovuXQQnV1HKdUpF3F1J80-wV7eOyBOs0O8i53WehFq3IufH9Y6N-98IgFdGSP9aBqCoGFLqXs",
             releasedDate = Calendar.Builder().setDate(2022, 5, 24).build().time,
             byCountry = "Russia",
@@ -51,11 +59,11 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
         KinoModelDto(
             id = "abb08203-ac9b-4467-9b76-dbb7d890e9b9",
             title = "Волшебник изумрудного города",
-            description = "",
+            description = "В далёком городе живёт девочка Элли. Однажды злая колдунья Гингема наколдовала ураган, который унёс Элли и ее собачку Тотошку в страну Жевунов. Чтобы вернуться домой, Элли вместе с новыми друзьями — Страшилой, Железным Дровосеком и Трусливым Львом — отправится по желтой кирпичной дороге в Изумрудный город на поиски Волшебника, который исполнит их заветные желания.",
             previewImage = "https://pic.rutubelist.ru/video/2025-01-06/6b/6d/6b6dc1541d3e46cedf0c1209b51fb86f.jpg",
             releasedDate = Calendar.Builder().setDate(2025, 1, 1).build().time,
             byCountry = "USA",
-            genres = listOf(DtoGenres.DRAMA.genre)
+            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.TRAVEL.genre, DtoGenres.FANTASY.genre)
         ),
     ).associateBy { it.id }
 
@@ -67,8 +75,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(13, 30, 30)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 1)
+                }.time,
                 sessionId = "db60116a-f83e-4b09-a3d0-5dadb1f179c8"
             ),
             KinoSessionModel(
@@ -84,8 +93,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["cf65ed1d-b79a-460a-9606-1d2edaf3586c"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(16, 30, 30)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 2)
+                }.time,
                 sessionId = "eb2772e7-beb1-42b9-838a-6b80d494935d"
             ),
             KinoSessionModel(
@@ -109,8 +119,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["ebb65720-2389-4a7e-9fe3-7d1458d240a0"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 13).setTimeOfDay(9, 15, 0)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 2)
+                }.time,
                 sessionId = "5d7e1b9c-d0ba-4903-ba91-087dc179c28d"
             ),
             KinoSessionModel(
@@ -150,6 +161,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
     }
 
     override suspend fun getAllAfishaKinos(): List<KinoModelDto> {
+        delay(10000)
         return kinoList.values.toList()
     }
 }

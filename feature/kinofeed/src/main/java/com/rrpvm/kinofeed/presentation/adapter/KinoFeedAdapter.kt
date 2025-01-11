@@ -49,7 +49,9 @@ class KinoFeedAdapter(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
-                ), onKinoItemSelected = actualFeedItemListener::onKinoSelected
+                ),
+                onKinoItemSelected = actualFeedItemListener::onKinoSelected,
+                onRefreshFetchData = actualFeedItemListener::onRetryFetchData
             ).also {
                 it.setOnShiftLeftDateDateModeListener(actualFeedItemListener::onShiftLeft)
                 it.setOnShiftRightDateDateModeListener(actualFeedItemListener::onShiftRight)
@@ -79,7 +81,7 @@ class KinoFeedAdapter(
 
     private var wasKinoActual: Boolean = false
     fun setItems(list: List<FeedItemUi>) {
-        mItems.submitList(list){
+        mItems.submitList(list) {
             val newKinoActual = list.any { it is ActualKinoFeedItem }
             if (newKinoActual != wasKinoActual && newKinoActual) {
                 this.recycler.get()?.scrollToPosition(0)

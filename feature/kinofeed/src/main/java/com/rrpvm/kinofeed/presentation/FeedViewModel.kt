@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -56,16 +57,19 @@ class FeedViewModel @Inject constructor(
         )
     private val seenFeedState = MutableStateFlow(SeenKinoFeedItem(viewedKinoList = emptyList()))
     private val _mAdapterLoadingState = MutableStateFlow(true)
+
     val mAdapterState =
-        combine(actualFeedState, seenFeedState) { actualKinoFeedItem, seenKinoFeedItem ->
+        combine(
+            actualFeedState,
+            seenFeedState,
+            _mAdapterLoadingState
+        ) { actualKinoFeedItem, seenKinoFeedItem, isLoadingNetwork ->
             val builder = mutableListOf<FeedItemUi>()
-            if (actualKinoFeedItem.kinoList.isNotEmpty()) {
+            if (!isLoadingNetwork || actualKinoFeedItem.kinoList.isNotEmpty()) {
+                //если мы не фетчим данные или список не пустой -> можем отобразить айтем с прокручиванием
                 builder.add(actualKinoFeedItem)
             }
             if (seenKinoFeedItem.viewedKinoList.isNotEmpty()) {
-                builder.add(seenKinoFeedItem)
-                builder.add(seenKinoFeedItem)
-                builder.add(seenKinoFeedItem)
                 builder.add(seenKinoFeedItem)
             }
             return@combine builder.takeIf { it.isNotEmpty() } ?: run {
@@ -75,19 +79,18 @@ class FeedViewModel @Inject constructor(
         }
             .flowOn(Dispatchers.Default + cre)
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    //стейт плейсхолдера при первой загрузке
     val mAdapterLoadingState =
-        _mAdapterLoadingState.combine(mAdapterState) { networkFetch, adapterData ->
-            return@combine networkFetch && adapterData?.isEmpty() == true
-        }.flowOn(Dispatchers.Default + cre)
-    val mEmptyScreenHolderVisible =
-        mAdapterLoadingState.combine(mAdapterState) { isLoading, adapterState ->
-            return@combine !isLoading && adapterState.isNullOrEmpty()
-        }.flowOn(Dispatchers.Default + cre)
+        _mAdapterLoadingState.combine(mAdapterState) { isLoading, adapterState ->
+            return@combine isLoading && adapterState == null
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    //стейт верхнего индикатора обновления
     val networkFetchState =
         _mAdapterLoadingState.combine(mAdapterState) { fetchRequest, adapterState ->
             return@combine fetchRequest && adapterState.isNullOrEmpty().not()
         }
-
 
     init {
         fetchKinoFeed()
@@ -95,7 +98,7 @@ class FeedViewModel @Inject constructor(
         observeViewedFeedState()
     }
 
-    fun onRetryFetch() {
+    override fun onRetryFetchData() {
         fetchKinoFeed()
     }
 

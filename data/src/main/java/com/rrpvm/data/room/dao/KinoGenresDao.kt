@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.rrpvm.data.room.entity.KinoEntity
 import com.rrpvm.data.room.entity.KinoGenreCrossRefEntity
 import com.rrpvm.data.room.entity.KinoGenreEntity
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +25,7 @@ interface KinoGenresDao {
         clearGenresTable()
         insertKinoGenres(kinoGenreList = genreList)
     }
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertKinoGenreCrossRef(kinoGenreCrossRefEntity: KinoGenreCrossRefEntity)
 }

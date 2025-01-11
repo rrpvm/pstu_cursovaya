@@ -23,7 +23,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp">
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -60,18 +61,22 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_kino_full"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintDimensionRatio="16:9"
+                android:adjustViewBounds="true"
+                android:paddingHorizontal="16dp"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_max="300dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Large"
-                tools:srcCompat="@color/surface_contrast" />
+                tools:layout_constraintDimensionRatio="16:9"
+                tools:srcCompat="@drawable/error_loading_image_with_surface" />
 
             <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/image_progress"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_kino_full"
@@ -79,6 +84,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/iv_kino_full"
                 app:layout_constraintStart_toStartOf="@+id/iv_kino_full"
                 app:layout_constraintTop_toTopOf="@+id/iv_kino_full"
+                app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/lottie_circle_image"
                 tools:lottie_progress=".72" />
@@ -87,11 +93,12 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Жанры:"
                 android:textFontWeight="600"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/iv_kino_full"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_kino_full" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -106,8 +113,80 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 app:spanCount="3"
-                tools:itemCount="5"
+                tools:itemCount="4"
                 tools:listitem="@layout/item_genre" />
+
+
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_genres"
+                tools:text="Длительность: 2ч 15м" />
+
+            <TextView
+                android:id="@+id/tv_releasedDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_duration"
+                tools:text="В прокате с: 24 февраля 2022г" />
+
+            <TextView
+                android:id="@+id/tv_description_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Описание:"
+                android:textFontWeight="600"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_releasedDate" />
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/p10"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_description_title"
+                tools:text="(Не)далекое будущее. В результате изменений климата, приведших к глобальной ядерной войне, цивилизация практически уничтожена: земли выжжены, города разрушены. Техника не работает, бензин давно потерял свои свойства. Главная валюта в этом мире — два патрона: 9 и 7,62 мм от АК-47. Преследуемый призраками прошлого одинокий путник Ронин странствует по пустошам в поисках убийцы своего отца, годами создавая карту континента. На каждом шагу его подстерегают охотники за головами и бандиты. Но однажды судьба сводит Ронина со своенравной девочкой-подростком Марией, которая обещает ему наивысшую плату, если он доведет ее до места, где она родилась." />
+
+            <TextView
+                android:id="@+id/tv_sessions_titile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Сессии:"
+                android:textFontWeight="600"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_description"
+                app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_session_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="0dp"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sessions_titile"
+                tools:listitem="@layout/item_session" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

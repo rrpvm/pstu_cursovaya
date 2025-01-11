@@ -114,12 +114,6 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
     </ScrollView>
 
-    <include
-        android:id="@+id/layout_no_content"
-        layout="@layout/item_feed_no_content"
-        android:visibility="invisible"
-        tools:visibility="gone" />
-
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/update_indicator"
         android:layout_width="match_parent"

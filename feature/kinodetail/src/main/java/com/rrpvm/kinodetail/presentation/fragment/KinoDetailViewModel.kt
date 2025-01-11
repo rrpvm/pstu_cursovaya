@@ -28,7 +28,9 @@ class KinoDetailViewModel @Inject constructor(
     val genresAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
         return@map it.kino.kinoModel.genres
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
+    val sessionsAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
+        return@map it.kino.sessions
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     init {
         viewModelScope.launch(Dispatchers.Default) {
             delay(1000L)//имитируем полезность
