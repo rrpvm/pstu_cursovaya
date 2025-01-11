@@ -18,7 +18,7 @@ sealed class FilterModel() {
 
     data class CountryFilter(val country: String) : FilterModel() {
         override fun isFilmConstraint(film: KinoModel): Boolean {
-            return true
+            return film.byCountry == country
         }
     }
 

@@ -9,8 +9,20 @@
         <action
             android:id="@+id/action_fragment_feed_to_dialog_genre_filter"
             app:destination="@id/dialog_genre_filter" />
+        <action
+            android:id="@+id/action_fragment_feed_to_dialog_country_filter"
+            app:destination="@id/dialog_country_filter" />
+        <action
+            android:id="@+id/action_fragment_feed_to_dialog_year_filter"
+            app:destination="@id/dialog_year_filter" />
     </fragment>
     <dialog
         android:id="@+id/dialog_genre_filter"
         android:name="com.rrpvm.kinofeed.presentation.GenresFilterModalBottomSheet" />
+    <dialog
+        android:id="@+id/dialog_country_filter"
+        android:name="com.rrpvm.kinofeed.presentation.CountryFilterModalBottomSheet" />
+    <dialog
+        android:id="@+id/dialog_year_filter"
+        android:name="com.rrpvm.kinofeed.presentation.YearFilterModalBottomSheet" />
 </navigation>

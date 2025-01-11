@@ -9,17 +9,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.rrpvm.kinofeed.databinding.BottomDialogFragmentGenresFilterBinding
+import com.rrpvm.kinofeed.databinding.BottomDialogFragmentCountryFilterBinding
 import com.rrpvm.kinofeed.presentation.adapter.DefaultFilterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GenresFilterModalBottomSheet : BottomSheetDialogFragment() {
-    private var _binding: BottomDialogFragmentGenresFilterBinding? = null
+class CountryFilterModalBottomSheet : BottomSheetDialogFragment() {
+    private var _binding: BottomDialogFragmentCountryFilterBinding? = null
     private val binding get() = checkNotNull(_binding)
-    private val viewModel: GenresFilterViewModel by viewModels()
+    private val viewModel: CountryFilterViewModel by viewModels()
     private val adapter by lazy {
         DefaultFilterAdapter(viewModel::onFilterItemStateChanged)
     }
@@ -29,14 +29,14 @@ class GenresFilterModalBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return BottomDialogFragmentGenresFilterBinding.inflate(inflater, container, false).let {
+        return BottomDialogFragmentCountryFilterBinding.inflate(inflater, container, false).let {
             _binding = it
             it.root
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.rvGenreFilter.adapter = adapter
+        binding.rvCountryFilter.adapter = adapter
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -50,7 +50,7 @@ class GenresFilterModalBottomSheet : BottomSheetDialogFragment() {
 
 
     override fun onDestroyView() {
-        _binding?.rvGenreFilter?.adapter = null
+        _binding?.rvCountryFilter?.adapter = null
         _binding = null
         super.onDestroyView()
     }

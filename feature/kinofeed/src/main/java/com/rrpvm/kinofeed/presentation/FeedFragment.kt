@@ -122,11 +122,11 @@ class FeedFragment : Fragment() {
     private fun resolveScreenEffect(effect: MainFeedViewEffect) {
         when (effect) {
             MainFeedViewEffect.OpenYearFilter -> {
-
+                findNavController().navigate(FeedFragmentDirections.actionFragmentFeedToDialogYearFilter())
             }
 
             MainFeedViewEffect.OpenCountryFilter -> {
-
+                findNavController().navigate(FeedFragmentDirections.actionFragmentFeedToDialogCountryFilter())
             }
 
             MainFeedViewEffect.OpenGenresFilter -> {

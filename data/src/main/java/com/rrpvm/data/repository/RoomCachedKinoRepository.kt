@@ -22,6 +22,7 @@ import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.repository.KinoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
 import java.util.Date
 import javax.inject.Inject
 
@@ -70,6 +71,20 @@ class RoomCachedKinoRepository @Inject constructor(
             it.map { e ->
                 e.map(KinoWithGenresToKinoModel)
             }
+        }
+    }
+
+    override fun getAllKinoFilmsWithAnyActualSession(): Flow<List<KinoModel>> {
+        val actualTime = Instant.now().toEpochMilli()
+        return kinoDao.getSessionsWithKinoByOrderDateFlow().map { kinoWithSessionsList ->
+            kinoWithSessionsList.asSequence().filter {
+                return@filter FromDomainDateStringMapper.mapToDomainDate(
+                    it.kinoWithSessions.sessionList.lastOrNull()?.sessionStartDate
+                        ?: return@filter false
+                ).time >= actualTime
+            }.map {
+                it.map(KinoWithSessionsAndGenresToKinoModel)
+            }.toList()
         }
     }
 

@@ -11,6 +11,7 @@ interface KinoRepository {
     fun getKinoFilmsByDateConstraintSessionDate(minDate: Date,maxDate:Date) : Flow<List<KinoModel>>
     fun getKinoFilmsViewed() : Flow<List<KinoModel>>
     fun getAllKinoFilms() : Flow<List<KinoModel>>
+    fun getAllKinoFilmsWithAnyActualSession() : Flow<List<KinoModel>>
     fun viewKino(kinoId:String) : Result<Boolean>
     fun getKinoGenres() : Flow<List<GenreModel>>
     suspend fun fetchKinoFeed(): Result<Boolean>
