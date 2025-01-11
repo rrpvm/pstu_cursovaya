@@ -8,8 +8,10 @@ data class KinoModel(
     val description: String,
     val previewImage: String,
     val releasedDate: Date,
+    val genres: List<GenreModel>,
+    val byCountry : String,
     val isLiked: Boolean = false
-){
+) {
     interface Mapper<T> {
         fun map(obj: KinoModel): T
     }
@@ -18,6 +20,7 @@ data class KinoModel(
         return mapper.map(this)
     }
 }
+
 fun listsEqual(list1: List<KinoModel>, list2: List<KinoModel>): Boolean {
 
     if (list1.size != list2.size)

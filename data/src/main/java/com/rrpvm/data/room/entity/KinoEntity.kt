@@ -17,6 +17,8 @@ data class KinoEntity(
     val mPreviewImage: String,
     @ColumnInfo(name = "released_date")
     val mReleasedDate: String,
+    @ColumnInfo(name = "byCountry")
+    val mCountry: String,
     @ColumnInfo(name = "is_liked")
     val isLiked: Boolean
 

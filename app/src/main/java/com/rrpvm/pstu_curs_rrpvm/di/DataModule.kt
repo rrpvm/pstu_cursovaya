@@ -13,6 +13,7 @@ import com.rrpvm.data.mapper_helpers.IsLikedKinoChecker
 import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
 import com.rrpvm.data.repository.FilterRepositoryImpl
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
+import com.rrpvm.data.room.dao.KinoGenresDao
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
@@ -59,6 +60,11 @@ abstract class DataModule {
         }
 
         @Provides
+        fun provideKinoGenresDao(db: KinoZDatabase): KinoGenresDao {
+            return db.getKinoGenresDao()
+        }
+
+        @Provides
         fun provideKinoSessionDao(db: KinoZDatabase): KinoSessionDao {
             return db.getKinoSessionEntityDao()
         }
@@ -97,6 +103,7 @@ abstract class DataModule {
             kinoDao: KinoDao,
             kinoSessionDao: KinoSessionDao,
             kinoFilmViewsDao: KinoFilmViewsDao,
+            kinoGenresDao: KinoGenresDao,
             kinofilmsDataSource: KinofilmsDataSource,
             kinoModelMapper: KinoDtoToKinoModelMapper
         ): RoomCachedKinoRepository {
@@ -104,6 +111,7 @@ abstract class DataModule {
                 kinoDao = kinoDao,
                 kinoSessionDao = kinoSessionDao,
                 kinoFilmViewsDao = kinoFilmViewsDao,
+                kinoGenresDao = kinoGenresDao,
                 kinoDataSource = kinofilmsDataSource,
                 kinoDtoToKinoModelMapper = kinoModelMapper
             )

@@ -8,14 +8,19 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.rrpvm.data.room.entity.KinoEntity
+import com.rrpvm.data.room.entity.query_model.KinoWithGenres
+import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @Dao
 interface KinoDao {
     @Query("SELECT * FROM kinos_table")
     fun getKinoList(): List<KinoEntity>
+
     @Query("SELECT * FROM kinos_table")
-    fun getKinoListFlow(): Flow<List<KinoEntity>>
+    @Transaction
+    fun getKinoListFlow(): Flow<List<KinoWithGenres>>
 
     @Query("SELECT * FROM kinos_table WHERE kino_id = :kinoId")
     fun getKino(kinoId: String): KinoEntity?
@@ -56,5 +61,29 @@ interface KinoDao {
         updateKinoList(existedUpdatedList.values.toList())
         insertKinoList(uniqueList)
 
+    }
+
+    //One to Many
+    @Transaction
+    @Query("SELECT * FROM kinos_table")
+    fun getKinoWithSessionAndGenres(): Flow<List<KinoWithSessionsAndGenres>>
+
+
+    @Query("SELECT * FROM kinos_table LEFT JOIN kino_film_views_table ON kinos_table.kino_id=kino_film_views_table.viewed_kino_id WHERE kino_id=viewed_kino_id")
+    @Transaction
+    fun getViewedKinoFilms(): Flow<List<KinoWithGenres>>
+
+    fun getSessionsWithKinoByOrderDateFlow(): Flow<List<KinoWithSessionsAndGenres>> {
+        return getKinoWithSessionAndGenres().map {
+            it.asSequence()
+                .filter { kinoWithSessionAndGenres ->
+                    kinoWithSessionAndGenres.kinoWithSessions.sessionList.isNotEmpty()
+                }
+                .sortedBy { kinoWithSessionsAndGenres ->
+                    kinoWithSessionsAndGenres.kinoWithSessions.sessionList.minByOrNull { session ->
+                        session.sessionStartDate
+                    }!!.sessionStartDate
+                }.toList()
+        }
     }
 }

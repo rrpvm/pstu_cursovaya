@@ -57,7 +57,7 @@ class DefaultFilterAdapter(private val onStateChanged: (String, Boolean) -> Unit
         fun onBind(item: FilterItem) {
             label = item.value
             binding.tvFilterLabel.text = item.value
-            binding.mcbFilter.isSelected = item.isEnabled
+            binding.mcbFilter.isChecked = item.isEnabled
         }
 
         fun onViewRecycled() {

@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
+import com.rrpvm.domain.contract.KinoModelFilterContract
+import com.rrpvm.domain.model.FilterModel
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
@@ -57,7 +59,9 @@ class FeedViewModel @Inject constructor(
     val mAdapterState =
         combine(actualFeedState, seenFeedState) { actualKinoFeedItem, seenKinoFeedItem ->
             val builder = mutableListOf<FeedItemUi>()
-            if (actualKinoFeedItem.kinoList.isNotEmpty()) builder.add(actualKinoFeedItem)
+            if (actualKinoFeedItem.kinoList.isNotEmpty()) {
+                builder.add(actualKinoFeedItem)
+            }
             if (seenKinoFeedItem.viewedKinoList.isNotEmpty()) {
                 builder.add(seenKinoFeedItem)
                 builder.add(seenKinoFeedItem)
@@ -189,12 +193,11 @@ class FeedViewModel @Inject constructor(
             kinoRepository.getKinoFilmsByDateConstraintSessionDate(now, endTime)
                 .distinctUntilChanged()
                 .combine(filterRepository.getFilters()) { unfilteredList, filters ->
-                    unfilteredList.filter { unfiliteredItem->
-                        var isSatisfies = true
-                        filters.forEach { filter->
-                            isSatisfies = isSatisfies and filter.isFilmConstraint(unfiliteredItem)
-                        }
-                        isSatisfies
+                    unfilteredList.filter { unfiliteredItem ->
+                        KinoModelFilterContract.checkKinoModel(
+                            kinoModel = unfiliteredItem,
+                            filterList = filters
+                        )
                     }
                 }
                 .collectLatest { films: List<KinoModel> ->

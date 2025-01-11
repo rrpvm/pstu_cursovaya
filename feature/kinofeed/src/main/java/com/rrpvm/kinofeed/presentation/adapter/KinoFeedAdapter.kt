@@ -9,17 +9,31 @@ import com.rrpvm.kinofeed.databinding.ItemFeedSeenPostsBinding
 import com.rrpvm.kinofeed.presentation.diffcallback.FeedItemUiDiffCallback
 import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
+import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import com.rrpvm.kinofeed.presentation.model.FeedItemUiTypes
 import com.rrpvm.kinofeed.presentation.viewholder.FeedActualDayPostsViewHolder
 import com.rrpvm.kinofeed.presentation.viewholder.FeedSeenPostsViewHolder
 import com.rrpvm.kinofeed.presentation.viewholder.KinoFeedDefaultViewHolder
+import java.lang.ref.WeakReference
 
 class KinoFeedAdapter(
     private val actualFeedItemListener: ActualFeedItemListener,
     private val seenFeedItemListener: SeenFeedItemListener,
 ) : RecyclerView.Adapter<KinoFeedDefaultViewHolder>() {
     private val mItems = AsyncListDiffer(this, FeedItemUiDiffCallback())
+    private var recycler = WeakReference<RecyclerView>(null)
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recycler = WeakReference(recyclerView)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        recycler = WeakReference(null)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KinoFeedDefaultViewHolder {
         return when (FeedItemUiTypes.entries.first { it.viewType == viewType }) {
             FeedItemUiTypes.SEEN_POSTS -> FeedSeenPostsViewHolder(
@@ -63,7 +77,13 @@ class KinoFeedAdapter(
         return mItems.currentList.size
     }
 
+    private var wasKinoActual: Boolean = false
     fun setItems(list: List<FeedItemUi>) {
-        mItems.submitList(list)
+        mItems.submitList(list){
+            val newKinoActual = list.any { it is ActualKinoFeedItem }
+            if (newKinoActual != wasKinoActual && newKinoActual) {
+                this.recycler.get()?.scrollToPosition(0)
+            }
+        }
     }
 }

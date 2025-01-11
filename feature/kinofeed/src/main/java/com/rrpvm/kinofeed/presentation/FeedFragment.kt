@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +29,7 @@ class FeedFragment : Fragment() {
     private var _binding: FragmentKinoFeedBinding? = null
     private val binding get() = checkNotNull(_binding)
     private var mAdapter: KinoFeedAdapter? = null
-    private val viewModel: FeedViewModel by viewModels()
+    private val viewModel: FeedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +84,7 @@ class FeedFragment : Fragment() {
                 launch {
                     viewModel.mEmptyScreenHolderVisible.collectLatest { isVisiblePlaceholder ->
                         binding.layoutNoContent.root.clearAnimation()
+                        binding.ivKinozLogo.isVisible = isVisiblePlaceholder.not()
                         if (isVisiblePlaceholder) {
                             binding.layoutNoContent.root.fadeIn(duration = 400L)
                         } else {
