@@ -11,6 +11,7 @@ data class UserModelToUserEntityMapper(val localAccountId: UUID) :
             internalAccountId = localAccountId,
             userId = obj.userId,
             username = obj.userName,
+            userAvatar = obj.userAvatar,
             createdAt = FromDomainDateStringMapper.mapToDomainString(obj.createdDate)
         )
     }

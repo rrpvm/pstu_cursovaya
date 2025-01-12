@@ -9,7 +9,7 @@ object UserModelToUiMapper : UserModel.Mapper<UserModelUi> {
         return UserModelUi(
             userName = obj.userName,
             userCreationDate = Const.uiDateFormatter.format(obj.createdDate),
-            userAvatar = "https://avatars.mds.yandex.net/i?id=af3b02024107a32573495496fec720b022f077df-5441329-images-thumbs&n=13"
+            userAvatar = obj.userAvatar
         )
     }
 }

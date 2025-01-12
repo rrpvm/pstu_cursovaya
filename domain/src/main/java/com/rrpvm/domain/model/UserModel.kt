@@ -5,6 +5,7 @@ import java.util.Date
 data class UserModel(
     val userId: String,
     val userName: String,
+    val userAvatar :String,
     val createdDate: Date
 ) {
     interface Mapper<T> {

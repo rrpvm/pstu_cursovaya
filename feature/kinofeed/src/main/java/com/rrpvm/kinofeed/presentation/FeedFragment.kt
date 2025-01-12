@@ -31,6 +31,7 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.onRetryFetchData()
         mAdapter = KinoFeedAdapter(
             actualFeedItemListener = viewModel as ActualFeedItemListener,
             seenFeedItemListener = viewModel as SeenFeedItemListener
@@ -104,15 +105,31 @@ class FeedFragment : Fragment() {
     private fun resolveScreenEffect(effect: MainFeedViewEffect) {
         when (effect) {
             MainFeedViewEffect.OpenYearFilter -> {
-                findNavController().navigate(FeedFragmentDirections.actionFragmentFeedToDialogYearFilter())
+                val action = FeedFragmentDirections.actionFragmentFeedToDialogYearFilter()
+                with(findNavController()) {
+                    currentDestination?.getAction(action.actionId)?.let {
+                        navigate(action)
+                    }
+                }
             }
 
             MainFeedViewEffect.OpenCountryFilter -> {
-                findNavController().navigate(FeedFragmentDirections.actionFragmentFeedToDialogCountryFilter())
+                val action = FeedFragmentDirections.actionFragmentFeedToDialogCountryFilter()
+                with(findNavController()) {
+                    currentDestination?.getAction(action.actionId)?.let {
+                        navigate(action)
+                    }
+                }
             }
 
             MainFeedViewEffect.OpenGenresFilter -> {
-                findNavController().navigate(FeedFragmentDirections.actionFragmentFeedToDialogGenreFilter())
+                val action = FeedFragmentDirections.actionFragmentFeedToDialogGenreFilter()
+                with(findNavController()) {
+                    currentDestination?.getAction(action.actionId)?.let {
+                        navigate(action)
+                    }
+                }
+
             }
 
             is MainFeedViewEffect.GoToKinoDetail -> {

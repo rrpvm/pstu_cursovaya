@@ -16,6 +16,8 @@ data class UserEntity(
     val username: String,
     @ColumnInfo(name = "created_at")
     val createdAt: String,
+    @ColumnInfo(name = "user_avatar")
+    val userAvatar: String,
 ) {
     interface Mapper<T> {
         fun map(obj: UserEntity): T

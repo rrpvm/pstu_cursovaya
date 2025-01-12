@@ -22,7 +22,6 @@ class RoomClientRepository @Inject constructor(
     private val clientDao: ClientDao,
     private val ticketsDao: TicketsDao,
     private val kinoFilmViewsDao: KinoFilmViewsDao,
-
     private val kinoDao: KinoDao,
 ) : ClientRepository {
     private val roomCEH = CoroutineExceptionHandler { coroutineContext, throwable ->

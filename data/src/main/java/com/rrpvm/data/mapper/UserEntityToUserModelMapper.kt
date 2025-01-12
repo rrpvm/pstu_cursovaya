@@ -9,7 +9,8 @@ object UserEntityToUserModelMapper : UserEntity.Mapper<UserModel> {
         return UserModel(
             userId = obj.userId,
             createdDate = FromDomainDateStringMapper.mapToDomainDate(obj.createdAt),
-            userName = obj.username
+            userName = obj.username,
+            userAvatar = obj.userAvatar
         )
     }
 }

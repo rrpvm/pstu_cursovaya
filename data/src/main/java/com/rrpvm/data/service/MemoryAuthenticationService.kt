@@ -115,10 +115,16 @@ class MemoryAuthenticationService @Inject constructor(
         private val GUEST_MODEL = UserModel(
             userId = "GUEST_ID",
             userName = "Посетитель",
+            userAvatar = "https://i.pinimg.com/originals/f0/ca/64/f0ca6421bfb0af3f6ce8cfc03178d9b4.jpg",
             createdDate = Calendar.getInstance().time
         )
         private val ADMIN_MEMORY: UserModel =
-            UserModel("UserAdmin", "admin", Calendar.Builder().setDate(2025, 1, 1).build().time)
+            UserModel(
+                userId = "UserAdmin",
+                userName = "admin",
+                userAvatar = "https://avatars.mds.yandex.net/i?id=af3b02024107a32573495496fec720b022f077df-5441329-images-thumbs&n=13",
+                createdDate = Calendar.Builder().setDate(2025, 0, 1).build().time
+            )
         private val ADMIN_MEMORY_INTERNAL_UID =
             UUID.fromString("5d145257-8dbf-4312-81cd-4150e7599be4")
     }
