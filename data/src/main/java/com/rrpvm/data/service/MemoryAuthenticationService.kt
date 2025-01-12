@@ -21,11 +21,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -67,6 +64,13 @@ class MemoryAuthenticationService @Inject constructor(
         }
     }
 
+    override suspend fun authenticateAsGuest() {
+        clientRepository.setClientData(GUEST_MODEL, GUEST_ACC_UID).also {
+            credentials.value = MemoryGuestCredential()
+            _currentAccountId.value = GUEST_ACC_UID
+        }
+    }
+
     override suspend fun logout() {
         delay(500L)
         _currentAccountId.value = null
@@ -89,6 +93,10 @@ class MemoryAuthenticationService @Inject constructor(
     init {
         serviceScope.launch {
             _currentAccountId.collectLatest { accId ->
+                if (accId == GUEST_ACC_UID) {
+                    credentials.value = MemoryGuestCredential()
+                    return@collectLatest
+                }
                 setLastInternalUUID(accId)
                 if (accId == null) {
                     credentials.value = Credentials.NoAuthCredentials
@@ -103,6 +111,12 @@ class MemoryAuthenticationService @Inject constructor(
     }
 
     companion object {
+        private val GUEST_ACC_UID = UUID.fromString("5d145111-8dbf-4312-81cd-4150e751111")
+        private val GUEST_MODEL = UserModel(
+            userId = "GUEST_ID",
+            userName = "Посетитель",
+            createdDate = Calendar.getInstance().time
+        )
         private val ADMIN_MEMORY: UserModel =
             UserModel("UserAdmin", "admin", Calendar.Builder().setDate(2025, 1, 1).build().time)
         private val ADMIN_MEMORY_INTERNAL_UID =

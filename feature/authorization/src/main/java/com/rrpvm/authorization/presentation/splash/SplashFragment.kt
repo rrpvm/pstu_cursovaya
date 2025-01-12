@@ -11,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rrpvm.authorization.databinding.FragmentSplashScreenBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
     private val viewModel: SplashScreenViewModel by viewModels<SplashScreenViewModel>()
     private var _binding: FragmentSplashScreenBinding? = null
@@ -45,6 +47,9 @@ class SplashFragment : Fragment() {
 
         binding.btnSignIn.setOnClickListener {
             viewModel.onSignInButtonClicked()
+        }
+        binding.btnSignInSilent.setOnClickListener {
+            viewModel.onSignInAsGuest()
         }
     }
 

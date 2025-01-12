@@ -13,9 +13,11 @@ import com.rrpvm.profile.presentation.menu.model.DefaultTextMenuTypes
 import com.rrpvm.profile.presentation.menu.model.ProfileMenuAdapterState
 import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
@@ -36,12 +38,9 @@ class ProfileViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     private val mAccount = authenticationService.currentAccountId.flatMapMerge { authedUUID ->
-        return@flatMapMerge runCatching {
-            clientRepository.getClientFlow(authedUUID)
-        }.getOrElse {
-            Log.w(TAG, "ProfileViewModel::mAccount is null")
-            flowOf(null)
-        }
+        clientRepository.getClientFlow(authedUUID).onFailure {
+            it.printStackTrace()
+        }.getOrNull() ?: flowOf(null)
     }.filterNotNull().onEach { userModel ->
         val uiModel = userModel.map(UserModelToUiMapper)
         _menuState.value = ProfileMenuAdapterState(
@@ -55,11 +54,6 @@ class ProfileViewModel @Inject constructor(
                     mText = stringProvider.provideString(R.string.my_tickets),
                     mIcon = R.drawable.ic_tickets,
                     type = DefaultTextMenuTypes.MyTickets
-                ),
-                ProfileMenuItem.DefaultTextMenu(
-                    mText = stringProvider.provideString(R.string.saved),
-                    mIcon = com.rrpvm.core.R.drawable.ic_like,
-                    type = DefaultTextMenuTypes.MyFavourites
                 ),
 
                 ProfileMenuItem.DefaultTextMenu(
@@ -83,7 +77,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             mAccount.launchIn(this)
         }
     }

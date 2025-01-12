@@ -10,5 +10,6 @@ interface IAuthenticationService {
     val currentAccountId: StateFlow<UUID?>
     val isAuthJobFirst : Flow<Boolean>
     suspend fun authenticate(authenticationModel: AuthenticationModel)
+    suspend fun authenticateAsGuest()
     suspend fun logout()
 }

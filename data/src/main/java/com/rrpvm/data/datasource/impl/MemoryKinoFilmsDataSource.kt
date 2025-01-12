@@ -5,24 +5,40 @@ import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.model.agerating.AgeRatingDto
 import com.rrpvm.data.model.hall.HallInfoDto
 import com.rrpvm.data.model.kinofilms.KinoModelDto
+import com.rrpvm.data.room.dao.TicketsDao
 import com.rrpvm.domain.model.GenreModel
 import com.rrpvm.domain.model.HallPlaceModel
 import com.rrpvm.domain.model.KinoSessionModel
 import com.rrpvm.domain.model.SessionHallInfoModel
+import com.rrpvm.domain.model.TicketModel
 import kotlinx.coroutines.delay
 import java.util.Calendar
+import java.util.UUID
 import javax.inject.Inject
 
-class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper: KinoDtoToKinoModelMapper) :
-    KinofilmsDataSource {
+class MemoryKinoFilmsDataSource @Inject constructor(
+    private val kinoModelMapper: KinoDtoToKinoModelMapper, private val kinoTicketsDao: TicketsDao
+) : KinofilmsDataSource {
     companion object {
         enum class DtoGenres(val genre: GenreModel) {
-            BOEVIK(GenreModel("d0ad42e1-7450-4519-aef8-2f36be7df341", "Боевик")),
-            DRAMA(GenreModel("01d775cf-3c83-4048-b374-cee0f6d08620", "Драма")),
-            COMEDY(GenreModel("c08af339-2489-40bb-a4e4-9615186ec330", "Комедия")),
-            MELODRAMA(GenreModel("8d9504be-4d4c-4539-8caa-aa02686ff80b", "Мелодрама")),
-            FANTASY(GenreModel("e718963f-914e-4eb7-b3da-7643fcd404c2", "Фантастика")),
-            TRAVEL(GenreModel("855789c1-2f83-4899-9614-64d5cb089601", "Приключения")),
+            BOEVIK(
+                GenreModel(
+                    "d0ad42e1-7450-4519-aef8-2f36be7df341",
+                    "Боевик"
+                )
+            ),
+            DRAMA(
+                GenreModel(
+                    "01d775cf-3c83-4048-b374-cee0f6d08620",
+                    "Драма"
+                )
+            ),
+            COMEDY(GenreModel("c08af339-2489-40bb-a4e4-9615186ec330", "Комедия")), MELODRAMA(
+                GenreModel("8d9504be-4d4c-4539-8caa-aa02686ff80b", "Мелодрама")
+            ),
+            FANTASY(GenreModel("e718963f-914e-4eb7-b3da-7643fcd404c2", "Фантастика")), TRAVEL(
+                GenreModel("855789c1-2f83-4899-9614-64d5cb089601", "Приключения")
+            ),
             HORROR(GenreModel("3bd22d52-2e39-4fe2-8e0a-cb2d03416b3c", "Ужасы")),
         }
 
@@ -42,7 +58,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
 
         private fun createHall(
             info: HallInfoDto, owner: String, price: Int,
-            busyByOtherList: List<Int>
+            busyByOtherList: List<Int>,
         ): SessionHallInfoModel {
             val size = info.rows * info.columns
             return SessionHallInfoModel(
@@ -52,7 +68,12 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 columns = info.columns,
                 placesSize = size,
                 places = MutableList(size) {
-                    HallPlaceModel(it, price, isBusyByOther = busyByOtherList.contains(it), false)
+                    HallPlaceModel(
+                        index = it,
+                        price = price,
+                        isBusyByOther = busyByOtherList.contains(it),
+                        isBusyByUser = false
+                    )
                 },
                 hallName = info.hallName
             )
@@ -158,8 +179,8 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
 
         ),
     ).associateBy { it.id }
-    private val kinoSessionList
-        get() = listOf(
+    private val kinoSessionList by lazy {
+        mutableListOf(
             //Аватар
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -176,21 +197,24 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     kinoModelMapper
                 ),
                 sessionStartDate = Calendar.getInstance().apply {
-                    this.add(Calendar.HOUR, 3)
+                    this.add(Calendar.HOUR, 2)
                 }.time,
                 sessionId = "50373c0c-e3cc-4f09-9772-fc36c5fb4628",
-                hallName = Halls.HALL_R.info.hallName
+                hallName = Halls.HALL_G.info.hallName
             ),
+            //third
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
                     kinoModelMapper
                 ),
                 sessionStartDate = Calendar.getInstance().apply {
-                    this.add(Calendar.HOUR, 6)
+                    this.add(Calendar.HOUR, 2)
+                    this.add(Calendar.MINUTE, 30)
                 }.time,
                 sessionId = "7a4f3094-a1c1-4be8-a462-d828d1ea792e",
-                hallName = Halls.HALL_R.info.hallName
+                hallName = Halls.HALL_B.info.hallName
             ),
+            //a-4
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
                     kinoModelMapper
@@ -201,14 +225,16 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 sessionId = "bc2f80b1-566b-4c04-aa78-a5f9161e1f24",
                 hallName = Halls.HALL_R.info.hallName
             ),
+            //a-5
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(16, 30, 30)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 12)
+                }.time,
                 sessionId = "3632ca1d-8784-454d-b103-eac719abd1f2",
-                hallName = Halls.HALL_R.info.hallName
+                hallName = Halls.HALL_G.info.hallName
             ),
             //Ронин
             KinoSessionModel(
@@ -216,7 +242,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     kinoModelMapper
                 ),
                 sessionStartDate = Calendar.getInstance().apply {
-                    this.add(Calendar.HOUR, 2)
+                    this.add(Calendar.HOUR, 1)
                 }.time,
                 sessionId = "eb2772e7-beb1-42b9-838a-6b80d494935d",
                 hallName = Halls.HALL_R.info.hallName
@@ -225,19 +251,21 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["cf65ed1d-b79a-460a-9606-1d2edaf3586c"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(18, 30, 30)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 1)
+                }.time,
                 sessionId = "4095449a-ce4f-467d-b3ed-0af6d0d3d2a6",
-                hallName = Halls.HALL_R.info.hallName
+                hallName = Halls.HALL_G.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["cf65ed1d-b79a-460a-9606-1d2edaf3586c"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(21, 30, 30)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR, 12)
+                }.time,
                 sessionId = "d5e8edd1-de15-45e7-9377-37bf7503a28c",
-                hallName = Halls.HALL_R.info.hallName
+                hallName = Halls.HALL_B.info.hallName
             ),
             //Постучись в мою дверь
             KinoSessionModel(
@@ -254,8 +282,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["ebb65720-2389-4a7e-9fe3-7d1458d240a0"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 13).setTimeOfDay(11, 15, 0)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.DAY_OF_YEAR, 5)
+                }.time,
                 sessionId = "34b94e26-99e6-40e2-9f2e-05e263768a90",
                 hallName = Halls.HALL_R.info.hallName
             ),
@@ -263,10 +292,11 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["ebb65720-2389-4a7e-9fe3-7d1458d240a0"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 13).setTimeOfDay(21, 15, 0)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.DAY_OF_YEAR, 2)
+                }.time,
                 sessionId = "fd7edc7a-7a9b-46a3-885e-d4973cbe546c",
-                hallName = Halls.HALL_R.info.hallName
+                hallName = Halls.HALL_G.info.hallName
             ),
             //Волшебник изумрудного города
             KinoSessionModel(
@@ -280,28 +310,129 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 hallName = Halls.HALL_R.info.hallName
             ),
         )
-    private val hallsBySessions: Map<String, SessionHallInfoModel>
-        get() {
-            val kinoSessionListCached = kinoSessionList
-            return mapOf(
-                with("db60116a-f83e-4b09-a3d0-5dadb1f179c8") {
-                    this to createHall(
-                        info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
-                        owner = this,
-                        price = 400,
-                        busyByOtherList = listOf(1, 4, 7, 12, 16, 19, 21, 25)
-                    )
-                },
-                with("50373c0c-e3cc-4f09-9772-fc36c5fb4628") {
-                    this to createHall(
-                        info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
-                        owner = this,
-                        price = 500,
-                        busyByOtherList = listOf(2, 3, 9, 25, 25, 27, 41, 42)
-                    )
-                }
+    }
+
+    //session - sessionhall
+    private val hallsBySessions: MutableMap<String, SessionHallInfoModel> by lazy {
+        val kinoSessionListCached = kinoSessionList
+        mutableMapOf(
+            //avatar_first
+            with("db60116a-f83e-4b09-a3d0-5dadb1f179c8") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 400,
+                    busyByOtherList = listOf(
+                        1, 4, 7, 12, 16, 19, 21, 25
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex }
+
+                )
+            },
+            //avatar_second
+            with("50373c0c-e3cc-4f09-9772-fc36c5fb4628") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        2, 3, 9, 25, 25, 27, 41, 42
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //avatar_third
+            with("7a4f3094-a1c1-4be8-a462-d828d1ea792e") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        51, 52, 53, 77, 78, 91, 92, 22, 21, 17, 4, 8
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //avatar fourth
+            with("bc2f80b1-566b-4c04-aa78-a5f9161e1f24") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        41, 42, 43, 44, 51, 52, 53, 54, 1, 9, 13, 16
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //a-5
+            with("3632ca1d-8784-454d-b103-eac719abd1f2") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        41, 42, 43, 44, 51, 52, 53, 54, 1, 9, 13, 16
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //ронин
+            with("eb2772e7-beb1-42b9-838a-6b80d494935d") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        2, 4, 6, 8, 24, 36, 48, 60, 72, 84, 96, 0
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //ronin-2
+            with("4095449a-ce4f-467d-b3ed-0af6d0d3d2a6") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        6, 9, 12, 15, 18, 24, 30, 33, 37, 90, 80, 71
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //ronin-3
+            with("d5e8edd1-de15-45e7-9377-37bf7503a28c") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52
+                    ) + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //стучись в дверь
+            with("5d7e1b9c-d0ba-4903-ba91-087dc179c28d") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = listOf(
+                        5, 10, 15, 25, 30, 35, 40, 45
+                    ) + List(5) {
+                        45 + it * 5
+                    } + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //стучись в дверь - 2
+            with("34b94e26-99e6-40e2-9f2e-05e263768a90") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = List(13) {
+                        it + it * 2 + it % 13
+                    } + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+            //стучись в дверь - 3
+            with("fd7edc7a-7a9b-46a3-885e-d4973cbe546c") {
+                this to createHall(info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                    owner = this,
+                    price = 500,
+                    busyByOtherList = List(17) {
+                        it + it * 3 + it % 17
+                    } + kinoTicketsDao.getTickets().filter { it.sessionId == this }
+                        .map { it.placeIndex })
+            },
+
             )
-        }
+    }
 
 
     override suspend fun getAllAfishaKinoSessions(): List<KinoSessionModel> {
@@ -317,5 +448,32 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
     override suspend fun getHallInformationBySessionId(sessionId: String): SessionHallInfoModel {
         delay(1000L)//имитация сетевого запроса
         return hallsBySessions[sessionId]!!
+    }
+
+    override suspend fun buyTickets(
+        sessionId: String, places: List<Int>
+    ): Result<List<TicketModel>> {
+        return kotlin.runCatching {
+            if (places.isEmpty()) throw RuntimeException("empty")
+            val hall = hallsBySessions[sessionId]!!
+            val ticketList = mutableListOf<TicketModel>()
+            hallsBySessions[sessionId] = hall.copy(places = hall.places.toMutableList().apply {
+                for (index in places) {
+                    if (this[index].isBusy) {
+                        throw RuntimeException("занято")
+                    }
+                    this[index] = this[index].copy(isBusyByOther = true)
+                    ticketList.add(
+                        TicketModel(
+                            ticketId = UUID.randomUUID().toString(),
+                            sessionId = sessionId,
+                            hallId = hall.hallId,
+                            placeIndex = index
+                        )
+                    )
+                }
+            })
+            ticketList
+        }
     }
 }

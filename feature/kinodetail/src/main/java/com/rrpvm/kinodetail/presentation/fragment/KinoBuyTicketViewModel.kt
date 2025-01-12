@@ -7,15 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.model.HallPlaceModel
 import com.rrpvm.domain.repository.HallRepository
+import com.rrpvm.domain.repository.TicketsRepository
 import com.rrpvm.kinodetail.presentation.model.kino_ticket.KinoBuyTicketScreenEffect
 import com.rrpvm.kinodetail.presentation.model.kino_ticket.KinoBuyTicketViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,7 +40,8 @@ private data class HallShortInformation(
 @HiltViewModel
 class KinoBuyTicketViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val hallRepository: HallRepository
+    private val hallRepository: HallRepository,
+    private val ticketsRepository: TicketsRepository,
 ) : ViewModel() {
     private val _screenEffect = MutableSharedFlow<KinoBuyTicketScreenEffect>()
     internal val screenEffect = _screenEffect.asSharedFlow()
@@ -73,6 +77,7 @@ class KinoBuyTicketViewModel @Inject constructor(
             }
         }
     }.filterNotNull()
+    private val _screenState = screenState.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -97,6 +102,7 @@ class KinoBuyTicketViewModel @Inject constructor(
                     adapterState.value = it.places
                 }
                 .onFailure {
+                    _screenEffect.emit(KinoBuyTicketScreenEffect.GoBackWithFailure)
                     it.printStackTrace()
                 }
         }.invokeOnCompletion {
@@ -112,6 +118,28 @@ class KinoBuyTicketViewModel @Inject constructor(
             val place = this[index]
             if (place.isBusyByOther) return
             this[index] = place.copy(isBusyByUser = place.isBusyByUser.not())
+        }
+    }
+
+    fun onBuyTickets() {
+        val data = _screenState.value ?: return
+        if (data !is KinoBuyTicketViewState.Success) return
+        if (data.selectedPlaces.isEmpty()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                ticketsRepository.buyTickets(
+                    possibleTicketIndexes = data.selectedPlaces
+                        .map {
+                            it.index
+                        }
+                        .toList(),
+                    sessionId = data.sessionId
+                )
+            }.onSuccess {
+                _screenEffect.emit(KinoBuyTicketScreenEffect.GoBackWithSuccess)
+            }.onFailure {
+                it.printStackTrace()
+            }
         }
     }
 }

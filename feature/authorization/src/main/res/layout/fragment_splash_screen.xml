@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
-                android:text="@string/button_register" />
+                android:text="@string/button_register"
+                android:visibility="invisible" />
 
             <Button
                 android:id="@+id/btn_sign_in_silent"

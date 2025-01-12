@@ -21,7 +21,7 @@ class ClientInfoViewHolder(private val binding: ItemAccountInfoBinding) :
         glideLoader = Glide.with(binding.ivAvatar.context.applicationContext)
             .load(item.avatarUri)
             .centerCrop()
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(object : SimpleTarget<Drawable>() {
                 override fun onResourceReady(
                     resource: Drawable,

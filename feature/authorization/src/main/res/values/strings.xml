@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="button_sign_in">Sign in</string>
-    <string name="button_sign_in_as_guest">Sign in as guest</string>
+    <string name="button_sign_in">Авторизоваться</string>
+    <string name="button_sign_in_as_guest">Войти как гость</string>
     <string name="button_register">Sign up</string>
 </resources>

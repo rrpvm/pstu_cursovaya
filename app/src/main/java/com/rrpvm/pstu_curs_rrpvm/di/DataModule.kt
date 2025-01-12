@@ -14,14 +14,17 @@ import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
 import com.rrpvm.data.repository.FilterRepositoryImpl
 import com.rrpvm.data.repository.HallNonCacheRepository
 import com.rrpvm.data.repository.RoomAgeRatingRepository
+import com.rrpvm.data.repository.RoomTicketsRepository
 import com.rrpvm.data.room.dao.AgeRatingDao
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.data.room.dao.KinoGenresDao
+import com.rrpvm.data.room.dao.TicketsDao
 import com.rrpvm.domain.repository.AgeRatingRepository
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.HallRepository
 import com.rrpvm.domain.repository.KinoRepository
+import com.rrpvm.domain.repository.TicketsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -47,6 +50,8 @@ abstract class DataModule {
     @Binds
     abstract fun bindHallRepository(repository: HallNonCacheRepository): HallRepository
 
+    @Binds
+    abstract fun bindTicketsRepository(repository: RoomTicketsRepository): TicketsRepository
 
     @Binds
     abstract fun bindKinoFilmDataSource(dataSource: MemoryKinoFilmsDataSource): KinofilmsDataSource
@@ -57,8 +62,18 @@ abstract class DataModule {
     companion object {
         @Provides
         @Singleton
-        fun provideClientRepository(clientDao: ClientDao): RoomClientRepository {
-            return RoomClientRepository(clientDao)
+        fun provideClientRepository(
+            clientDao: ClientDao,
+            ticketsDao: TicketsDao,
+            kinoDao: KinoDao,
+            kinoFilmViewsDao: KinoFilmViewsDao
+        ): RoomClientRepository {
+            return RoomClientRepository(
+                clientDao = clientDao,
+                ticketsDao = ticketsDao,
+                kinoFilmViewsDao = kinoFilmViewsDao,
+                kinoDao = kinoDao
+            )
         }
 
         @Provides
@@ -92,8 +107,18 @@ abstract class DataModule {
         }
 
         @Provides
+        fun provideTicketsDao(db: KinoZDatabase): TicketsDao {
+            return db.getTicketsDao()
+        }
+
+        @Provides
         @Singleton
         fun provideRoomAgeRatingRepository(dao: AgeRatingDao) = RoomAgeRatingRepository(dao)
+
+        @Provides
+        @Singleton
+        fun provideRoomTicketsRepository(ticketsDao: TicketsDao, dataSource: KinofilmsDataSource) =
+            RoomTicketsRepository(ticketsDao = ticketsDao, dataSource = dataSource)
 
         @Provides
         @Singleton
@@ -102,8 +127,11 @@ abstract class DataModule {
 
         @Provides
         @Singleton
-        fun provideMemoryKinoFilmsDataSource(mapper: KinoDtoToKinoModelMapper): MemoryKinoFilmsDataSource {
-            return MemoryKinoFilmsDataSource(mapper)
+        fun provideMemoryKinoFilmsDataSource(
+            mapper: KinoDtoToKinoModelMapper,
+            kinoTicketsDao: TicketsDao
+        ): MemoryKinoFilmsDataSource {
+            return MemoryKinoFilmsDataSource(mapper, kinoTicketsDao)
         }
 
 

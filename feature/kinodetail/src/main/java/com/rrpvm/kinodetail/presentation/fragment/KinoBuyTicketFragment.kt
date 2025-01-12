@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -47,6 +48,9 @@ class KinoBuyTicketFragment : Fragment() {
         binding.rvPlaces.adapter = adapter
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+        binding.btnBuyTicket.setOnClickListener {
+            viewModel.onBuyTickets()
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -113,7 +117,7 @@ class KinoBuyTicketFragment : Fragment() {
         when (uiEffect) {
             is KinoBuyTicketScreenEffect.InfoFetched -> {
                 binding.rvPlaces.layoutManager =
-                    HallSquareGridLayoutManager(binding.rvPlaces.context, uiEffect.column).also {
+                    GridLayoutManager(binding.rvPlaces.context, uiEffect.column).also {
                         it.orientation = GridLayoutManager.VERTICAL
                     }
                 with(binding.rvPlaces) {
@@ -122,6 +126,26 @@ class KinoBuyTicketFragment : Fragment() {
                     }
                     addItemDecoration(HallPlaceDecorator(uiEffect.column, requireContext()), 0)
                 }
+            }
+
+            KinoBuyTicketScreenEffect.GoBackWithSuccess -> {
+                Toast.makeText(
+                    requireContext(),
+                    "Билеты успешно куплены!(тут мог быть редирект на оплату)",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                findNavController().navigateUp()
+            }
+
+            KinoBuyTicketScreenEffect.GoBackWithFailure -> {
+                Toast.makeText(
+                    requireContext(),
+                    "Возникла ошибка - не удаётся найти информацию",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                findNavController().navigateUp()
             }
         }
     }

@@ -189,7 +189,7 @@ class KinoDetailFragment : Fragment() {
                 .error(R.drawable.error_loading_image_with_surface)
                 .placeholder(com.rrpvm.core.R.color.surface_contrast)
                 .transform(RoundedCorners((resources.displayMetrics.density * 8).toInt()))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onLoadStarted(placeholder: Drawable?) {
                         _binding?.ivKinoFull?.setImageDrawable(placeholder)
@@ -232,6 +232,6 @@ class KinoDetailFragment : Fragment() {
 
     companion object {
         private val releaseDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        private val sessionShowDateFormat = SimpleDateFormat("EE, dd MMMM с hh:mm", Locale("Ru"))
+        private val sessionShowDateFormat = SimpleDateFormat("EE, dd MMMM с HH:mm", Locale("Ru"))
     }
 }

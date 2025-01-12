@@ -16,4 +16,7 @@ interface KinoFilmViewsDao {
     fun insertKinoView(view: KinoFilmViewEntity)
 
 
+    @Query("DELETE FROM kino_film_views_table")
+    fun clearTable()
+
 }

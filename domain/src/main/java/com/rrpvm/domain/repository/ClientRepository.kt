@@ -7,7 +7,7 @@ import kotlin.jvm.Throws
 
 interface ClientRepository {
     @Throws(NoSuchElementException::class)
-    fun getClientFlow(currentUUID: UUID?): Flow<UserModel>
+    fun getClientFlow(currentUUID: UUID?): Result<Flow<UserModel>>
 
     @Throws(NoSuchElementException::class)
     suspend fun getClientInternalUUID(clientId: String): UUID

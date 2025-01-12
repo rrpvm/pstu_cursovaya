@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.map
 
 @Dao
 interface KinoDao {
+    @Query("DELETE from kinos_table")
+    fun clearTable()
+
     @Query("SELECT * FROM kinos_table")
     fun getKinoList(): List<KinoEntity>
 
