@@ -28,8 +28,8 @@ import com.rrpvm.kinodetail.R
 import com.rrpvm.kinodetail.databinding.FragmentKinoDetailBinding
 import com.rrpvm.kinodetail.presentation.adapter.GenreListAdapter
 import com.rrpvm.kinodetail.presentation.adapter.SessionListAdapter
-import com.rrpvm.kinodetail.presentation.model.KinoDetailViewData
-import com.rrpvm.kinodetail.presentation.model.SessionModelUi
+import com.rrpvm.kinodetail.presentation.model.detail.KinoDetailViewData
+import com.rrpvm.kinodetail.presentation.model.detail.SessionModelUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -49,7 +49,7 @@ class KinoDetailFragment : Fragment() {
         GenreListAdapter()
     }
     private val sessionAdapter by lazy {
-        SessionListAdapter()
+        SessionListAdapter(viewModel::onBuyTicket)
     }
     private var loadingTarget: Target<*>? = null
     override fun onCreateView(
@@ -74,6 +74,19 @@ class KinoDetailFragment : Fragment() {
                 launch {
                     viewModel.genresAdapterData.collectLatest {
                         genreAdapter.setItems(it)
+                    }
+                }
+                launch {
+                    viewModel.screenEffect.collectLatest {
+                        when (it) {
+                            is KinoDetailScreenEffect.GoBuyTicket -> {
+                                findNavController().navigate(
+                                    KinoDetailFragmentDirections.actionFragmentKinoDetailToFragmentKinoBuyTicket(
+                                        it.sessionId
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
                 launch {

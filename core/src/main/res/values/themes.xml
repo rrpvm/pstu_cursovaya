@@ -23,6 +23,14 @@
         <item name="android:paddingVertical">8dp</item>
         <item name="android:paddingHorizontal">16dp</item>
     </style>
+    <style name="DefaultOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">8dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+    </style>
 
     <style name="MyDefaultMaterialButton" parent="DefaultButton">
         <item name="cornerRadius">8dp</item>
@@ -31,6 +39,14 @@
         <item name="android:paddingVertical">8dp</item>
         <item name="android:paddingHorizontal">16dp</item>
     </style>
+    <style name="MyDefaultOutlinedMaterialButton" parent="DefaultOutlinedButton">
+        <item name="cornerRadius">8dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+    </style>
+
 
     <style name="WarnDefaultMaterialButton" parent="MyDefaultMaterialButton">
         <item name="backgroundTint">@color/e40</item>

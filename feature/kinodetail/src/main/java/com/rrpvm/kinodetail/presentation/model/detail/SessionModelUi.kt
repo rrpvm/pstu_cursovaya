@@ -1,6 +1,6 @@
-package com.rrpvm.kinodetail.presentation.model
+package com.rrpvm.kinodetail.presentation.model.detail
 
-data class SessionModelUi(
+internal data class SessionModelUi(
     val sessionId: String,
     val sessionIndexNormalized: String,
     val label: String,

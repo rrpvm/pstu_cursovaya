@@ -3,9 +3,12 @@ package com.rrpvm.data.datasource.impl
 import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.model.agerating.AgeRatingDto
+import com.rrpvm.data.model.hall.HallInfoDto
 import com.rrpvm.data.model.kinofilms.KinoModelDto
 import com.rrpvm.domain.model.GenreModel
+import com.rrpvm.domain.model.HallPlaceModel
 import com.rrpvm.domain.model.KinoSessionModel
+import com.rrpvm.domain.model.SessionHallInfoModel
 import kotlinx.coroutines.delay
 import java.util.Calendar
 import javax.inject.Inject
@@ -22,12 +25,39 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
             TRAVEL(GenreModel("855789c1-2f83-4899-9614-64d5cb089601", "Приключения")),
             HORROR(GenreModel("3bd22d52-2e39-4fe2-8e0a-cb2d03416b3c", "Ужасы")),
         }
-        enum class SessionAdditionalInfo(val info :String){
-            HALL_R("Зал R"),
-            HALL_G("Зал G"),
-            HALL_B("Зал B");
+
+        enum class Halls(val info: HallInfoDto) {
+            HALL_R(
+                HallInfoDto("GustavoFring", "Зал R", 9, 14)
+            ),
+            HALL_G(
+                HallInfoDto("WillyWonka", "Зал G", 8, 17)
+            ),
+            HALL_B(
+                HallInfoDto("WalterWhite", "Зал B", 10, 13)
+            );
             //палитра
         }
+
+
+        private fun createHall(
+            info: HallInfoDto, owner: String, price: Int,
+            busyByOtherList: List<Int>
+        ): SessionHallInfoModel {
+            val size = info.rows * info.columns
+            return SessionHallInfoModel(
+                hallId = info.hallId,
+                ownerId = owner,
+                rows = info.rows,
+                columns = info.columns,
+                placesSize = size,
+                places = MutableList(size) {
+                    HallPlaceModel(it, price, isBusyByOther = busyByOtherList.contains(it), false)
+                },
+                hallName = info.hallName
+            )
+        }
+
         enum class AgeRatings(val dto: AgeRatingDto) {
             `0`(
                 AgeRatingDto(
@@ -128,10 +158,8 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
 
         ),
     ).associateBy { it.id }
-
-    override suspend fun getAllAfishaKinoSessions(): List<KinoSessionModel> {
-        delay(1000L)//имитация сетевого запроса
-        return listOf<KinoSessionModel>(
+    private val kinoSessionList
+        get() = listOf(
             //Аватар
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -141,7 +169,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 1)
                 }.time,
                 sessionId = "db60116a-f83e-4b09-a3d0-5dadb1f179c8",
-                additionInfo = SessionAdditionalInfo.HALL_R.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -151,7 +179,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 3)
                 }.time,
                 sessionId = "50373c0c-e3cc-4f09-9772-fc36c5fb4628",
-                additionInfo = SessionAdditionalInfo.HALL_R.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -161,7 +189,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 6)
                 }.time,
                 sessionId = "7a4f3094-a1c1-4be8-a462-d828d1ea792e",
-                additionInfo = SessionAdditionalInfo.HALL_G.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -171,7 +199,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 8)
                 }.time,
                 sessionId = "bc2f80b1-566b-4c04-aa78-a5f9161e1f24",
-                additionInfo = SessionAdditionalInfo.HALL_B.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["5874b417-5417-4b01-be85-aa9f647bd35f"]!!.map(
@@ -180,7 +208,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(16, 30, 30)
                     .build().time,
                 sessionId = "3632ca1d-8784-454d-b103-eac719abd1f2",
-                additionInfo = SessionAdditionalInfo.HALL_R.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             //Ронин
             KinoSessionModel(
@@ -191,7 +219,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 2)
                 }.time,
                 sessionId = "eb2772e7-beb1-42b9-838a-6b80d494935d",
-                additionInfo = SessionAdditionalInfo.HALL_G.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["cf65ed1d-b79a-460a-9606-1d2edaf3586c"]!!.map(
@@ -200,7 +228,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(18, 30, 30)
                     .build().time,
                 sessionId = "4095449a-ce4f-467d-b3ed-0af6d0d3d2a6",
-                additionInfo = SessionAdditionalInfo.HALL_B.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["cf65ed1d-b79a-460a-9606-1d2edaf3586c"]!!.map(
@@ -209,7 +237,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 sessionStartDate = Calendar.Builder().setDate(2025, 0, 10).setTimeOfDay(21, 30, 30)
                     .build().time,
                 sessionId = "d5e8edd1-de15-45e7-9377-37bf7503a28c",
-                additionInfo = SessionAdditionalInfo.HALL_R.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             //Постучись в мою дверь
             KinoSessionModel(
@@ -220,7 +248,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR, 2)
                 }.time,
                 sessionId = "5d7e1b9c-d0ba-4903-ba91-087dc179c28d",
-                additionInfo = SessionAdditionalInfo.HALL_B.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["ebb65720-2389-4a7e-9fe3-7d1458d240a0"]!!.map(
@@ -229,7 +257,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 sessionStartDate = Calendar.Builder().setDate(2025, 0, 13).setTimeOfDay(11, 15, 0)
                     .build().time,
                 sessionId = "34b94e26-99e6-40e2-9f2e-05e263768a90",
-                additionInfo = SessionAdditionalInfo.HALL_G.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             KinoSessionModel(
                 kinoModel = kinoList["ebb65720-2389-4a7e-9fe3-7d1458d240a0"]!!.map(
@@ -238,7 +266,7 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 sessionStartDate = Calendar.Builder().setDate(2025, 0, 13).setTimeOfDay(21, 15, 0)
                     .build().time,
                 sessionId = "fd7edc7a-7a9b-46a3-885e-d4973cbe546c",
-                additionInfo = SessionAdditionalInfo.HALL_R.info
+                hallName = Halls.HALL_R.info.hallName
             ),
             //Волшебник изумрудного города
             KinoSessionModel(
@@ -249,13 +277,45 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                     this.add(Calendar.HOUR_OF_DAY, 9)
                 }.time,
                 sessionId = "db84083c-0f50-43f7-9b05-7b4882ae8073",
-                additionInfo = SessionAdditionalInfo.HALL_B.info
+                hallName = Halls.HALL_R.info.hallName
             ),
         )
+    private val hallsBySessions: Map<String, SessionHallInfoModel>
+        get() {
+            val kinoSessionListCached = kinoSessionList
+            return mapOf(
+                with("db60116a-f83e-4b09-a3d0-5dadb1f179c8") {
+                    this to createHall(
+                        info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                        owner = this,
+                        price = 400,
+                        busyByOtherList = listOf(1, 4, 7, 12, 16, 19, 21, 25)
+                    )
+                },
+                with("50373c0c-e3cc-4f09-9772-fc36c5fb4628") {
+                    this to createHall(
+                        info = Halls.entries.first { it.info.hallName == kinoSessionListCached.first { e -> e.sessionId == this }.hallName }.info,
+                        owner = this,
+                        price = 500,
+                        busyByOtherList = listOf(2, 3, 9, 25, 25, 27, 41, 42)
+                    )
+                }
+            )
+        }
+
+
+    override suspend fun getAllAfishaKinoSessions(): List<KinoSessionModel> {
+        delay(1000L)//имитация сетевого запроса
+        return kinoSessionList
     }
 
     override suspend fun getAllAfishaKinos(): List<KinoModelDto> {
-        delay(1000)
+        delay(1000)//имитация сетевого запроса
         return kinoList.values.toList()
+    }
+
+    override suspend fun getHallInformationBySessionId(sessionId: String): SessionHallInfoModel {
+        delay(1000L)//имитация сетевого запроса
+        return hallsBySessions[sessionId]!!
     }
 }

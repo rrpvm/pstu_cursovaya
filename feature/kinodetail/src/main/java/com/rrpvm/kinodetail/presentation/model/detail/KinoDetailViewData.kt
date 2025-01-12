@@ -1,8 +1,8 @@
-package com.rrpvm.kinodetail.presentation.model
+package com.rrpvm.kinodetail.presentation.model.detail
 
 
 
-sealed class KinoDetailViewData {
+internal sealed class KinoDetailViewData {
     data object ScreenLoading : KinoDetailViewData()
     data object ScreenFail : KinoDetailViewData()
     data class Success(val kino: FullDetailKinoModelUi) : KinoDetailViewData()

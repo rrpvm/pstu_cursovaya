@@ -9,7 +9,7 @@ object KinoSessionModelToKinoSessionEntityMapper : KinoSessionModel.Mapper<KinoS
             sessionId = obj.sessionId,
             kinoId = obj.kinoModel.id,
             sessionStartDate = com.rrpvm.domain.util.Const.baseFullDateFormat.format(obj.sessionStartDate),
-            sessionDescription =obj.additionInfo
+            sessionDescription =obj.hallName
         )
     }
 }

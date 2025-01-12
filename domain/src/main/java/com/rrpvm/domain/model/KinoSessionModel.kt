@@ -6,7 +6,7 @@ data class KinoSessionModel(
     val sessionId : String,
     val kinoModel: KinoModel,
     val sessionStartDate: Date,
-    val additionInfo : String
+    val hallName : String
 ) {
     interface Mapper<T> {
         fun map(obj: KinoSessionModel): T

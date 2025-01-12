@@ -1,9 +1,9 @@
-package com.rrpvm.kinodetail.presentation.model
+package com.rrpvm.kinodetail.presentation.model.detail
 
 import com.rrpvm.domain.model.AgeRatingModel
 import com.rrpvm.domain.model.KinoWithSessionsModel
 
-data class FullDetailKinoModelUi(
+internal data class FullDetailKinoModelUi(
     val base: KinoWithSessionsModel,
     val ageRatingModel: AgeRatingModel?,
 )

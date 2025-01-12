@@ -12,8 +12,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.rrpvm.core.presentation.fadeIn
-import com.rrpvm.core.presentation.fadeOff
 import com.rrpvm.kinofeed.databinding.FragmentKinoFeedBinding
 import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.adapter.KinoFeedAdapter

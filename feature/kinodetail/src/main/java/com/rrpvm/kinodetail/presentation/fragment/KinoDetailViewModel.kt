@@ -5,13 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrpvm.domain.repository.AgeRatingRepository
 import com.rrpvm.domain.repository.KinoRepository
-import com.rrpvm.kinodetail.presentation.model.FullDetailKinoModelUi
-import com.rrpvm.kinodetail.presentation.model.KinoDetailViewData
+import com.rrpvm.kinodetail.presentation.model.detail.FullDetailKinoModelUi
+import com.rrpvm.kinodetail.presentation.model.detail.KinoDetailViewData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
@@ -19,6 +21,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+
+sealed class KinoDetailScreenEffect {
+    data class GoBuyTicket(val sessionId: String) : KinoDetailScreenEffect()
+}
 
 @HiltViewModel
 class KinoDetailViewModel @Inject constructor(
@@ -28,7 +34,11 @@ class KinoDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val _screenState =
         MutableStateFlow<KinoDetailViewData>(KinoDetailViewData.ScreenLoading)
-    val screenState = _screenState.asStateFlow()
+    private val _screenEffect = MutableSharedFlow<KinoDetailScreenEffect>()
+    val screenEffect = _screenEffect.asSharedFlow()
+
+
+    internal val screenState = _screenState.asStateFlow()
     val genresAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
         return@map it.kino.base.kinoModel.genres.sortedBy { genre ->
             genre.title
@@ -77,6 +87,12 @@ class KinoDetailViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                 }
+        }
+    }
+
+    fun onBuyTicket(sessionId: String) {
+        viewModelScope.launch {
+            _screenEffect.emit(KinoDetailScreenEffect.GoBuyTicket(sessionId))
         }
     }
 

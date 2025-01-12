@@ -17,5 +17,17 @@
             android:name="kinoId"
             app:argType="string"
             app:nullable="false" />
+        <action
+            android:id="@+id/action_fragment_kino_detail_to_fragment_kino_buy_ticket"
+            app:destination="@id/fragment_kino_buy_ticket"/>
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_kino_buy_ticket"
+        android:name="com.rrpvm.kinodetail.presentation.fragment.KinoBuyTicketFragment"
+        tools:layout="@layout/fragment_kino_buy_ticket">
+        <argument
+            android:name="sessionId"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 </navigation>

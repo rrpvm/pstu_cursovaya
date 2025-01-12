@@ -12,6 +12,7 @@ import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.mapper_helpers.IsLikedKinoChecker
 import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
 import com.rrpvm.data.repository.FilterRepositoryImpl
+import com.rrpvm.data.repository.HallNonCacheRepository
 import com.rrpvm.data.repository.RoomAgeRatingRepository
 import com.rrpvm.data.room.dao.AgeRatingDao
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
@@ -19,6 +20,7 @@ import com.rrpvm.data.room.dao.KinoGenresDao
 import com.rrpvm.domain.repository.AgeRatingRepository
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.FilterRepository
+import com.rrpvm.domain.repository.HallRepository
 import com.rrpvm.domain.repository.KinoRepository
 import dagger.Binds
 import dagger.Module
@@ -41,6 +43,10 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindAgeRatingRepository(repository: RoomAgeRatingRepository): AgeRatingRepository
+
+    @Binds
+    abstract fun bindHallRepository(repository: HallNonCacheRepository): HallRepository
+
 
     @Binds
     abstract fun bindKinoFilmDataSource(dataSource: MemoryKinoFilmsDataSource): KinofilmsDataSource
@@ -89,12 +95,17 @@ abstract class DataModule {
         @Singleton
         fun provideRoomAgeRatingRepository(dao: AgeRatingDao) = RoomAgeRatingRepository(dao)
 
+        @Provides
+        @Singleton
+        fun provideNonCacheHallRepository(kinofilmsDataSource: KinofilmsDataSource) =
+            HallNonCacheRepository(kinofilmsDataSource)
 
         @Provides
         @Singleton
         fun provideMemoryKinoFilmsDataSource(mapper: KinoDtoToKinoModelMapper): MemoryKinoFilmsDataSource {
             return MemoryKinoFilmsDataSource(mapper)
         }
+
 
         @Provides
         @Singleton

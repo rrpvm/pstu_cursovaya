@@ -4,22 +4,35 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rrpvm.kinodetail.databinding.ItemSessionBinding
-import com.rrpvm.kinodetail.presentation.model.SessionModelUi
+import com.rrpvm.kinodetail.presentation.model.detail.SessionModelUi
 
-class SessionListAdapter : RecyclerView.Adapter<SessionListAdapter.SessionViewHolder>() {
+class SessionListAdapter(private val onBuyTicket: (sessionId: String) -> Unit) :
+    RecyclerView.Adapter<SessionListAdapter.SessionViewHolder>() {
     private val items = mutableListOf<SessionModelUi>()
 
 
-    class SessionViewHolder(private val binding: ItemSessionBinding) :
+    class SessionViewHolder(
+        private val binding: ItemSessionBinding,
+        onBuyTicket: (sessionId: String) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: SessionModelUi) {
+        private var sessionId: String? = null
+
+        init {
+            binding.btnBuyTicket.setOnClickListener {
+                onBuyTicket.invoke(sessionId ?: return@setOnClickListener)
+            }
+        }
+
+        internal fun onBind(item: SessionModelUi) {
+            sessionId = item.sessionId
             binding.tvNumber.text = item.sessionIndexNormalized
             binding.tvSessionLabel.text =
                 StringBuilder().append(item.sessionInfo).append(", ").append(item.label).toString()
         }
     }
 
-    fun setItems(list: List<SessionModelUi>) {
+    internal fun setItems(list: List<SessionModelUi>) {
         items.clear()
         items.addAll(list)
         notifyDataSetChanged()//все равно данные никак не меняются на экране деталей
@@ -31,7 +44,8 @@ class SessionListAdapter : RecyclerView.Adapter<SessionListAdapter.SessionViewHo
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onBuyTicket
         )
     }
 

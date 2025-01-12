@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="4dp"
+    android:background="@color/white"
+    android:maxHeight="32dp"
+    android:paddingVertical="2dp"
+    tools:layout_height="24dp"
+    tools:backgroundTint="@color/unused_place">
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:maxLines="1"
+        android:textSize="12sp"
+        tools:text="23" />
+</FrameLayout>

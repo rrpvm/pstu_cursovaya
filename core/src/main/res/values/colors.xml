@@ -17,4 +17,6 @@
     <color name="surface_experimental">#e3e9ea</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="semi_transparent_black">#80000000</color>
+    <color name="unused_place">#BFBCB8B8</color>
+    <color name="client_selected">#028002</color>
 </resources>
