@@ -3,7 +3,7 @@ package com.rrpvm.kinofeed.presentation.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.BaseKinoModel
 import com.rrpvm.kinofeed.databinding.ItemKinoItemBinding
 import com.rrpvm.kinofeed.presentation.viewholder.KinoViewHolder
 
@@ -11,7 +11,7 @@ const val ITEM_SIZE_MULTIPLIER = 0.3
 
 class DefaultKinoListAdapter(private val onKinoSelected: ((kinoId: String) -> Unit)) :
     RecyclerView.Adapter<KinoViewHolder>() {
-    private val mItems = mutableListOf<KinoModel>()
+    private val mItems = mutableListOf<BaseKinoModel>()
     //callbacks
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KinoViewHolder {
@@ -43,7 +43,7 @@ class DefaultKinoListAdapter(private val onKinoSelected: ((kinoId: String) -> Un
         return mItems.size
     }
 
-    fun setItems(list: List<KinoModel>) {
+    fun setItems(list: List<BaseKinoModel>) {
         mItems.clear()
         mItems.addAll(list)
         notifyDataSetChanged()

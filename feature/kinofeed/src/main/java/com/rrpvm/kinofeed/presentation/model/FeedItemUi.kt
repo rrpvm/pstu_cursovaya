@@ -7,8 +7,6 @@ open class FeedItemUi(private val type: FeedItemUiTypes) {
 enum class FeedItemUiTypes(val viewType: Int) {
     SEEN_POSTS(0xF),
     ACTUAL_POSTS(0xFF),
-    NEW_POSTS(0xFFF),
-    FATHERLANDS_POSTS(0xFFFF),
-    FOREIGN_POSTS(0xFFFFF),
+    LIKED_POSTS(0xFFF)
 
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.contract.KinoModelFilterContract
-import com.rrpvm.domain.model.FilterModel
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
@@ -13,6 +12,7 @@ import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
 import com.rrpvm.kinofeed.presentation.listener.SeenFeedItemListener
 import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
+import com.rrpvm.kinofeed.presentation.model.LikedKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.MainFeedViewEffect
 import com.rrpvm.kinofeed.presentation.model.PickDateModeUi
 import com.rrpvm.kinofeed.presentation.model.SeenKinoFeedItem
@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -56,14 +55,16 @@ class FeedViewModel @Inject constructor(
             )
         )
     private val seenFeedState = MutableStateFlow(SeenKinoFeedItem(viewedKinoList = emptyList()))
+    private val likedFeedState = MutableStateFlow(LikedKinoFeedItem(likedKinoList = emptyList()))
     private val _mAdapterLoadingState = MutableStateFlow(true)
 
     val mAdapterState =
         combine(
             actualFeedState,
             seenFeedState,
+            likedFeedState,
             _mAdapterLoadingState
-        ) { actualKinoFeedItem, seenKinoFeedItem, isLoadingNetwork ->
+        ) { actualKinoFeedItem, seenKinoFeedItem, likedFeedState, isLoadingNetwork ->
             val builder = mutableListOf<FeedItemUi>()
             if (!isLoadingNetwork || actualKinoFeedItem.kinoList.isNotEmpty()) {
                 //если мы не фетчим данные или список не пустой -> можем отобразить айтем с прокручиванием
@@ -72,6 +73,10 @@ class FeedViewModel @Inject constructor(
             if (seenKinoFeedItem.viewedKinoList.isNotEmpty()) {
                 builder.add(seenKinoFeedItem)
             }
+            if (likedFeedState.likedKinoList.isNotEmpty()) {
+                builder.add(likedFeedState)
+            }
+
             return@combine builder.takeIf { it.isNotEmpty() } ?: run {
                 Log.e("null", "${actualKinoFeedItem.kinoList}")
                 return@combine null
@@ -96,6 +101,7 @@ class FeedViewModel @Inject constructor(
         fetchKinoFeed()
         observeActualFeedState()
         observeViewedFeedState()
+        observeLikedFeedState()
     }
 
     override fun onRetryFetchData() {
@@ -215,7 +221,13 @@ class FeedViewModel @Inject constructor(
                 }
         }
     }
-
+    private fun observeLikedFeedState(){
+        viewModelScope.launch(Dispatchers.Default + cre) {
+            kinoRepository.getLikedKinoFilms().collectLatest {
+                likedFeedState.value = LikedKinoFeedItem(it)
+            }
+        }
+    }
     private fun observeViewedFeedState() {
         viewModelScope.launch(Dispatchers.Default + cre) {
             kinoRepository.getKinoFilmsViewed().collectLatest {

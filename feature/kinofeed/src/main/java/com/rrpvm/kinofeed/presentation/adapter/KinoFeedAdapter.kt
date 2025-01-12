@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.rrpvm.kinofeed.databinding.ItemFeedActualDayPostsBinding
+import com.rrpvm.kinofeed.databinding.ItemFeedLikedBinding
 import com.rrpvm.kinofeed.databinding.ItemFeedSeenPostsBinding
 import com.rrpvm.kinofeed.presentation.diffcallback.FeedItemUiDiffCallback
 import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener
@@ -13,6 +14,7 @@ import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import com.rrpvm.kinofeed.presentation.model.FeedItemUiTypes
 import com.rrpvm.kinofeed.presentation.viewholder.FeedActualDayPostsViewHolder
+import com.rrpvm.kinofeed.presentation.viewholder.FeedLikedPostsViewHolder
 import com.rrpvm.kinofeed.presentation.viewholder.FeedSeenPostsViewHolder
 import com.rrpvm.kinofeed.presentation.viewholder.KinoFeedDefaultViewHolder
 import java.lang.ref.WeakReference
@@ -57,8 +59,13 @@ class KinoFeedAdapter(
                 it.setOnShiftRightDateDateModeListener(actualFeedItemListener::onShiftRight)
             }
 
-            // FeedItemUiTypes.NEW_POSTS -> KinoFeedDefaultViewHolder(View(parent.context))
-            else -> throw IllegalArgumentException()
+            FeedItemUiTypes.LIKED_POSTS -> FeedLikedPostsViewHolder(
+                binding = ItemFeedLikedBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ), onKinoItemSelected = seenFeedItemListener::onItemSelected
+            )
         }
     }
 

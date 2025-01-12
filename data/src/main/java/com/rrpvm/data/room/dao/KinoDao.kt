@@ -18,6 +18,9 @@ interface KinoDao {
     @Query("SELECT * FROM kinos_table")
     fun getKinoList(): List<KinoEntity>
 
+    @Query("SELECT * FROM kinos_table WHERE is_liked=1")
+    fun getLikedKinoList() : Flow<List<KinoEntity>>
+
     @Query("SELECT * FROM kinos_table")
     @Transaction
     fun getKinoListFlow(): Flow<List<KinoWithGenres>>
@@ -45,7 +48,6 @@ interface KinoDao {
     @Update(entity = KinoEntity::class)
     fun updateKinoList(kinoList: List<KinoEntity>)
 
-
     @Transaction
     fun fullUpdateKinoList(newList: List<KinoEntity>) {
         val newData: Map<String, KinoEntity> = newList.associateBy { e -> e.kinoId }
@@ -72,10 +74,14 @@ interface KinoDao {
     @Query("SELECT * FROM kinos_table")
     fun getKinoWithSessionAndGenres(): Flow<List<KinoWithSessionsAndGenres>>
 
+    @Query("SELECT * FROM kinos_table LEFT JOIN kino_film_views_table ON kinos_table.kino_id=kino_film_views_table.viewed_kino_id WHERE kino_id=viewed_kino_id")
+    @Transaction
+    fun getFullViewedKinoFilms(): Flow<List<KinoWithGenres>>
 
     @Query("SELECT * FROM kinos_table LEFT JOIN kino_film_views_table ON kinos_table.kino_id=kino_film_views_table.viewed_kino_id WHERE kino_id=viewed_kino_id")
     @Transaction
-    fun getViewedKinoFilms(): Flow<List<KinoWithGenres>>
+    fun getBaseViewedKinoFilms(): Flow<List<KinoEntity>>
+
 
     fun getSessionsWithKinoByOrderDateFlow(): Flow<List<KinoWithSessionsAndGenres>> {
         return getKinoWithSessionAndGenres().map {

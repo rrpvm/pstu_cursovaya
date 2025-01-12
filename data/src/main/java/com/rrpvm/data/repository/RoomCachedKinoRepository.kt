@@ -22,6 +22,7 @@ import com.rrpvm.data.room.entity.KinoFilmViewEntity
 import com.rrpvm.data.room.entity.KinoGenreCrossRefEntity
 import com.rrpvm.data.room.entity.KinoGenreEntity
 import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
+import com.rrpvm.domain.model.BaseKinoModel
 import com.rrpvm.domain.model.GenreModel
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.model.KinoWithSessionsModel
@@ -65,10 +66,18 @@ class RoomCachedKinoRepository @Inject constructor(
             }
     }
 
-    override fun getKinoFilmsViewed(): Flow<List<KinoModel>> {
-        return kinoDao.getViewedKinoFilms().map {
+    override fun getKinoFilmsViewed(): Flow<List<BaseKinoModel>> {
+        return kinoDao.getBaseViewedKinoFilms().map {
             it.map { e ->
-                e.map(KinoWithGenresToKinoModel)
+                BaseKinoModel(id = e.kinoId, title = e.mTitle, previewImage = e.mPreviewImage)
+            }
+        }
+    }
+
+    override fun getLikedKinoFilms(): Flow<List<BaseKinoModel>> {
+        return kinoDao.getLikedKinoList().map {
+            it.map { e ->
+                BaseKinoModel(id = e.kinoId, title = e.mTitle, previewImage = e.mPreviewImage)
             }
         }
     }

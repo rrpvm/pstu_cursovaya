@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.rrpvm.domain.model.BaseKinoModel
 import com.rrpvm.kinofeed.databinding.ItemFeedActualDayPostsBinding
 import com.rrpvm.kinofeed.presentation.adapter.DefaultKinoListAdapter
 import com.rrpvm.kinofeed.presentation.decorator.KinoHorizontalDecorator
@@ -73,7 +74,9 @@ class FeedActualDayPostsViewHolder(
     private fun bindList(item: ActualKinoFeedItem) {
         binding.layoutNoContent.root.isVisible = item.kinoList.isEmpty()
         binding.rvFeedActualDayPosts.isVisible = item.kinoList.isNotEmpty()
-        mAdapter.setItems(item.kinoList)
+        mAdapter.setItems(item.kinoList.map {
+            BaseKinoModel(id = it.id, title = it.title, previewImage = it.previewImage)
+        })
     }
 
     fun onBindByChanges(item: FeedItemUi, payload: List<*>) {

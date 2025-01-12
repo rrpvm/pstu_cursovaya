@@ -3,7 +3,7 @@ package com.rrpvm.kinofeed.presentation.diffcallback
 import androidx.recyclerview.widget.DiffUtil
 import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
-import com.rrpvm.kinofeed.presentation.model.NewsKinoFeedItem
+import com.rrpvm.kinofeed.presentation.model.LikedKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.SeenKinoFeedItem
 
 
@@ -18,10 +18,10 @@ class FeedItemUiDiffCallback : DiffUtil.ItemCallback<FeedItemUi>() {
                 FeedActualKinoDiffCallback
             )
 
-            NewsKinoFeedItem::class -> areItemsTheSame(
+            LikedKinoFeedItem::class -> areItemsTheSame(
                 oldItem,
                 newItem,
-                FeedNewsKinoDiffCallback
+                FeedLikedKinoDiffCallback
             )
 
             else -> throw IllegalArgumentException("no supported Kotlin class")
@@ -39,10 +39,10 @@ class FeedItemUiDiffCallback : DiffUtil.ItemCallback<FeedItemUi>() {
                 FeedActualKinoDiffCallback
             )
 
-            NewsKinoFeedItem::class -> areContentsTheSame(
+            LikedKinoFeedItem::class -> areContentsTheSame(
                 oldItem,
                 newItem,
-                FeedNewsKinoDiffCallback
+                FeedLikedKinoDiffCallback
             )
 
             else -> throw IllegalArgumentException("no supported Kotlin class")
