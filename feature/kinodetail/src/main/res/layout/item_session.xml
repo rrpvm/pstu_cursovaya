@@ -27,14 +27,11 @@
 
     <TextView
         android:id="@+id/tv_session_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Зал А, 11.01.2025 в 10:00" />
-
-    <Space
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        tools:text="Зал А, чт, 11.01 с 10:00 " />
 
     <Button
         android:id="@+id/btn_buy_ticket"

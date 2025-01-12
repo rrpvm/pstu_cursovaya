@@ -50,13 +50,21 @@
 
                 <TextView
                     android:id="@+id/iv_kino_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
                     android:textColor="?attr/colorOnPrimary"
                     android:textFontWeight="400"
                     android:textSize="18sp"
                     tools:text="Бойцовский клуб" />
+
+                <ImageView
+                    android:id="@+id/iv_kino_like"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:tint="@color/white"
+                    tools:srcCompat="@drawable/ic_like_outline" />
             </LinearLayout>
 
             <com.google.android.material.imageview.ShapeableImageView

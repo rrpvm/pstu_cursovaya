@@ -66,6 +66,21 @@ class KinoFeedAdapter(
         holder.onBind(mItems.currentList[position])
     }
 
+    override fun onBindViewHolder(
+        holder: KinoFeedDefaultViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+            return
+        }
+        if (holder is FeedActualDayPostsViewHolder) {
+            holder.onBindByChanges(mItems.currentList[position], payloads)
+            return
+        } else super.onBindViewHolder(holder, position, payloads)
+    }
+
     override fun onViewRecycled(holder: KinoFeedDefaultViewHolder) {
         super.onViewRecycled(holder)
         holder.onViewRecycled()

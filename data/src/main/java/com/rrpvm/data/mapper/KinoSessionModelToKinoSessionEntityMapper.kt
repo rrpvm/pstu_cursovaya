@@ -8,7 +8,8 @@ object KinoSessionModelToKinoSessionEntityMapper : KinoSessionModel.Mapper<KinoS
         return KinoSessionEntity(
             sessionId = obj.sessionId,
             kinoId = obj.kinoModel.id,
-            sessionStartDate = com.rrpvm.domain.util.Const.baseFullDateFormat.format(obj.sessionStartDate)
+            sessionStartDate = com.rrpvm.domain.util.Const.baseFullDateFormat.format(obj.sessionStartDate),
+            sessionDescription =obj.additionInfo
         )
     }
 }

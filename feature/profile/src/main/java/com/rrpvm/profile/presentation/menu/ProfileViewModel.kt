@@ -58,7 +58,7 @@ class ProfileViewModel @Inject constructor(
                 ),
                 ProfileMenuItem.DefaultTextMenu(
                     mText = stringProvider.provideString(R.string.saved),
-                    mIcon = R.drawable.ic_like,
+                    mIcon = com.rrpvm.core.R.drawable.ic_like,
                     type = DefaultTextMenuTypes.MyFavourites
                 ),
 

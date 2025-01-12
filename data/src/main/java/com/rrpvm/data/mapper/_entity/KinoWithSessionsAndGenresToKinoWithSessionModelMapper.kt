@@ -13,7 +13,8 @@ object KinoWithSessionsAndGenresToKinoWithSessionModelMapper :
             sessions = obj.kinoWithSessions.sessionList.map {
                 BaseShortSessionModel(
                     sessionId = it.sessionId,
-                    sessionDate = FromDomainDateStringMapper.mapToDomainDate(it.sessionStartDate)
+                    sessionDate = FromDomainDateStringMapper.mapToDomainDate(it.sessionStartDate),
+                    sessionInfo = it.sessionDescription
                 )
             }
         )

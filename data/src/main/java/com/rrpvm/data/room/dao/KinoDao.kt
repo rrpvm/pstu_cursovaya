@@ -45,6 +45,7 @@ interface KinoDao {
     @Update(entity = KinoEntity::class)
     fun updateKinoList(kinoList: List<KinoEntity>)
 
+
     @Transaction
     fun fullUpdateKinoList(newList: List<KinoEntity>) {
         val newData: Map<String, KinoEntity> = newList.associateBy { e -> e.kinoId }

@@ -42,7 +42,7 @@ class KinoDetailViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             delay(1000L)//имитируем полезность
             repository.getKinoById(savedInstance.get<String>("kinoId") ?: run {
                 _screenState.value = KinoDetailViewData.ScreenFail
@@ -61,4 +61,23 @@ class KinoDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun onLike() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //так делать нельзя, но время поджимает
+            val prevResult = screenState.value as KinoDetailViewData.Success
+            repository.doLike(prevResult.kino.base.kinoModel.id)
+                .onSuccess { updatedKinoMode ->
+                    _screenState.value = KinoDetailViewData.Success(
+                        FullDetailKinoModelUi(
+                            base = prevResult.kino.base.copy(kinoModel = updatedKinoMode),
+                            prevResult.kino.ageRatingModel
+                        )
+                    )
+                }.onFailure {
+                    it.printStackTrace()
+                }
+        }
+    }
+
 }

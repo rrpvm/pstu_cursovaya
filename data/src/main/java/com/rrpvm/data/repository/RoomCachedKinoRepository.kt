@@ -118,6 +118,17 @@ class RoomCachedKinoRepository @Inject constructor(
         }
     }
 
+    override suspend fun doLike(kinoId: String): Result<KinoModel> {
+        return runCatching {
+            val kinoModel = kinoDao.getKino(kinoId)!!.let { kino ->
+                kino.copy(isLiked = kino.isLiked.not())
+            }
+            kinoDao.updateKino(kinoModel)
+            return@runCatching kinoDao.getFullKinoModel(kinoId)
+                .map(KinoWithSessionsAndGenresToKinoModel)
+        }
+    }
+
     override suspend fun fetchKinoFeed(): Result<Boolean> {
         val result = runCatching {
             //refresh films and genres

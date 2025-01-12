@@ -29,6 +29,7 @@ import com.rrpvm.kinodetail.databinding.FragmentKinoDetailBinding
 import com.rrpvm.kinodetail.presentation.adapter.GenreListAdapter
 import com.rrpvm.kinodetail.presentation.adapter.SessionListAdapter
 import com.rrpvm.kinodetail.presentation.model.KinoDetailViewData
+import com.rrpvm.kinodetail.presentation.model.SessionModelUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -77,13 +78,23 @@ class KinoDetailFragment : Fragment() {
                 }
                 launch {
                     viewModel.sessionsAdapterData.collectLatest {
-                        sessionAdapter.setItems(it)
+                        sessionAdapter.setItems(it.mapIndexed { index, baseShortSessionModel ->
+                            SessionModelUi(
+                                sessionId = baseShortSessionModel.sessionId,
+                                sessionIndexNormalized = index.inc().toString(),
+                                label = sessionShowDateFormat.format(baseShortSessionModel.sessionDate),
+                                sessionInfo = baseShortSessionModel.sessionInfo
+                            )
+                        })
                     }
                 }
             }
         }
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+        binding.ivKinoLike.setOnClickListener {
+            viewModel.onLike()
         }
         binding.rvSessionList.adapter = sessionAdapter
         binding.rvGenres.adapter = genreAdapter
@@ -109,10 +120,19 @@ class KinoDetailFragment : Fragment() {
         }
     }
 
-    private val releaseDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+
     private fun onUiSuccess(uiState: KinoDetailViewData.Success) {
         with(uiState.kino.base) {
             binding.ivKinoTitle.text = kinoModel.title
+            Glide.with(binding.ivKinoLike)
+                .load(
+                    if (uiState.kino.base.kinoModel.isLiked) {
+                        com.rrpvm.core.R.drawable.ic_like
+                    } else {
+                        com.rrpvm.core.R.drawable.ic_like_outline
+                    }
+                )
+                .into(binding.ivKinoLike)
             val filmDuration = (kinoModel.duration / 60).toDuration(DurationUnit.MINUTES)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 binding.tvDuration.text =
@@ -195,5 +215,10 @@ class KinoDetailFragment : Fragment() {
             }
         }
         super.onDestroyView()
+    }
+
+    companion object {
+        private val releaseDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        private val sessionShowDateFormat = SimpleDateFormat("EE, dd MMMM с hh:mm", Locale("Ru"))
     }
 }

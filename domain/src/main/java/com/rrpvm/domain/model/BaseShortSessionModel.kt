@@ -4,5 +4,6 @@ import java.util.Date
 
 data class BaseShortSessionModel(
     val sessionId: String,
-    val sessionDate: Date
+    val sessionDate: Date,
+    val sessionInfo: String,
 )

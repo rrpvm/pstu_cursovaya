@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import com.rrpvm.kinofeed.databinding.ItemFeedSeenPostsBinding
 import com.rrpvm.kinofeed.presentation.adapter.DefaultKinoListAdapter
 import com.rrpvm.kinofeed.presentation.decorator.KinoHorizontalDecorator
-import com.rrpvm.kinofeed.presentation.model.ActualKinoFeedItem
 import com.rrpvm.kinofeed.presentation.model.FeedItemUi
 import com.rrpvm.kinofeed.presentation.model.SeenKinoFeedItem
 

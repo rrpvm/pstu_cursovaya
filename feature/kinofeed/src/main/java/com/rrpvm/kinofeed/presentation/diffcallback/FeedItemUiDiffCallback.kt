@@ -50,6 +50,16 @@ class FeedItemUiDiffCallback : DiffUtil.ItemCallback<FeedItemUi>() {
         }
     }
 
+    override fun getChangePayload(oldItem: FeedItemUi, newItem: FeedItemUi): Any? {
+        if (oldItem is ActualKinoFeedItem && newItem is ActualKinoFeedItem) {
+            val payload = mutableListOf<ActualKinoFeedItem.Payloads>()
+            if (oldItem.dateMode != newItem.dateMode) payload.add(ActualKinoFeedItem.Payloads.DateModeChanged)
+            if (oldItem.kinoList != newItem.kinoList) payload.add(ActualKinoFeedItem.Payloads.KinoListChanged)
+            return payload.takeIf { it.isNotEmpty() }
+        }
+        return super.getChangePayload(oldItem, newItem)
+    }
+
     private inline fun <reified T : FeedItemUi> areContentsTheSame(
         a1: FeedItemUi,
         a2: FeedItemUi,

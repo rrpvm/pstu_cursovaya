@@ -3,22 +3,23 @@ package com.rrpvm.kinodetail.presentation.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rrpvm.domain.model.BaseShortSessionModel
 import com.rrpvm.kinodetail.databinding.ItemSessionBinding
+import com.rrpvm.kinodetail.presentation.model.SessionModelUi
 
 class SessionListAdapter : RecyclerView.Adapter<SessionListAdapter.SessionViewHolder>() {
-    private val items = mutableListOf<BaseShortSessionModel>()
+    private val items = mutableListOf<SessionModelUi>()
 
 
     class SessionViewHolder(private val binding: ItemSessionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: BaseShortSessionModel, position: Int) {
-            binding.tvNumber.text = (position+1).toString()
-            binding.tvSessionLabel.text = item.sessionDate.toString()
+        fun onBind(item: SessionModelUi) {
+            binding.tvNumber.text = item.sessionIndexNormalized
+            binding.tvSessionLabel.text =
+                StringBuilder().append(item.sessionInfo).append(", ").append(item.label).toString()
         }
     }
 
-    fun setItems(list: List<BaseShortSessionModel>) {
+    fun setItems(list: List<SessionModelUi>) {
         items.clear()
         items.addAll(list)
         notifyDataSetChanged()//все равно данные никак не меняются на экране деталей
@@ -39,6 +40,6 @@ class SessionListAdapter : RecyclerView.Adapter<SessionListAdapter.SessionViewHo
     }
 
     override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
-        holder.onBind(items[position], position)
+        holder.onBind(items[position])
     }
 }

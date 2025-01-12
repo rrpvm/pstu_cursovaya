@@ -6,5 +6,8 @@ data class ActualKinoFeedItem(
     val kinoList: List<KinoModel>,
     val dateMode: PickDateModeUi,
 ) : FeedItemUi(FeedItemUiTypes.ACTUAL_POSTS) {
-
+    enum class Payloads{
+        DateModeChanged,
+        KinoListChanged
+    }
 }

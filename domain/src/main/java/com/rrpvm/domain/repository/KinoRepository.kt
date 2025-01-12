@@ -14,6 +14,7 @@ interface KinoRepository {
     fun getAllKinoFilms(): Flow<List<KinoModel>>
     fun getAllKinoFilmsWithAnyActualSession(): Flow<List<KinoModel>>
     fun viewKino(kinoId: String): Result<Boolean>
+    suspend fun doLike(kinoId: String):Result<KinoModel>
     fun getKinoGenres(): Flow<List<GenreModel>>
     fun getKinoById(kinoId: String): Result<KinoWithSessionsModel>
     suspend fun fetchKinoFeed(): Result<Boolean>

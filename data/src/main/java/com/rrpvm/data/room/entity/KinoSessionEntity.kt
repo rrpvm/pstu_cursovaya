@@ -21,7 +21,9 @@ data class KinoSessionEntity(
     @ColumnInfo(name = "bound_kino_id", index = true)
     val kinoId: String,
     @ColumnInfo(name = "session_start_date")
-    val sessionStartDate: String
+    val sessionStartDate: String,
+    @ColumnInfo(name = "session_description")
+    val sessionDescription: String
 ) {
     interface Mapper<T> {
         fun map(obj: KinoSessionEntity): T

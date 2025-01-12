@@ -51,14 +51,15 @@ class FeedActualDayPostsViewHolder(
 
     override fun onBind(item: FeedItemUi) {
         if (item !is ActualKinoFeedItem) return
-        binding.layoutNoContent.root.isVisible = item.kinoList.isEmpty()
-        binding.rvFeedActualDayPosts.isVisible = item.kinoList.isNotEmpty()
-
+        bindDatePicker(item)
+        bindList(item)
         binding.rvFeedActualDayPosts.adapter = mAdapter
+    }
+
+    private fun bindDatePicker(item: ActualKinoFeedItem) {
         binding.tvDateMode.setText(item.dateMode.resId)
         if (item.dateMode.ordinal == 0) {
             binding.btnDateModeShiftLeft.setDisabled()
-
         } else {
             binding.btnDateModeShiftLeft.setEnabled()
         }
@@ -67,7 +68,30 @@ class FeedActualDayPostsViewHolder(
         } else {
             binding.btnDateModeShiftRight.setEnabled()
         }
+    }
+
+    private fun bindList(item: ActualKinoFeedItem) {
+        binding.layoutNoContent.root.isVisible = item.kinoList.isEmpty()
+        binding.rvFeedActualDayPosts.isVisible = item.kinoList.isNotEmpty()
         mAdapter.setItems(item.kinoList)
+    }
+
+    fun onBindByChanges(item: FeedItemUi, payload: List<*>) {
+        if (item !is ActualKinoFeedItem) return
+        for (_payload in payload) {
+            if (_payload !is List<*>) continue
+            _payload.filterIsInstance<ActualKinoFeedItem.Payloads>().forEach {
+                when (it) {
+                    ActualKinoFeedItem.Payloads.DateModeChanged -> {
+                        bindDatePicker(item)
+                    }
+
+                    ActualKinoFeedItem.Payloads.KinoListChanged -> {
+                        bindList(item)
+                    }
+                }
+            }
+        }
     }
 
     private fun ImageView.setDisabled() {
