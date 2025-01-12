@@ -3,7 +3,9 @@ package com.rrpvm.kinodetail.presentation.fragment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rrpvm.domain.repository.AgeRatingRepository
 import com.rrpvm.domain.repository.KinoRepository
+import com.rrpvm.kinodetail.presentation.model.FullDetailKinoModelUi
 import com.rrpvm.kinodetail.presentation.model.KinoDetailViewData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,21 +23,22 @@ import javax.inject.Inject
 @HiltViewModel
 class KinoDetailViewModel @Inject constructor(
     savedInstance: SavedStateHandle,
-    private val repository: KinoRepository
+    private val repository: KinoRepository,
+    private val ageRatingRepository: AgeRatingRepository
 ) : ViewModel() {
     private val _screenState =
         MutableStateFlow<KinoDetailViewData>(KinoDetailViewData.ScreenLoading)
     val screenState = _screenState.asStateFlow()
     val genresAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
-        return@map it.kino.kinoModel.genres.sortedBy {genre->
+        return@map it.kino.base.kinoModel.genres.sortedBy { genre ->
             genre.title
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val sessionsAdapterData = _screenState.filterIsInstance<KinoDetailViewData.Success>().map {
-        return@map it.kino.sessions.asSequence()
-            .filter {
-                it.sessionDate.time >= Calendar.getInstance().time.time
-            }.sortedBy { it.sessionDate }.toList()
+        return@map it.kino.base.sessions.asSequence()
+            .filter { shortSessionModel ->
+                shortSessionModel.sessionDate.time >= Calendar.getInstance().time.time
+            }.sortedBy { e -> e.sessionDate }.toList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
@@ -45,7 +48,14 @@ class KinoDetailViewModel @Inject constructor(
                 _screenState.value = KinoDetailViewData.ScreenFail
                 return@launch
             }).onSuccess {
-                _screenState.value = KinoDetailViewData.Success(it)
+                val ageRatingModel = ageRatingRepository.getAgeRatingById(it.kinoModel.ageRatingId)
+
+                _screenState.value = KinoDetailViewData.Success(
+                    FullDetailKinoModelUi(
+                        base = it,
+                        ageRatingModel = ageRatingModel.getOrNull()
+                    )
+                )
             }.onFailure {
                 _screenState.value = KinoDetailViewData.ScreenFail
             }

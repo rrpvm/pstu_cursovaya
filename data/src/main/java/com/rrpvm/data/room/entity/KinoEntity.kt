@@ -20,8 +20,11 @@ data class KinoEntity(
     @ColumnInfo(name = "byCountry")
     val mCountry: String,
     @ColumnInfo(name = "is_liked")
-    val isLiked: Boolean
-
+    val isLiked: Boolean,
+    @ColumnInfo(name="duration")
+    val mDuration : Int, //in seconds
+    @ColumnInfo(name = "age_rating")
+    val ageRatingId: Int
 ) {
     interface Mapper<T> {
         fun map(obj: KinoEntity): T

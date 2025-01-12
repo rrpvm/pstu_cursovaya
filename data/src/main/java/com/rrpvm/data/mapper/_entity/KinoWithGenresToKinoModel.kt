@@ -16,7 +16,9 @@ object KinoWithGenresToKinoModel : KinoWithGenres.Mapper<KinoModel> {
             genres = obj.genres.map {
                 GenreModel(it.mGenreId, it.mGenreName)
             }, byCountry = obj.kino.mCountry,
-            isLiked = obj.kino.isLiked
+            isLiked = obj.kino.isLiked,
+            ageRatingId = obj.kino.ageRatingId,
+            duration = obj.kino.mDuration
         )
     }
 }

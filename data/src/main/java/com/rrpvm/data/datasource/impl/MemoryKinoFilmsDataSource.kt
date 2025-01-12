@@ -2,6 +2,7 @@ package com.rrpvm.data.datasource.impl
 
 import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
+import com.rrpvm.data.model.agerating.AgeRatingDto
 import com.rrpvm.data.model.kinofilms.KinoModelDto
 import com.rrpvm.domain.model.GenreModel
 import com.rrpvm.domain.model.KinoSessionModel
@@ -21,6 +22,50 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
             TRAVEL(GenreModel("855789c1-2f83-4899-9614-64d5cb089601", "Приключения")),
             HORROR(GenreModel("3bd22d52-2e39-4fe2-8e0a-cb2d03416b3c", "Ужасы")),
         }
+
+        enum class AgeRatings(val dto: AgeRatingDto) {
+            `0`(
+                AgeRatingDto(
+                    id = 1,
+                    present = "0+",
+                    iconUrl = "https://img.icons8.com/?size=100&id=iLLnZLo56xxm&format=png&color=000000",
+                    minAge = 0,
+
+                    )
+            ),
+            `6`(
+                AgeRatingDto(
+                    id = 2,
+                    present = "6+",
+                    iconUrl = "https://img.icons8.com/?size=100&id=4Lbwo64nJNK1&format=png&color=000000",
+                    minAge = 6,
+                )
+            ),
+            `12`(
+                AgeRatingDto(
+                    id = 3,
+                    present = "12+",
+                    iconUrl = "https://img.icons8.com/?size=100&id=OMkPnTo5cjzp&format=png&color=000000",
+                    minAge = 12,
+                )
+            ),
+            `16`(
+                AgeRatingDto(
+                    id = 4,
+                    present = "16+",
+                    iconUrl = "https://img.icons8.com/?size=100&id=AczAVUihwpMA&format=png&color=000000",
+                    minAge = 16,
+                )
+            ),
+            `18`(
+                AgeRatingDto(
+                    id = 5,
+                    present = "18+",
+                    iconUrl = "https://img.icons8.com/?size=100&id=8Utbqkpx2EVt&format=png&color=000000",
+                    minAge = 18,
+                )
+            )
+        }
     }
 
     private val kinoList: Map<String, KinoModelDto> = listOf(
@@ -39,7 +84,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 DtoGenres.COMEDY.genre,
                 DtoGenres.HORROR.genre,
                 DtoGenres.MELODRAMA.genre
-            )
+            ),
+            duration = 3600 * 2,
+            ageRating = AgeRatings.`18`.dto
         ),
         KinoModelDto(
             id = "cf65ed1d-b79a-460a-9606-1d2edaf3586c",
@@ -48,7 +95,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
             previewImage = "https://avatars.mds.yandex.net/i?id=1508d997ad6dc85da055bbb434f34b73_l-10414746-images-thumbs&n=13",
             releasedDate = Calendar.Builder().setDate(2024, 6, 19).build().time,
             byCountry = "USA",
-            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.BOEVIK.genre)
+            duration = 3600 * 2,
+            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.BOEVIK.genre),
+            ageRating = AgeRatings.`18`.dto
         ),
         KinoModelDto(
             id = "ebb65720-2389-4a7e-9fe3-7d1458d240a0",
@@ -57,7 +106,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
             previewImage = "https://yastatic.net/naydex/yandex-search/bTFy12402/d21c4fyqx/EVXP3tawtuggczhscKX0EJ-siEZ_6PFmTUAZlZURLVdixeCovuXQQnV1HKdUpF3F1J80-wV7eOyBOs0O8i53WehFq3IufH9Y6N-98IgFdGSP9aBqCoGFLqXs",
             releasedDate = Calendar.Builder().setDate(2022, 5, 24).build().time,
             byCountry = "Russia",
-            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.COMEDY.genre)
+            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.COMEDY.genre),
+            duration = (3600 * 0.5F).toInt(),
+            ageRating = AgeRatings.`18`.dto
         ),
         KinoModelDto(
             id = "abb08203-ac9b-4467-9b76-dbb7d890e9b9",
@@ -66,7 +117,10 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
             previewImage = "https://pic.rutubelist.ru/video/2025-01-06/6b/6d/6b6dc1541d3e46cedf0c1209b51fb86f.jpg",
             releasedDate = Calendar.Builder().setDate(2025, 1, 1).build().time,
             byCountry = "USA",
-            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.TRAVEL.genre, DtoGenres.FANTASY.genre)
+            duration = (3600 * 1.5).toInt(),
+            genres = listOf(DtoGenres.DRAMA.genre, DtoGenres.TRAVEL.genre, DtoGenres.FANTASY.genre),
+            ageRating = AgeRatings.`18`.dto
+
         ),
     ).associateBy { it.id }
 
@@ -175,16 +229,9 @@ class MemoryKinoFilmsDataSource @Inject constructor(private val kinoModelMapper:
                 kinoModel = kinoList["abb08203-ac9b-4467-9b76-dbb7d890e9b9"]!!.map(
                     kinoModelMapper
                 ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 11).setTimeOfDay(22, 15, 0)
-                    .build().time,
-                sessionId = "db84083c-0f50-43f7-9b05-7b4882ae8073"
-            ),
-            KinoSessionModel(
-                kinoModel = kinoList["abb08203-ac9b-4467-9b76-dbb7d890e9b9"]!!.map(
-                    kinoModelMapper
-                ),
-                sessionStartDate = Calendar.Builder().setDate(2025, 0, 11).setTimeOfDay(21, 15, 0)
-                    .build().time,
+                sessionStartDate = Calendar.getInstance().apply {
+                    this.add(Calendar.HOUR_OF_DAY, 9)
+                }.time,
                 sessionId = "db84083c-0f50-43f7-9b05-7b4882ae8073"
             ),
         )

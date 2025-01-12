@@ -17,6 +17,8 @@ class KinoDtoToKinoModelMapper @Inject constructor(private val isLikedKinoChecke
             releasedDate = obj.releasedDate,
             isLiked = isLikedKinoChecker.isLiked(obj.id),
             genres = obj.genres,
+            duration = obj.duration,
+            ageRatingId = obj.ageRating.id,
             byCountry = obj.byCountry
         )
     }

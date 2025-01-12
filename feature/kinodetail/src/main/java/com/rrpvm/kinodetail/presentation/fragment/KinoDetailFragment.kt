@@ -2,8 +2,11 @@ package com.rrpvm.kinodetail.presentation.fragment
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.icu.number.NumberFormatter
+import android.icu.text.MeasureFormat
+import android.icu.util.MeasureUnit
+import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +34,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @AndroidEntryPoint
 class KinoDetailFragment : Fragment() {
@@ -106,45 +111,78 @@ class KinoDetailFragment : Fragment() {
 
     private val releaseDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
     private fun onUiSuccess(uiState: KinoDetailViewData.Success) {
+        with(uiState.kino.base) {
+            binding.ivKinoTitle.text = kinoModel.title
+            val filmDuration = (kinoModel.duration / 60).toDuration(DurationUnit.MINUTES)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                binding.tvDuration.text =
+                    resources.getString(
+                        R.string.duration_format,
+                        NumberFormatter.withLocale(Locale.getDefault()).unit(MeasureUnit.MINUTE)
+                            .sign(NumberFormatter.SignDisplay.NEVER)
+                            .unitWidth(NumberFormatter.UnitWidth.SHORT)
+                            .format(filmDuration.inWholeMinutes).toString()
+                    )
+            } else {
+                binding.tvDuration.text =
+                    resources.getString(
+                        R.string.duration_format,
+                        filmDuration.toString() + MeasureFormat.getInstance(
+                            Locale.getDefault(),
+                            MeasureFormat.FormatWidth.SHORT
+                        ).getUnitDisplayName(MeasureUnit.MINUTE)
+                    )
+            }
 
-        binding.ivKinoTitle.text = uiState.kino.kinoModel.title
-        binding.tvDuration.text =
-            resources.getString(R.string.duration_format, "2ч 15м")
-        binding.tvReleasedDate.text =
-            resources.getString(
-                R.string.released_format,
-                releaseDateFormat.format(uiState.kino.kinoModel.releasedDate)
-            )
+            binding.tvReleasedDate.text =
+                resources.getString(
+                    R.string.released_format,
+                    releaseDateFormat.format(kinoModel.releasedDate)
+                )
 
-        binding.tvDescription.text = uiState.kino.kinoModel.description
-        loadingTarget = Glide.with(binding.ivKinoFull)
-            .asBitmap()
-            .load(uiState.kino.kinoModel.previewImage)
-            .error(R.drawable.error_loading_image_with_surface)
-            .placeholder(com.rrpvm.core.R.color.surface_contrast)
-            .transform(RoundedCorners((resources.displayMetrics.density * 8).toInt()))
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(object : SimpleTarget<Bitmap>() {
-                override fun onLoadStarted(placeholder: Drawable?) {
-                    _binding?.ivKinoFull?.setImageDrawable(placeholder)
-                    _binding?.imageProgress?.isVisible = true
-                }
+            binding.tvDescription.text = kinoModel.description
+            binding.llAgeRating.isVisible = uiState.kino.ageRatingModel != null
+            uiState.kino.ageRatingModel?.let {
+                Glide.with(binding.ivAgeRating).load(
+                    it.urlIcon
+                ).error(com.rrpvm.core.R.drawable.ic_image_error)
+                    .into(binding.ivAgeRating)
+            }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    _binding?.ivKinoFull?.setImageDrawable(placeholder)
-                    _binding?.imageProgress?.isVisible = true
-                }
 
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    _binding?.ivKinoFull?.setImageDrawable(errorDrawable)
-                    _binding?.imageProgress?.isVisible = false
-                }
+            loadingTarget = Glide.with(binding.ivKinoFull)
+                .asBitmap()
+                .load(kinoModel.previewImage)
+                .error(R.drawable.error_loading_image_with_surface)
+                .placeholder(com.rrpvm.core.R.color.surface_contrast)
+                .transform(RoundedCorners((resources.displayMetrics.density * 8).toInt()))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onLoadStarted(placeholder: Drawable?) {
+                        _binding?.ivKinoFull?.setImageDrawable(placeholder)
+                        _binding?.imageProgress?.isVisible = true
+                    }
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    _binding?.imageProgress?.isVisible = false
-                    _binding?.ivKinoFull?.setImageBitmap(resource)
-                }
-            })
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        _binding?.ivKinoFull?.setImageDrawable(placeholder)
+                        _binding?.imageProgress?.isVisible = true
+                    }
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        _binding?.ivKinoFull?.setImageDrawable(errorDrawable)
+                        _binding?.imageProgress?.isVisible = false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        _binding?.imageProgress?.isVisible = false
+                        _binding?.ivKinoFull?.setImageBitmap(resource)
+                    }
+                })
+        }
+
     }
 
     override fun onDestroyView() {

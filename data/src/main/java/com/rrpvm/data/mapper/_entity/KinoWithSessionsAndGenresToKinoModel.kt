@@ -15,7 +15,9 @@ object KinoWithSessionsAndGenresToKinoModel : KinoWithSessionsAndGenres.Mapper<K
             releasedDate = FromDomainDateStringMapper.mapToDomainDate(obj.kinoWithSessions.kinoModel.mReleasedDate),
             genres = obj.kinoGenres.map { GenreModel(it.mGenreId, it.mGenreName) },
             byCountry = obj.kinoWithSessions.kinoModel.mCountry,
-            isLiked = obj.kinoWithSessions.kinoModel.isLiked
+            isLiked = obj.kinoWithSessions.kinoModel.isLiked,
+            ageRatingId = obj.kinoWithSessions.kinoModel.ageRatingId,
+            duration = obj.kinoWithSessions.kinoModel.mDuration
         )
     }
 }

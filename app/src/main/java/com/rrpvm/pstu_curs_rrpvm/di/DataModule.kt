@@ -12,8 +12,11 @@ import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.mapper_helpers.IsLikedKinoChecker
 import com.rrpvm.data.mapper_helpers.IsLikedKinoCheckerRoomImpl
 import com.rrpvm.data.repository.FilterRepositoryImpl
+import com.rrpvm.data.repository.RoomAgeRatingRepository
+import com.rrpvm.data.room.dao.AgeRatingDao
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.data.room.dao.KinoGenresDao
+import com.rrpvm.domain.repository.AgeRatingRepository
 import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
@@ -35,6 +38,9 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindFilterRepository(repository: FilterRepositoryImpl): FilterRepository
+
+    @Binds
+    abstract fun bindAgeRatingRepository(repository: RoomAgeRatingRepository): AgeRatingRepository
 
     @Binds
     abstract fun bindKinoFilmDataSource(dataSource: MemoryKinoFilmsDataSource): KinofilmsDataSource
@@ -75,6 +81,16 @@ abstract class DataModule {
         }
 
         @Provides
+        fun provideAgeRatingDao(db: KinoZDatabase): AgeRatingDao {
+            return db.getAgeRatingDao()
+        }
+
+        @Provides
+        @Singleton
+        fun provideRoomAgeRatingRepository(dao: AgeRatingDao) = RoomAgeRatingRepository(dao)
+
+
+        @Provides
         @Singleton
         fun provideMemoryKinoFilmsDataSource(mapper: KinoDtoToKinoModelMapper): MemoryKinoFilmsDataSource {
             return MemoryKinoFilmsDataSource(mapper)
@@ -104,6 +120,7 @@ abstract class DataModule {
             kinoSessionDao: KinoSessionDao,
             kinoFilmViewsDao: KinoFilmViewsDao,
             kinoGenresDao: KinoGenresDao,
+            ageRatingDao: AgeRatingDao,
             kinofilmsDataSource: KinofilmsDataSource,
             kinoModelMapper: KinoDtoToKinoModelMapper
         ): RoomCachedKinoRepository {
@@ -112,6 +129,7 @@ abstract class DataModule {
                 kinoSessionDao = kinoSessionDao,
                 kinoFilmViewsDao = kinoFilmViewsDao,
                 kinoGenresDao = kinoGenresDao,
+                ageRatingDao = ageRatingDao,
                 kinoDataSource = kinofilmsDataSource,
                 kinoDtoToKinoModelMapper = kinoModelMapper
             )

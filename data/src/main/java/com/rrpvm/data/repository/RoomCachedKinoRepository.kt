@@ -8,12 +8,16 @@ import com.rrpvm.data.room.dao.KinoSessionDao
 import com.rrpvm.data.room.entity.KinoSessionEntity
 import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper.GenreModelToKinoGenreEntityMapper
+import com.rrpvm.data.mapper._data.AgeRatingDtoToAgeRatingEntityMapper
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
 import com.rrpvm.data.mapper._entity.KinoWithGenresToKinoModel
 import com.rrpvm.data.mapper._entity.KinoWithSessionsAndGenresToKinoModel
 import com.rrpvm.data.mapper._entity.KinoWithSessionsAndGenresToKinoWithSessionModelMapper
+import com.rrpvm.data.model.agerating.AgeRatingDto
+import com.rrpvm.data.room.dao.AgeRatingDao
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.data.room.dao.KinoGenresDao
+import com.rrpvm.data.room.entity.AgeRatingEntity
 import com.rrpvm.data.room.entity.KinoFilmViewEntity
 import com.rrpvm.data.room.entity.KinoGenreCrossRefEntity
 import com.rrpvm.data.room.entity.KinoGenreEntity
@@ -33,6 +37,7 @@ class RoomCachedKinoRepository @Inject constructor(
     private val kinoSessionDao: KinoSessionDao,
     private val kinoFilmViewsDao: KinoFilmViewsDao,
     private val kinoGenresDao: KinoGenresDao,
+    private val ageRatingDao: AgeRatingDao,
     private val kinoDataSource: KinofilmsDataSource,
     private val kinoDtoToKinoModelMapper: KinoDtoToKinoModelMapper
 ) : KinoRepository {
@@ -81,7 +86,7 @@ class RoomCachedKinoRepository @Inject constructor(
         return kinoDao.getSessionsWithKinoByOrderDateFlow().map { kinoWithSessionsList ->
             kinoWithSessionsList.asSequence().filter {
                 return@filter FromDomainDateStringMapper.mapToDomainDate(
-                    it.kinoWithSessions.sessionList.lastOrNull()?.sessionStartDate
+                    it.kinoWithSessions.sessionList.firstOrNull()?.sessionStartDate
                         ?: return@filter false
                 ).time >= actualTime
             }.map {
@@ -119,7 +124,10 @@ class RoomCachedKinoRepository @Inject constructor(
 
             kinoDataSource.getAllAfishaKinos().let { films ->
                 val genresList = mutableSetOf<KinoGenreEntity>()
+                val ageRatingList = mutableSetOf<AgeRatingDto>()
                 val kinoEntityList = films.asSequence().map { e ->
+                    ageRatingList.add(e.ageRating)
+
                     //добавляем в бд(пока локально) все жанры из существующих фильмов
                     e.genres.forEach { genreModel ->
                         genresList.add(genreModel.map(GenreModelToKinoGenreEntityMapper))
@@ -129,6 +137,10 @@ class RoomCachedKinoRepository @Inject constructor(
                     domainModel.map(KinoModelToKinoEntityMapper)
                 }.toList()
                 //обновляем бд
+                //возрастные рейтинги,найденные из дто'шки фильмов
+                ageRatingDao.fullUpdateAgeRatings(ageRatingList.map {
+                    it.map(AgeRatingDtoToAgeRatingEntityMapper)
+                })
                 kinoGenresDao.setKinoGenres(genresList.toList())//жанры
                 kinoDao.fullUpdateKinoList(kinoEntityList)//ставим кино в бд
                 films.forEach { filmDto ->//проставляем жанры к фильмам

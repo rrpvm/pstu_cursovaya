@@ -140,6 +140,35 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_duration"
                 tools:text="В прокате с: 24 февраля 2022г" />
 
+            <LinearLayout
+                android:id="@+id/ll_age_rating"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_releasedDate">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Возрастное ограничение:"
+                    android:textFontWeight="700" />
+
+                <ImageView
+                    android:id="@+id/iv_age_rating"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/brush_8dp_solid"
+                    android:backgroundTint="@color/surface_contrast"
+                    android:scaleType="center"
+                    tools:srcCompat="@drawable/ic_image_error" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_description_title"
                 android:layout_width="0dp"
@@ -150,7 +179,7 @@
                 android:textFontWeight="600"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_releasedDate" />
+                app:layout_constraintTop_toBottomOf="@+id/ll_age_rating" />
 
             <TextView
                 android:id="@+id/tv_description"

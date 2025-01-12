@@ -12,7 +12,9 @@ object KinoModelToKinoEntityMapper : KinoModel.Mapper<KinoEntity> {
             mPreviewImage = obj.previewImage,
             mReleasedDate = Const.baseFullDateFormat.format(obj.releasedDate),
             isLiked = obj.isLiked,
-            mCountry = obj.byCountry
+            mDuration = obj.duration,
+            mCountry = obj.byCountry,
+            ageRatingId = obj.ageRatingId
         )
     }
 }

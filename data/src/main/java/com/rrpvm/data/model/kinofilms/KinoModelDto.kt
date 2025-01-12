@@ -1,5 +1,6 @@
 package com.rrpvm.data.model.kinofilms
 
+import com.rrpvm.data.model.agerating.AgeRatingDto
 import com.rrpvm.domain.model.GenreModel
 import java.util.Date
 
@@ -11,7 +12,8 @@ data class KinoModelDto(
     val releasedDate: Date,
     val byCountry : String,
     val genres : List<GenreModel>,
-    val duration : Int = 0//в секундах
+    val duration : Int = 0,//в секундах
+    val ageRating : AgeRatingDto
 ){
     interface Mapper<T> {
         fun map(obj: KinoModelDto): T

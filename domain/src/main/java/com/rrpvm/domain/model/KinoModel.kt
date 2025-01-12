@@ -10,7 +10,9 @@ data class KinoModel(
     val releasedDate: Date,
     val genres: List<GenreModel>,
     val byCountry : String,
-    val isLiked: Boolean = false
+    val isLiked: Boolean,
+    val ageRatingId : Int,
+    val duration : Int//seconds
 ) {
     interface Mapper<T> {
         fun map(obj: KinoModel): T
