@@ -2,4 +2,7 @@
 <resources>
     <string name="duration_format">Длительность: %s</string>
     <string name="released_format">Выпущено в прокат: %s</string>
+    <string name="selected_places">Выбрано мест: %d</string>
+    <string name="selected_places_where">Места: %s</string>
+    <string name="to_pay">К оплате: %d RUB</string>
 </resources>
