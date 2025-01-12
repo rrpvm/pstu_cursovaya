@@ -136,6 +136,9 @@ class KinoBuyTicketViewModel @Inject constructor(
                     sessionId = data.sessionId
                 )
             }.onSuccess {
+
+
+
                 _screenEffect.emit(KinoBuyTicketScreenEffect.GoBackWithSuccess)
             }.onFailure {
                 it.printStackTrace()

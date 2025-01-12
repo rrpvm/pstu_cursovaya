@@ -23,6 +23,7 @@ import com.rrpvm.data.room.entity.KinoGenreCrossRefEntity
 import com.rrpvm.data.room.entity.KinoGenreEntity
 import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
 import com.rrpvm.domain.model.BaseKinoModel
+import com.rrpvm.domain.model.BaseShortSessionModel
 import com.rrpvm.domain.model.GenreModel
 import com.rrpvm.domain.model.KinoModel
 import com.rrpvm.domain.model.KinoWithSessionsModel
@@ -188,4 +189,14 @@ class RoomCachedKinoRepository @Inject constructor(
         return result
     }
 
+    override fun getSessionById(sessionId: String): Result<BaseShortSessionModel> {
+        return kotlin.runCatching {
+            val model = checkNotNull(kinoSessionDao.getSessionById(sessionId))
+            BaseShortSessionModel(
+                sessionId = model.sessionId,
+                sessionDate = FromDomainDateStringMapper.mapToDomainDate(model.sessionStartDate),
+                sessionInfo = model.sessionDescription
+            )
+        }
+    }
 }

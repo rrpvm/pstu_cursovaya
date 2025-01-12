@@ -71,7 +71,6 @@ interface KinoDao {
         insertKinoList(uniqueList)
 
     }
-
     //One to Many
     @Transaction
     @Query("SELECT * FROM kinos_table")

@@ -16,6 +16,9 @@ interface KinoSessionDao {
     @Query("SELECT * FROM kino_sessions")
     fun getKinoSessionFlow(): Flow<List<KinoSessionEntity>>
 
+    @Query("SELECT * FROM kino_sessions WHERE sessionId=:sessionId")
+    fun getSessionById(sessionId: String): KinoSessionEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSession(session: KinoSessionEntity)
 

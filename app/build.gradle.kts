@@ -81,6 +81,8 @@ dependencies {
     implementation(libs.splash.screen)
     implementation(libs.lottie.anims)
 
+    implementation(libs.android.workmanager)
+
     //shared
     implementation(project(":core"))
     implementation(project(":domain"))
