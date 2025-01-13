@@ -1,5 +1,6 @@
-package com.rrpvm.domain.model
+package com.rrpvm.domain.model.kino
 
+import com.rrpvm.domain.model.GenreModel
 import java.util.Date
 
 data class KinoModel(

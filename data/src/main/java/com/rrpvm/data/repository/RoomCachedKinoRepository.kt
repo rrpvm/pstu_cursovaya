@@ -10,6 +10,8 @@ import com.rrpvm.data.datasource.KinofilmsDataSource
 import com.rrpvm.data.mapper.GenreModelToKinoGenreEntityMapper
 import com.rrpvm.data.mapper._data.AgeRatingDtoToAgeRatingEntityMapper
 import com.rrpvm.data.mapper._data.KinoDtoToKinoModelMapper
+import com.rrpvm.data.mapper._entity.KinoEntityToBaseKinoModelMapper
+import com.rrpvm.data.mapper._entity.KinoSessionEntityToBaseSessionMapper
 import com.rrpvm.data.mapper._entity.KinoWithGenresToKinoModel
 import com.rrpvm.data.mapper._entity.KinoWithSessionsAndGenresToKinoModel
 import com.rrpvm.data.mapper._entity.KinoWithSessionsAndGenresToKinoWithSessionModelMapper
@@ -17,16 +19,17 @@ import com.rrpvm.data.model.agerating.AgeRatingDto
 import com.rrpvm.data.room.dao.AgeRatingDao
 import com.rrpvm.data.room.dao.KinoFilmViewsDao
 import com.rrpvm.data.room.dao.KinoGenresDao
-import com.rrpvm.data.room.entity.AgeRatingEntity
 import com.rrpvm.data.room.entity.KinoFilmViewEntity
 import com.rrpvm.data.room.entity.KinoGenreCrossRefEntity
 import com.rrpvm.data.room.entity.KinoGenreEntity
 import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
-import com.rrpvm.domain.model.BaseKinoModel
+import com.rrpvm.domain.model.kino.BaseKinoModel
 import com.rrpvm.domain.model.BaseShortSessionModel
 import com.rrpvm.domain.model.GenreModel
-import com.rrpvm.domain.model.KinoModel
-import com.rrpvm.domain.model.KinoWithSessionsModel
+import com.rrpvm.domain.model.kino.KinoModel
+import com.rrpvm.domain.model.kino.KinoSessionModel
+import com.rrpvm.domain.model.kino.KinoWithSessionsModel
+import com.rrpvm.domain.model.session.NativeSessionWithKinoModel
 import com.rrpvm.domain.repository.KinoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -70,7 +73,7 @@ class RoomCachedKinoRepository @Inject constructor(
     override fun getKinoFilmsViewed(): Flow<List<BaseKinoModel>> {
         return kinoDao.getBaseViewedKinoFilms().map {
             it.map { e ->
-                BaseKinoModel(id = e.kinoId, title = e.mTitle, previewImage = e.mPreviewImage)
+                e.map(KinoEntityToBaseKinoModelMapper)
             }
         }
     }
@@ -78,7 +81,7 @@ class RoomCachedKinoRepository @Inject constructor(
     override fun getLikedKinoFilms(): Flow<List<BaseKinoModel>> {
         return kinoDao.getLikedKinoList().map {
             it.map { e ->
-                BaseKinoModel(id = e.kinoId, title = e.mTitle, previewImage = e.mPreviewImage)
+                e.map(KinoEntityToBaseKinoModelMapper)
             }
         }
     }
@@ -127,6 +130,7 @@ class RoomCachedKinoRepository @Inject constructor(
             )
         }
     }
+
 
     override suspend fun doLike(kinoId: String): Result<KinoModel> {
         return runCatching {
@@ -189,14 +193,20 @@ class RoomCachedKinoRepository @Inject constructor(
         return result
     }
 
+    override fun getSessionWithKinoBySessionId(sessionId: String): Result<NativeSessionWithKinoModel> {
+        return kotlin.runCatching {
+            val preResult = checkNotNull(kinoDao.getSessionWithKinoBySessionId(sessionId))
+            NativeSessionWithKinoModel(
+                baseSessionInfo = preResult.sessionEntity.map(KinoSessionEntityToBaseSessionMapper),
+                baseKinoInfo = preResult.kinoEntity.map(KinoEntityToBaseKinoModelMapper)
+            )
+        }
+    }
+
     override fun getSessionById(sessionId: String): Result<BaseShortSessionModel> {
         return kotlin.runCatching {
             val model = checkNotNull(kinoSessionDao.getSessionById(sessionId))
-            BaseShortSessionModel(
-                sessionId = model.sessionId,
-                sessionDate = FromDomainDateStringMapper.mapToDomainDate(model.sessionStartDate),
-                sessionInfo = model.sessionDescription
-            )
+            model.map(KinoSessionEntityToBaseSessionMapper)
         }
     }
 }

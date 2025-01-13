@@ -1,7 +1,7 @@
 package com.rrpvm.data.mapper
 
 import com.rrpvm.data.room.entity.KinoSessionEntity
-import com.rrpvm.domain.model.KinoSessionModel
+import com.rrpvm.domain.model.kino.KinoSessionModel
 
 object KinoSessionModelToKinoSessionEntityMapper : KinoSessionModel.Mapper<KinoSessionEntity> {
     override fun map(obj: KinoSessionModel): KinoSessionEntity {

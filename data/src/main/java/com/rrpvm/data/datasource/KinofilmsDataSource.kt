@@ -1,7 +1,7 @@
 package com.rrpvm.data.datasource
 
 import com.rrpvm.data.model.kinofilms.KinoModelDto
-import com.rrpvm.domain.model.KinoSessionModel
+import com.rrpvm.domain.model.kino.KinoSessionModel
 import com.rrpvm.domain.model.SessionHallInfoModel
 import com.rrpvm.domain.model.TicketModel
 

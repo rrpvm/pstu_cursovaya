@@ -7,7 +7,7 @@ import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.rrpvm.profile.databinding.ItemAccountInfoBinding
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.ProfileMenuItem
 
 class ClientInfoViewHolder(private val binding: ItemAccountInfoBinding) :
     ProfileMenuViewHolder(binding.root) {

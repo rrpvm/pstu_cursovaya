@@ -1,4 +1,4 @@
-package com.rrpvm.domain.model
+package com.rrpvm.domain.model.kino
 
 import java.util.Date
 

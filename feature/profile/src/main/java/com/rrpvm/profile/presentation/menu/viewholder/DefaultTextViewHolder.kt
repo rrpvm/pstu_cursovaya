@@ -1,8 +1,8 @@
 package com.rrpvm.profile.presentation.menu.viewholder
 
 import com.rrpvm.profile.databinding.ItemDefaultTextBinding
-import com.rrpvm.profile.presentation.menu.model.DefaultTextMenuTypes
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.DefaultTextMenuTypes
+import com.rrpvm.profile.presentation.model.ProfileMenuItem
 
 class DefaultTextViewHolder(
     private val binding: ItemDefaultTextBinding,

@@ -7,13 +7,16 @@ import com.rrpvm.domain.repository.ClientRepository
 import com.rrpvm.domain.service.IAuthenticationService
 import com.rrpvm.domain.service.IStringProvider
 import com.rrpvm.profile.R
-import com.rrpvm.profile.presentation.menu.model.DefaultTextMenuTypes
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuAdapterState
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.DefaultTextMenuTypes
+import com.rrpvm.profile.presentation.model.ProfileMenuAdapterState
+import com.rrpvm.profile.presentation.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.ProfileScreenEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapMerge
@@ -31,6 +34,8 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _menuState = MutableStateFlow(ProfileMenuAdapterState())
     val menuState = _menuState.asStateFlow()
+    private val _screenEffect = MutableSharedFlow<ProfileScreenEffect>()
+    val screenEffect = _screenEffect.asSharedFlow()
 
     @OptIn(FlowPreview::class)
     private val mAccount = authenticationService.currentAccountId.flatMapMerge { authedUUID ->
@@ -69,7 +74,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onMenuOptionClicked(type: DefaultTextMenuTypes) {
-
+        if (type == DefaultTextMenuTypes.MyTickets) {
+            viewModelScope.launch {
+                _screenEffect.emit(ProfileScreenEffect.GoMyTickets)
+            }
+        }
     }
 
     init {

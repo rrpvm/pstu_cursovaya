@@ -10,6 +10,7 @@ import androidx.room.Update
 import com.rrpvm.data.room.entity.KinoEntity
 import com.rrpvm.data.room.entity.query_model.KinoWithGenres
 import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
+import com.rrpvm.data.room.entity.query_model.SessionWithKino
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -22,7 +23,7 @@ interface KinoDao {
     fun getKinoList(): List<KinoEntity>
 
     @Query("SELECT * FROM kinos_table WHERE is_liked=1")
-    fun getLikedKinoList() : Flow<List<KinoEntity>>
+    fun getLikedKinoList(): Flow<List<KinoEntity>>
 
     @Query("SELECT * FROM kinos_table")
     @Transaction
@@ -32,7 +33,7 @@ interface KinoDao {
     fun getKino(kinoId: String): KinoEntity?
 
     @Query("SELECT * FROM kinos_table WHERE kino_id=:kinoId")
-    fun getFullKinoModel(kinoId: String):KinoWithSessionsAndGenres
+    fun getFullKinoModel(kinoId: String): KinoWithSessionsAndGenres
 
     @Delete(entity = KinoEntity::class)
     fun deleteKinoList(list: List<KinoEntity>)
@@ -71,6 +72,7 @@ interface KinoDao {
         insertKinoList(uniqueList)
 
     }
+
     //One to Many
     @Transaction
     @Query("SELECT * FROM kinos_table")
@@ -83,6 +85,9 @@ interface KinoDao {
     @Query("SELECT * FROM kinos_table LEFT JOIN kino_film_views_table ON kinos_table.kino_id=kino_film_views_table.viewed_kino_id WHERE kino_id=viewed_kino_id")
     @Transaction
     fun getBaseViewedKinoFilms(): Flow<List<KinoEntity>>
+
+    @Query("SELECT * FROM kino_sessions LEFT JOIN kinos_table ON kino_sessions.bound_kino_id=kinos_table.kino_id WHERE sessionId=:sessionId")
+    fun getSessionWithKinoBySessionId(sessionId: String): SessionWithKino
 
 
     fun getSessionsWithKinoByOrderDateFlow(): Flow<List<KinoWithSessionsAndGenres>> {

@@ -4,7 +4,7 @@ import android.content.res.ColorStateList
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.rrpvm.domain.model.BaseKinoModel
+import com.rrpvm.domain.model.kino.BaseKinoModel
 import com.rrpvm.kinofeed.databinding.ItemFeedActualDayPostsBinding
 import com.rrpvm.kinofeed.presentation.adapter.DefaultKinoListAdapter
 import com.rrpvm.kinofeed.presentation.decorator.KinoHorizontalDecorator

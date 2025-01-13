@@ -1,7 +1,7 @@
 package com.rrpvm.domain.contract
 
 import com.rrpvm.domain.model.FilterModel
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.kino.KinoModel
 
 object  KinoModelFilterContract {
     fun checkKinoModel(kinoModel: KinoModel, filterList : List<FilterModel>):Boolean{

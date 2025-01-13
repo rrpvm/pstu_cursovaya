@@ -1,6 +1,6 @@
 package com.rrpvm.kinofeed.presentation.model
 
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.kino.KinoModel
 
 data class ActualKinoFeedItem(
     val kinoList: List<KinoModel>,

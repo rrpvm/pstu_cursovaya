@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.rrpvm.core.toPx
 import com.rrpvm.profile.R
 import com.rrpvm.profile.databinding.FragmentProfileLayoutBinding
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.ProfileScreenEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -55,11 +59,23 @@ class ProfileFragment : Fragment() {
             )
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.menuState.collectLatest { newData ->
-                adapter.setNewData(newData.mItems)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.menuState.collectLatest { newData ->
+                        adapter.setNewData(newData.mItems)
+                    }
+                }
+                launch {
+                    viewModel.screenEffect.collect {
+                        when (it) {
+                            ProfileScreenEffect.GoMyTickets -> {
+                                findNavController().navigate(ProfileFragmentDirections.actionFragmentProfileToFragmentMyTickets())
+                            }
+                        }
+                    }
+                }
             }
         }
-
     }
 
     override fun onDestroyView() {

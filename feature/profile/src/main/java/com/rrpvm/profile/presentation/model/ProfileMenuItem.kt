@@ -1,4 +1,4 @@
-package com.rrpvm.profile.presentation.menu.model
+package com.rrpvm.profile.presentation.model
 
 import androidx.annotation.DrawableRes
 

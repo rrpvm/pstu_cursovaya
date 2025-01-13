@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rrpvm.core.TAG
 import com.rrpvm.domain.contract.KinoModelFilterContract
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.kino.KinoModel
 import com.rrpvm.domain.repository.FilterRepository
 import com.rrpvm.domain.repository.KinoRepository
 import com.rrpvm.kinofeed.presentation.listener.ActualFeedItemListener

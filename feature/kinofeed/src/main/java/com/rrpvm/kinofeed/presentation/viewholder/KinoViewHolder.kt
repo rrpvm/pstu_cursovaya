@@ -10,8 +10,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
-import com.rrpvm.domain.model.BaseKinoModel
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.kino.BaseKinoModel
 import com.rrpvm.kinofeed.databinding.ItemKinoItemBinding
 
 class KinoViewHolder(private val binding: ItemKinoItemBinding) : ViewHolder(binding.root) {

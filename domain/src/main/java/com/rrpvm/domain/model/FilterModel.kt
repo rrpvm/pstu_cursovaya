@@ -1,5 +1,6 @@
 package com.rrpvm.domain.model
 
+import com.rrpvm.domain.model.kino.KinoModel
 import com.rrpvm.domain.util.toLocalDateTime
 
 

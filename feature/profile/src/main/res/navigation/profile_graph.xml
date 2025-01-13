@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/profile_graph"
     app:startDestination="@id/fragment_profile">
-    <fragment android:id="@+id/fragment_profile"
-        android:name="com.rrpvm.profile.presentation.menu.ProfileFragment"/>
+    <fragment
+        android:id="@+id/fragment_profile"
+        android:name="com.rrpvm.profile.presentation.menu.ProfileFragment" >
+        <action
+            android:id="@+id/action_fragment_profile_to_fragment_my_tickets"
+            app:destination="@id/fragment_my_tickets" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_my_tickets"
+        android:name="com.rrpvm.profile.presentation.tickets.MyTicketsFragment" />
 </navigation>

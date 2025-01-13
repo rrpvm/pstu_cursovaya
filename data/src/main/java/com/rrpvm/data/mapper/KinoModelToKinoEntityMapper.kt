@@ -1,7 +1,7 @@
 package com.rrpvm.data.mapper
 
 import com.rrpvm.data.room.entity.KinoEntity
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.kino.KinoModel
 import com.rrpvm.domain.util.Const
 
 object KinoModelToKinoEntityMapper : KinoModel.Mapper<KinoEntity> {

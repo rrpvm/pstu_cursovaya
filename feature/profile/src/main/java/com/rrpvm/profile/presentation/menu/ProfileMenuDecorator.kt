@@ -10,7 +10,7 @@ import androidx.annotation.ColorInt
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.rrpvm.core.toPx
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.ProfileMenuItem
 import com.rrpvm.profile.presentation.menu.viewholder.ClientInfoViewHolder
 import com.rrpvm.profile.presentation.menu.viewholder.LogoutButtonViewHolder
 

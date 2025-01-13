@@ -1,9 +1,7 @@
 package com.rrpvm.data.mapper._entity
 
-import com.rrpvm.data.mapper.FromDomainDateStringMapper
 import com.rrpvm.data.room.entity.query_model.KinoWithSessionsAndGenres
-import com.rrpvm.domain.model.BaseShortSessionModel
-import com.rrpvm.domain.model.KinoWithSessionsModel
+import com.rrpvm.domain.model.kino.KinoWithSessionsModel
 
 object KinoWithSessionsAndGenresToKinoWithSessionModelMapper :
     KinoWithSessionsAndGenres.Mapper<KinoWithSessionsModel> {
@@ -11,11 +9,7 @@ object KinoWithSessionsAndGenresToKinoWithSessionModelMapper :
         return KinoWithSessionsModel(
             kinoModel = obj.map(KinoWithSessionsAndGenresToKinoModel),
             sessions = obj.kinoWithSessions.sessionList.map {
-                BaseShortSessionModel(
-                    sessionId = it.sessionId,
-                    sessionDate = FromDomainDateStringMapper.mapToDomainDate(it.sessionStartDate),
-                    sessionInfo = it.sessionDescription
-                )
+               it.map(KinoSessionEntityToBaseSessionMapper)
             }
         )
     }

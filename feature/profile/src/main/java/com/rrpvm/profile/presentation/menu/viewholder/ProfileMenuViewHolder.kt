@@ -2,7 +2,7 @@ package com.rrpvm.profile.presentation.menu.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.rrpvm.profile.presentation.menu.model.ProfileMenuItem
+import com.rrpvm.profile.presentation.model.ProfileMenuItem
 
 
 open class ProfileMenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -8,7 +8,7 @@ import com.rrpvm.data.model.kinofilms.KinoModelDto
 import com.rrpvm.data.room.dao.TicketsDao
 import com.rrpvm.domain.model.GenreModel
 import com.rrpvm.domain.model.HallPlaceModel
-import com.rrpvm.domain.model.KinoSessionModel
+import com.rrpvm.domain.model.kino.KinoSessionModel
 import com.rrpvm.domain.model.SessionHallInfoModel
 import com.rrpvm.domain.model.TicketModel
 import kotlinx.coroutines.delay

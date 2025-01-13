@@ -3,7 +3,7 @@ package com.rrpvm.kinofeed.presentation.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rrpvm.domain.model.BaseKinoModel
+import com.rrpvm.domain.model.kino.BaseKinoModel
 import com.rrpvm.kinofeed.databinding.ItemKinoItemBinding
 import com.rrpvm.kinofeed.presentation.viewholder.KinoViewHolder
 

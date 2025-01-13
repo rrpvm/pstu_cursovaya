@@ -1,7 +1,7 @@
 package com.rrpvm.kinofeed.presentation.diffcallback
 
 import androidx.recyclerview.widget.DiffUtil
-import com.rrpvm.domain.model.listsEqual
+import com.rrpvm.domain.model.kino.listsEqual
 import com.rrpvm.kinofeed.presentation.model.LikedKinoFeedItem
 
 

@@ -3,7 +3,7 @@ package com.rrpvm.data.mapper._entity
 import com.rrpvm.data.mapper.FromDomainDateStringMapper
 import com.rrpvm.data.room.entity.query_model.KinoWithGenres
 import com.rrpvm.domain.model.GenreModel
-import com.rrpvm.domain.model.KinoModel
+import com.rrpvm.domain.model.kino.KinoModel
 
 object KinoWithGenresToKinoModel : KinoWithGenres.Mapper<KinoModel> {
     override fun map(obj: KinoWithGenres): KinoModel {

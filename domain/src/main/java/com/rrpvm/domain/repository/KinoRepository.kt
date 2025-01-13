@@ -1,11 +1,12 @@
 package com.rrpvm.domain.repository
 
 
-import com.rrpvm.domain.model.BaseKinoModel
+import com.rrpvm.domain.model.kino.BaseKinoModel
 import com.rrpvm.domain.model.BaseShortSessionModel
 import com.rrpvm.domain.model.GenreModel
-import com.rrpvm.domain.model.KinoModel
-import com.rrpvm.domain.model.KinoWithSessionsModel
+import com.rrpvm.domain.model.kino.KinoModel
+import com.rrpvm.domain.model.kino.KinoWithSessionsModel
+import com.rrpvm.domain.model.session.NativeSessionWithKinoModel
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
@@ -24,5 +25,6 @@ interface KinoRepository {
 
 
     //session repository
+    fun getSessionWithKinoBySessionId(sessionId:String):Result<NativeSessionWithKinoModel>
     fun getSessionById(sessionId:String) : Result<BaseShortSessionModel>
 }
